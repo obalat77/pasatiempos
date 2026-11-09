@@ -1,4 +1,25 @@
+# Sistema
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*~
+
+# Dependencias y restos de herramientas
 node_modules/
+__pycache__/
 *.log
+
+# Ajustes locales y secretos (nunca al repositorio)
+.env
+.env.*
+*.local
+*.pem
+*.key
+
+# Capturas y salidas de pruebas en el navegador
+.playwright-mcp/
