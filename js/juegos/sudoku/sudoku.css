@@ -107,27 +107,6 @@
 /* ---------- Controles ---------- */
 .sudoku-controles { display: flex; flex-direction: column; gap: 16px; }
 .sudoku-herramientas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-.herramienta {
-  min-height: 4.5rem;                         /* 72 px */
-  padding: 0 6px;
-  border: 3px solid transparent;
-  border-radius: 20px;
-  background: var(--superficie);
-  color: var(--texto);
-  font-size: 1.1875rem;                       /* 19 px */
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.herramienta svg { flex: none; width: 26px; height: 26px; }
-.herramienta[aria-pressed="true"] {
-  border-color: var(--acento);
-  background: var(--acento-suave);
-  color: var(--acento-texto);
-}
-
 .sudoku-teclado { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 8px; }
 .tecla {
   min-height: 5.75rem;                        /* 92 px */
@@ -148,24 +127,6 @@
 /* ---------- Pausa y final ---------- */
 .sudoku.en-pausa .sudoku-tablero .casilla { color: transparent; background: var(--superficie); }
 .sudoku.en-pausa .sudoku-tablero .notas { visibility: hidden; }
-.sudoku-aviso {
-  background: var(--superficie);
-  border-radius: 28px;
-  padding: 20px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: center;
-}
-.sudoku-aviso h2 { font-size: 2rem; font-weight: 700; }
-.sudoku-aviso p { font-size: 1.25rem; color: var(--texto-2); }
-.sudoku-aviso .tiempo-final { font-size: 2.75rem; line-height: 1.1; font-weight: 700; color: var(--texto); font-variant-numeric: tabular-nums; }
-.sudoku-aviso .destacado { font-weight: 700; color: var(--acento-texto); }
-.sudoku-aviso .botones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
-@media (orientation: landscape) {
-  .sudoku-aviso { flex: 1; justify-content: center; gap: 14px; padding: 28px; }
-  .sudoku-aviso .botones { grid-template-columns: 1fr; }
-}
 .sudoku-preparando { margin: auto; font-size: 1.5rem; color: var(--texto-2); }
 
 /* ---------- Horizontal: tablero a la izquierda, todo lo demás a la derecha ---------- */
@@ -196,7 +157,7 @@
   .sudoku-titulo h1 { font-size: 1.875rem; }
   .sudoku-tiempo { font-size: 1.875rem; }
   .sudoku-herramientas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .herramienta { min-height: 72px; }
+  .sudoku .herramienta { min-height: 72px; }
   .sudoku-teclado { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
   .tecla { min-height: 96px; font-size: 2.875rem; }   /* px: con texto Grande no cabría */
 }
@@ -211,5 +172,5 @@
   .sudoku-tiempo { grid-column: 3; justify-self: end; margin-right: calc(7.5rem + 12px); }
   .sudoku.terminada .sudoku-tiempo { margin-right: 0; }
   .sudoku-tablero { order: 1; }
-  .sudoku-controles, .sudoku-aviso { order: 2; }
+  .sudoku-controles, .tarjeta-final { order: 2; }
 }

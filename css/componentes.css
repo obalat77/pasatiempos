@@ -176,3 +176,46 @@
 }
 /* Mientras se ve el aviso, se deja sitio debajo para que no tape ningún botón. */
 body.con-aviso { padding-bottom: calc(3.5rem + 32px + env(safe-area-inset-bottom)); }
+
+/* ---------- Juegos: botones de herramienta (Deshacer, Pista…) ---------- */
+.herramienta {
+  min-height: 4.5rem;                         /* 72 px */
+  padding: 0 6px;
+  border: 3px solid transparent;
+  border-radius: 20px;
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 1.1875rem;                       /* 19 px */
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.herramienta svg { flex: none; width: 26px; height: 26px; }
+.herramienta:disabled { opacity: 0.45; cursor: default; }
+.herramienta[aria-pressed="true"] {
+  border-color: var(--acento);
+  background: var(--acento-suave);
+  color: var(--acento-texto);
+}
+
+/* ---------- Juegos: tarjeta de aviso (pausa, final de partida) ---------- */
+.tarjeta-final {
+  background: var(--superficie);
+  border-radius: 28px;
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.tarjeta-final h2 { font-size: 2rem; font-weight: 700; }
+.tarjeta-final p { font-size: 1.25rem; color: var(--texto-2); }
+.tarjeta-final .tiempo-final { font-size: 2.75rem; line-height: 1.1; font-weight: 700; color: var(--texto); font-variant-numeric: tabular-nums; }
+.tarjeta-final .destacado { font-weight: 700; color: var(--acento-texto); }
+.tarjeta-final .botones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
+@media (orientation: landscape) {
+  .tarjeta-final { flex: 1; justify-content: center; gap: 14px; padding: 28px; }
+  .tarjeta-final .botones { grid-template-columns: 1fr; }
+}

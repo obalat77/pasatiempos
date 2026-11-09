@@ -1,0 +1,110 @@
+/* Parejas de números — diseños Parejas-Light (vertical) y Parejas-H-Light (horizontal). */
+
+.parejas {
+  --casilla: min(76px, calc((100vw - 102px) / 9));
+  height: 100vh;
+  height: 100dvh;
+  padding:
+    max(44px, env(safe-area-inset-top))
+    max(48px, env(safe-area-inset-right))
+    max(48px, env(safe-area-inset-bottom))
+    max(48px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---------- Cabecera ---------- */
+.parejas-cabecera { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.parejas-titulo { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.parejas-titulo h1 { font-size: 1.625rem; font-weight: 700; }
+.parejas-titulo .subtitulo { font-size: 1.125rem; color: var(--texto-2); }
+.parejas-tiempo { font-size: 1.625rem; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 7.5rem; text-align: right; }
+.parejas-instruccion { font-size: 1.3125rem; text-align: center; min-height: 1.6em; }
+.parejas-instruccion.aviso { font-weight: 700; }
+
+/* ---------- Tablero (se desplaza por dentro si hay muchas filas) ---------- */
+.parejas-tablero {
+  align-self: center;
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 3px solid var(--linea-fuerte);
+  border-radius: 12px;
+  background: var(--superficie);
+}
+.parejas-rejilla { display: grid; grid-template-columns: repeat(9, var(--casilla)); }
+.celda {
+  width: var(--casilla);
+  height: var(--casilla);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-right: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: calc(var(--casilla) * 0.53);   /* 40 px con casillas de 76 */
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.celda:nth-child(9n) { border-right: 0; }
+.celda.quitada { color: var(--eliminado); }
+.celda.seleccionada { background: var(--seleccion); }
+.celda.pista { box-shadow: inset 0 0 0 4px var(--acento); }
+.celda:focus-visible { outline-offset: -4px; }
+
+/* ---------- Controles ---------- */
+.parejas-controles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.parejas .herramienta { min-height: 4.75rem; font-size: 1.25rem; }
+.boton-añadir { border: 2px solid var(--acento); color: var(--acento-texto); flex-direction: column; gap: 2px; }
+.boton-añadir .quedan-añadir { font-size: 1.125rem; font-weight: 400; }
+.boton-añadir.pista { box-shadow: inset 0 0 0 4px var(--acento); }
+.parejas-preparando { margin: auto; font-size: 1.5rem; color: var(--texto-2); }
+
+/* ---------- Horizontal ---------- */
+@media (orientation: landscape) {
+  .parejas {
+    --casilla: min(76px, calc((100vw - 490px) / 9));
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: max(40px, env(safe-area-inset-top)) max(40px, env(safe-area-inset-right))
+             max(40px, env(safe-area-inset-bottom)) max(40px, env(safe-area-inset-left));
+  }
+  .parejas-tablero { flex: none; max-height: 100%; }
+  .parejas-lateral {
+    flex: 1;
+    min-width: 0;
+    max-width: 480px;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .parejas-cabecera { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+  .parejas-titulo { align-items: flex-start; text-align: left; gap: 4px; }
+  .parejas-titulo h1 { font-size: 1.75rem; }
+  .parejas-titulo .subtitulo { font-size: 1.1875rem; }
+  .parejas-instruccion { text-align: left; }
+  .parejas-controles { grid-template-columns: 1fr; }
+  .parejas .herramienta { min-height: 76px; }
+  .boton-añadir { flex-direction: row; gap: 10px; }
+  .parejas .tarjeta-final { flex: 0 1 auto; }
+}
+@media (orientation: portrait) {
+  .parejas-lateral { display: contents; }
+  .parejas-cabecera { order: 0; }
+  .parejas-instruccion { order: 1; }
+  .parejas-tablero { order: 2; }
+  .parejas-controles, .parejas .tarjeta-final { order: 3; }
+}

@@ -1,7 +1,9 @@
 // Sudoku — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.1).
 // Une la lógica (reglas.js, generador.js) con la pantalla y el guardado.
 import { h, icono, botonInicio } from '../../core/ui.js';
-import { cronometro, tiempo } from '../../core/formato.js';
+import { cronometro } from '../../core/formato.js';
+import { Reloj } from '../../core/reloj.js';
+import { tarjetaFinal, datoDestacado, esRecord } from '../../core/final.js';
 import { DIFICULTADES, buscarJuego } from '../catalogo.js';
 import { elegirPartida } from '../../pantallas/elegir-partida.js';
 import { generarSudoku } from './generador.js';
@@ -28,8 +30,7 @@ class PartidaSudoku {
     this.modoNotas = false;
     this.pausada = false;
     this.terminada = false;
-    this.segundosBase = 0;   // segundos acumulados antes del tramo actual
-    this.tramoDesde = null;  // ms en que empezó a contar el tramo actual (null = parado)
+    this.reloj = new Reloj(0, () => this.pintarReloj());
     this.alCambiarVisibilidad = () => this.visibilidad();
     this.alPulsarTecla = (e) => this.tecla(e);
   }
@@ -51,7 +52,7 @@ class PartidaSudoku {
     if (guardada?.estado?.solucion) {
       this.p = guardada.estado;
       this.inicio = guardada.inicio;
-      this.segundosBase = guardada.segundos || 0;
+      this.reloj.base = guardada.segundos || 0;
     } else {
       await trasPintar();
       const dificultad = ctx.nueva?.dificultad || 'facil';
@@ -227,20 +228,16 @@ class PartidaSudoku {
   // ---------- Tiempo ----------
 
   segundos() {
-    const tramo = this.tramoDesde ? (Date.now() - this.tramoDesde) / 1000 : 0;
-    return this.segundosBase + tramo;
+    return this.reloj.segundos();
   }
 
   arrancarReloj() {
-    if (this.tramoDesde || this.pausada || this.terminada) return;
-    this.tramoDesde = Date.now();
-    this.intervalo = setInterval(() => this.pintarReloj(), 1000);
+    if (this.pausada || this.terminada) return;
+    this.reloj.arrancar();
   }
 
   pararReloj() {
-    if (this.tramoDesde) this.segundosBase = this.segundos();
-    this.tramoDesde = null;
-    clearInterval(this.intervalo);
+    this.reloj.parar();
   }
 
   pintarReloj() {
@@ -256,7 +253,7 @@ class PartidaSudoku {
   }
 
   mostrarAvisoPausa() {
-    this.avisoPausa = h('section', { class: 'sudoku-aviso' },
+    this.avisoPausa = h('section', { class: 'tarjeta-final' },
       h('h2', {}, 'En pausa'),
       h('p', {}, 'El tiempo está parado.'),
       h('button', { type: 'button', class: 'boton boton-principal boton-grande boton-ancho',
@@ -293,15 +290,13 @@ class PartidaSudoku {
   }
 
   async terminar() {
-    this.pararReloj();
+    const segundos = this.reloj.detenerFinal(); // el reloj de arriba y el tiempo final coinciden
     this.sel = -1;
-    const segundos = Math.round(this.segundos());
-    this.segundosBase = segundos; // el reloj de arriba y el tiempo final coinciden
     const dificultad = this.p.dificultad;
     // Mejor tiempo anterior en esta dificultad (para el dato destacado)
     const anteriores = (await this.ctx.partidas.resultados(ID))
       .filter((r) => r.dificultad === dificultad && r.resultado === 'terminada');
-    const record = anteriores.length > 0 && anteriores.every((r) => segundos < r.duracionSeg);
+    const record = esRecord(segundos, anteriores);
 
     await this.ctx.partidas.cerrar(ID, 'terminada', {
       segundos,
@@ -311,21 +306,14 @@ class PartidaSudoku {
     this.terminada = true;
     this.pintar();
 
-    let destacado;
-    if (record) destacado = '¡Nuevo mejor tiempo!';
-    else if (this.p.pistas === 0) destacado = 'Sin usar ninguna pista';
-    else destacado = this.p.pistas === 1 ? 'Con 1 pista' : `Con ${this.p.pistas} pistas`;
-
-    const aviso = h('section', { class: 'sudoku-aviso', role: 'status' },
-      h('h2', {}, '¡Enhorabuena!'),
-      h('p', {}, `Sudoku ${DIFICULTADES[dificultad].toLowerCase()} terminado en`),
-      h('p', { class: 'tiempo-final' }, tiempo(segundos)),
-      h('p', { class: 'destacado' }, destacado),
-      h('div', { class: 'botones' },
-        h('button', { type: 'button', class: 'boton boton-principal', on: { click: () => this.otraPartida() } },
-          'Otra partida'),
-        h('button', { type: 'button', class: 'boton boton-secundario', on: { click: () => this.ctx.navegar('') } },
-          'Inicio')));
+    const aviso = tarjetaFinal({
+      titulo: '¡Enhorabuena!',
+      texto: `Sudoku ${DIFICULTADES[dificultad].toLowerCase()} terminado en`,
+      segundos,
+      destacado: datoDestacado({ record, pistas: this.p.pistas }),
+      alOtraPartida: () => this.otraPartida(),
+      alInicio: () => this.ctx.navegar(''),
+    });
     this.controles.replaceWith(aviso);
   }
 

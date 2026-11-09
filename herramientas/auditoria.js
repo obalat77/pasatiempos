@@ -5,7 +5,7 @@
 // Reglas del proyecto: texto ≥ 18 px; contraste ≥ 4,5:1 (3:1 desde 24 px, o 18,66 px en negrita);
 // áreas táctiles ≥ 56 px (nunca < 44 px); sin desplazamiento horizontal.
 // Excepciones deliberadas: dibujos de iconos (aria-hidden), números ya emparejados de Parejas
-// (.eliminada), teclas atenuadas por estar completas (.completa), contenido oculto en pausa.
+// (.quitada), teclas atenuadas (.completa), controles desactivados y contenido oculto en pausa.
 
 window.auditar = function auditar() {
   const fallos = [];
@@ -48,7 +48,7 @@ window.auditar = function auditar() {
     const t = (el.getAttribute('aria-label') || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 40);
     return `${el.tagName.toLowerCase()}${el.className && typeof el.className === 'string' ? '.' + el.className.split(' ').join('.') : ''} «${t}»`;
   };
-  const exento = (el) => el.closest('[aria-hidden="true"], .eliminada, .completa, .en-pausa .sudoku-tablero, .en-pausa .tablero-juego');
+  const exento = (el) => el.closest('[aria-hidden="true"], .eliminada, .quitada, .completa, :disabled, .en-pausa .sudoku-tablero, .en-pausa .tablero-juego');
 
   // Texto
   for (const el of document.querySelectorAll('body *')) {

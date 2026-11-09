@@ -35,7 +35,7 @@ function contenido(juego, resultados) {
   const mejores = dificultades.map((dif) => {
     const t = e.mejorTiempo[dif];
     return h('div', { class: 'lista-fila' },
-      h('span', {}, DIFICULTADES[dif] || 'Mejor tiempo'),
+      h('span', {}, DIFICULTADES[dif] || 'Partida más rápida'),
       t === undefined
         ? h('span', { class: 'texto-2' }, 'Sin partidas')
         : h('span', { class: 'negrita cifras' }, tiempo(t)));
@@ -46,7 +46,8 @@ function contenido(juego, resultados) {
       .filter(Boolean).join(' · ')),
     h('span', { class: 'lista-derecha' },
       h('span', { class: 'negrita cifras' }, tiempo(r.duracionSeg)),
-      h('span', { class: esExito(r) ? 'resultado-exito' : 'texto-2' }, NOMBRE_RESULTADO[r.resultado] || r.resultado))));
+      h('span', { class: esExito(r) ? 'resultado-exito' : 'texto-2' },
+        juego.resultados?.[r.resultado] || NOMBRE_RESULTADO[r.resultado] || r.resultado))));
 
   return h('div', { class: 'estadisticas-cuerpo' },
     cifras,
