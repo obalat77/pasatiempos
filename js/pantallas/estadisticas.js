@@ -43,8 +43,46 @@ function contenidoNiveles(juego, resultados) {
       lista('Últimos niveles', ultimas, 'Aún no has completado ningún nivel.')));
 }
 
+const NIVEL_RUMMY = { principiante: 'Principiante', intermedio: 'Intermedio', experto: 'Experto' };
+
+/** Estadísticas del Rummy: partidas ganadas por cada jugador y puntos (ESPECIFICACION.md §4.2). */
+function contenidoRummy(juego, resultados) {
+  const e = calcularEstadisticas(resultados, juego.id, new Date());
+  const propias = resultados.filter((r) => r.juego === juego.id && r.detalles?.nombres);
+  const nombres = propias[0]?.detalles.nombres || ['Tú', 'Lola', 'Paco', 'Carmen'];
+  const ganadas = nombres.map((_, i) => propias.filter((r) => r.detalles.ganador === i).length);
+  const puntos = nombres.map((_, i) => propias.reduce((s, r) => s + (r.detalles.puntos?.[i] || 0), 0));
+  const signo = (n) => `${n > 0 ? '+' : ''}${numero(n)}`;
+
+  const cifras = h('section', { class: 'cifras-grid', 'aria-label': 'Resumen' },
+    cifra(numero(e.jugadas), 'Partidas jugadas'),
+    cifra(numero(e.exitos), 'Partidas ganadas'),
+    cifra(e.racha === 1 ? '1 día' : `${numero(e.racha)} días`, 'Racha actual'),
+    cifra(duracionTexto(e.tiempoTotal).replace(/(\d) (h|min)/g, '$1\u00a0$2'), 'Tiempo total', true));
+  const porJugador = nombres.map((n, i) => h('div', { class: 'lista-fila' },
+    h('span', { class: i === 0 ? 'negrita' : null }, n),
+    h('span', { class: 'lista-derecha' },
+      h('span', {}, ganadas[i] === 1 ? '1 ganada' : `${numero(ganadas[i])} ganadas`),
+      h('span', { class: 'negrita cifras' }, `${signo(puntos[i])} puntos`))));
+  const ultimas = e.ultimas.map((r) => {
+    const ganador = r.detalles?.nombres?.[r.detalles.ganador];
+    return h('div', { class: 'lista-fila' },
+      h('span', {}, [fechaRelativa(new Date(r.fin)), NIVEL_RUMMY[r.detalles?.nivel]].filter(Boolean).join(' · ')),
+      h('span', { class: 'lista-derecha' },
+        h('span', { class: 'negrita cifras' }, tiempo(r.duracionSeg)),
+        h('span', { class: esExito(r) ? 'resultado-exito' : 'texto-2' },
+          esExito(r) ? 'Ganada' : ganador ? `Ganó ${ganador}` : 'Perdida')));
+  });
+  return h('div', { class: 'estadisticas-cuerpo' },
+    cifras,
+    h('div', { class: 'estadisticas-listas' },
+      lista('Por jugador', propias.length ? porJugador : [], 'Aún no has jugado ninguna partida.'),
+      lista('Últimas partidas', ultimas, 'Aún no has jugado ninguna partida.')));
+}
+
 function contenido(juego, resultados) {
   if (juego.porNiveles) return contenidoNiveles(juego, resultados);
+  if (juego.estadisticasRummy) return contenidoRummy(juego, resultados);
   const e = calcularEstadisticas(resultados, juego.id, new Date());
 
   const cifras = h('section', { class: 'cifras-grid', 'aria-label': 'Resumen' },

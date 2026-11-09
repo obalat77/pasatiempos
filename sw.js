@@ -5,7 +5,7 @@
 // comprueba que coinciden). Así el iPad detecta que hay versión nueva.
 // AL AÑADIR O QUITAR ARCHIVOS: actualizar ARCHIVOS (una prueba lo comprueba).
 
-const VERSION = 4;
+const VERSION = 5;
 const CACHE = `pasatiempos-v${VERSION}`;
 
 const ARCHIVOS = [
@@ -53,6 +53,12 @@ const ARCHIVOS = [
   'js/juegos/sudoku/sudoku.css',
   'js/juegos/sudoku/tablero.js',
   'js/juegos/sudoku/tecnicas.js',
+  'js/juegos/rummy/buscador.js',
+  'js/juegos/rummy/ia.js',
+  'js/juegos/rummy/index.js',
+  'js/juegos/rummy/reglas.js',
+  'js/juegos/rummy/rummy.css',
+  'js/juegos/rummy/worker.js',
   'js/pantallas/ajustes.js',
   'js/pantallas/elegir-partida.js',
   'js/pantallas/estadisticas.js',

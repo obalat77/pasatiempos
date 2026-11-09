@@ -37,7 +37,11 @@ export const JUEGOS = [
   { id: 'calculos', nombre: 'Cálculos cruzados', nombreCorto: 'Cálculos', subtitulo: 'Cuentas en forma de crucigrama',
     dificultades: CUATRO, exito: 'terminadas', disponible: true },
   { id: 'rummy', nombre: 'Rummy', nombreCorto: 'Rummy', subtitulo: 'Contra 3 rivales',
-    dificultades: [], exito: 'ganadas', disponible: false },
+    dificultades: [], exito: 'ganadas', disponible: true, estadisticasRummy: true,
+    subtituloDinamico: async (db) => {
+      const nivel = (await db.obtener('ajustes', 'rummy.nivel')) || 'intermedio';
+      return `Contra 3 rivales · ${{ principiante: 'Principiante', intermedio: 'Intermedio', experto: 'Experto' }[nivel]}`;
+    } },
 ];
 
 export const juegosDisponibles = () => JUEGOS.filter((j) => j.disponible);

@@ -1,0 +1,192 @@
+/* Rummy — diseños Rummy-Light (vertical) y Rummy-H-Light (horizontal).
+   Colores propios del Rummy: fijos en ambos temas (ESPECIFICACION.md §3.2). */
+
+.rummy {
+  --tapete: #2F6F5E;
+  --tapete-borde: #275D4F;
+  --ficha-cara: #FBF6E9;
+  --ficha-borde: #D9CDB8;
+  --ficha-sombra: #CBBEA6;
+  --dorso: #E9DFCB;
+  --madera: #A86B3C;
+  --balda: #8A5428;
+  --madera-sombra: #7A4A26;
+  --rojo: #C62828;
+  --azul: #1565C0;
+  --negro: #222222;
+  --naranja: #B35900;
+  --nueva-zona: #CFE5DD;
+  --resalte-nueva: #FFFFFF;          /* contorno de las fichas que acaba de poner un rival */
+  --fm-ancho: 48px;                  /* ficha en la mesa (lo ajusta index.js) */
+  --fa-ancho: 76px;                  /* ficha en el atril (ídem) */
+
+  height: 100vh;
+  height: 100dvh;
+  padding:
+    max(20px, env(safe-area-inset-top))
+    max(20px, env(safe-area-inset-right))
+    max(20px, env(safe-area-inset-bottom))
+    max(20px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---------- Cabecera ---------- */
+.rummy-cabecera { display: flex; align-items: center; gap: 14px; }
+.rummy-cabecera h1 { font-size: 1.625rem; font-weight: 700; }
+.rummy-cabecera .boton-inicio { min-height: 3.5rem; }
+.rummy-info { font-size: 1.125rem; color: var(--texto-2); }
+.boton-deshacer {
+  margin-left: auto;
+  min-height: 3.5rem;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: 1.625rem;
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.boton-deshacer svg { flex: none; width: 24px; height: 24px; }
+.boton-deshacer:disabled { opacity: 0.45; }
+
+/* ---------- Rivales ---------- */
+.rival { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.rival-nombre { font-size: 1.25rem; font-weight: 700; }
+.rival.activo .rival-nombre { color: var(--acento-texto); }
+.rival-fichas, .rival-estado { font-size: 1.125rem; color: var(--texto-2); text-align: center; }
+.dorsos { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; }
+.dorso { width: 20px; height: 28px; border-radius: 4px; background: var(--dorso); border: 1px solid var(--ficha-sombra); }
+.rival-arriba { min-height: 44px; }
+.rival-lado { width: 96px; flex: none; flex-direction: column; gap: 8px; }
+.rival-lado .dorsos { display: grid; grid-template-columns: repeat(2, 28px); }
+.rival-lado .dorso { width: 28px; height: 20px; }
+
+.rummy-centro { flex: 1; min-height: 0; display: flex; gap: 12px; }
+
+/* ---------- Mesa ---------- */
+.mesa {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--tapete);
+  box-shadow: inset 0 0 0 6px var(--tapete-borde);
+  border-radius: 28px;
+  padding: 24px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: calc(var(--fm-ancho) * 0.5) calc(var(--fm-ancho) * 0.5);
+}
+.combinacion { display: flex; gap: 4px; padding: 4px; margin: -4px; border-radius: 10px; }
+.combinacion.no-valida { box-shadow: 0 0 0 3px var(--error); }
+.combinacion.destino { cursor: pointer; }
+.zona-nueva {
+  min-width: calc(var(--fm-ancho) * 4);
+  min-height: calc(var(--fm-ancho) * 1.375);
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 3px dashed var(--nueva-zona);
+  background: transparent;
+  color: #FFFFFF;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+/* ---------- Fichas ---------- */
+.ficha-r {
+  --ancho: var(--fm-ancho);
+  flex: none;
+  width: var(--ancho);
+  height: calc(var(--ancho) * 1.375);
+  padding: 0;
+  margin: 0;
+  border-radius: calc(var(--ancho) * 0.16);
+  border: 1px solid var(--ficha-borde);
+  background: var(--ficha-cara);
+  box-shadow: 0 2px 0 var(--ficha-sombra);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-weight: 700;
+  line-height: 1;
+  touch-action: none;
+}
+.ficha-r .num { font-size: calc(var(--ancho) * 0.62); }
+.ficha-r .sim { font-size: max(12px, calc(var(--ancho) * 0.25)); }
+.ficha-r.c-r { color: var(--rojo); }
+.ficha-r.c-b { color: var(--azul); }
+.ficha-r.c-k { color: var(--negro); }
+.ficha-r.c-o { color: var(--naranja); }
+.ficha-r.comodin { color: var(--rojo); }
+.ficha-r.comodin svg { width: 70%; height: auto; }
+.ficha-r.elegida { border: 4px solid var(--acento); }
+.ficha-r.nueva { box-shadow: 0 0 0 4px var(--resalte-nueva); }
+.atril .ficha-r.nueva { box-shadow: 0 0 0 4px var(--acento); }   /* la ficha que acabas de robar */
+.ficha-r.puesta { border: 3px solid var(--acento); }      /* puesta en este turno */
+.atril .ficha-r { --ancho: var(--fa-ancho); }
+.atril .ficha-r.elegida { transform: translateY(-10px); }
+.ficha-r.fantasma { position: fixed; z-index: 20; pointer-events: none; opacity: 0.9; }
+
+/* ---------- Atril ---------- */
+.rummy-abajo { display: flex; flex-direction: column; gap: 10px; }
+.zona-atril { align-self: center; display: flex; flex-direction: column; gap: 6px; max-width: 100%; }
+.estado-turno { font-size: 1.1875rem; font-weight: 700; color: var(--acento-texto); min-height: 1.4em; }
+.estado-turno.aviso { color: var(--error); }
+.atril {
+  background: var(--madera);
+  border-radius: 16px;
+  padding: 10px 14px 0;
+  box-shadow: 0 4px 0 var(--madera-sombra);
+  display: flex;
+  flex-direction: column;
+}
+.balda {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  min-height: calc(var(--fa-ancho) * 1.375 + 12px);
+  border-bottom: 12px solid var(--balda);
+}
+.rummy-botones { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.rummy-botones button {
+  min-height: 4.25rem;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 18px;
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.rummy-botones .robar { border: 2px solid var(--acento); color: var(--acento-texto); }
+.rummy-botones .terminar { background: var(--acento); color: var(--sobre-acento); }
+.rummy-botones button:disabled { opacity: 0.45; }
+
+/* ---------- Final ---------- */
+.rummy .tarjeta-final { align-self: center; width: min(640px, 100%); }
+.tabla-puntos { display: grid; grid-template-columns: 1fr auto auto; gap: 6px 24px; font-size: 1.25rem; text-align: left; margin: 4px auto; }
+.tabla-puntos .ganador { font-weight: 700; color: var(--acento-texto); }
+.tabla-puntos .cifras { text-align: right; }
+.rummy-preparando { margin: auto; font-size: 1.5rem; color: var(--texto-2); }
+
+/* ---------- Horizontal ---------- */
+@media (orientation: landscape) {
+  .rummy { padding-top: max(18px, env(safe-area-inset-top)); }
+  .rummy-cabecera h1 { font-size: 1.5rem; }
+  .rummy .rummy-info.solo-vertical { display: none; }
+  .rummy-abajo { flex-direction: row; align-items: flex-end; gap: 16px; }
+  .zona-atril { align-self: auto; }
+  .rummy-botones { flex: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rummy-botones .robar, .rummy-botones .terminar { grid-column: span 2; }
+  .rummy-botones button { min-height: 3.875rem; font-size: 1.1875rem; }
+}

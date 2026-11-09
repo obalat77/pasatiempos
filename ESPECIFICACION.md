@@ -1,6 +1,6 @@
 # Pasatiempos — Especificación
 
-Versión 1.4 · 10 de noviembre de 2026
+Versión 1.5 · 10 de noviembre de 2026
 
 Aplicación web instalable (PWA) para iPad con cinco juegos de mesa y lógica, pensada para **una persona mayor**. Uso personal: sin anuncios, sin servidores, sin cuentas, sin internet después de instalarla.
 
@@ -281,6 +281,14 @@ Juego de fichas numeradas al estilo del Rummikub clásico (no usar ese nombre ni
 **Pantalla** (ver diseños `Rummy-Light`, `Rummy-H-Light` y oscuros): tapete verde en el centro con las combinaciones; rivales alrededor mostrando dorsos y número de fichas («aún no ha bajado» si procede); atril de madera de dos pisos abajo (7 + 7 huecos); botones Ordenar 1 2 3, Ordenar por color, Robar ficha, Terminar turno; «Deshacer jugada» arriba a la derecha; fichas que quedan por robar.
 - Cada ficha: número grande en su color + **símbolo del color debajo** (● ▲ ■ ◆) para distinguirlas aunque cueste ver los colores. Comodín: carita.
 
+**Concreción (v1.5):**
+- Una sola partida por vez (sin rondas). Orden de turno: Tú, Lola, Paco, Carmen.
+- Con una ficha elegida, tocar una ficha de una combinación la lleva a esa combinación; tocar el atril la devuelve (solo si era tuya y la pusiste en este turno). «Robar ficha» devuelve antes al atril lo que hubieras puesto; con el pozo vacío se llama «Pasar turno».
+- La ficha que acabas de robar se resalta en el atril; las que acaba de poner un rival, con un contorno blanco (`#FFFFFF`, color fijo del Rummy) en la mesa. Mientras se anima la jugada de un rival no se marca ninguna combinación como no válida.
+- Al reanudar una partida guardada a mitad de tu turno, ese turno empieza de nuevo (como «Deshacer jugada»).
+- Experto: se guarda fichas cuando solo podría poner 1 o 2 (con 12 o menos en el atril), usa sus comodines solo si colocan al menos 3 fichas más (o para cerrar), y deja de guardarse en cuanto alguien tiene 3 fichas o menos o se acaba el pozo.
+- Estadísticas del Rummy: partidas jugadas y ganadas, racha, tiempo total, tabla «Por jugador» (ganadas y puntos acumulados de cada uno) y últimas partidas con su nivel y ganador.
+
 ---
 
 ## 6. Fases de trabajo
@@ -307,5 +315,5 @@ Cada fase termina con la app publicada en GitHub Pages y probada en el iPad.
 Para confirmar con el usuario cuando llegue cada fase:
 1. ~~Fuente de la lista de palabras en español (licencia).~~ **Decidido:** ver §5.2 y `data/palabras/FUENTES.md`.
 2. ~~Palabras: comprobar la palabra al soltar el dedo o con un botón «Comprobar» en modo toque.~~ **Decidido:** al soltar el dedo (y, en modo toque, al tocar la palabra en curso), sin botón «Comprobar».
-3. Rummy: ¿jugar a una sola partida o a varias rondas con puntuación acumulada?
-4. ¿Sonidos opcionales (desactivados por defecto)?
+3. ~~Rummy: ¿jugar a una sola partida o a varias rondas con puntuación acumulada?~~ **Decidido:** una sola partida (por ahora).
+4. ~~¿Sonidos opcionales (desactivados por defecto)?~~ **Decidido:** sin sonidos.
