@@ -1,6 +1,6 @@
 # Pasatiempos — Especificación
 
-Versión 1.2 · 9 de noviembre de 2026
+Versión 1.3 · 9 de noviembre de 2026
 
 Aplicación web instalable (PWA) para iPad con cinco juegos de mesa y lógica, pensada para **una persona mayor**. Uso personal: sin anuncios, sin servidores, sin cuentas, sin internet después de instalarla.
 
@@ -229,6 +229,7 @@ Juego clásico de emparejar números (tipo «Take Ten»).
 - Fin: tablero vacío → ganada. Sin parejas y sin «Añadir números» → «No quedan jugadas» con «Otra partida».
 - Tablero inicial: aleatorio, unos 27–36 números (3–4 filas), garantizando al menos varias parejas posibles.
 - Interacción: tocar un número (queda marcado con `--seleccion`) y después el segundo; si no es válido, aviso suave y queda seleccionado el segundo.
+- Concreción (v1.3): el tablero inicial tiene al menos 4 parejas posibles; el tablero muestra al menos 8 filas y se desplaza por dentro si hay más. En Estadísticas, las partidas sin jugadas aparecen como «Sin jugadas».
 - Diseños: `Parejas-Light`, `Parejas-H-Light` y oscuros.
 
 ### 5.4 Cálculos cruzados
@@ -242,6 +243,7 @@ Crucigrama de cuentas.
 - Interacción: tocar casilla vacía → tocar número de la bandeja. Borrar devuelve el número a la bandeja. Deshacer, Pista (coloca un número correcto).
 - «Marcar errores en rojo» (ajuste): número distinto de la solución en `--error`.
 - Fin: todas las cuentas correctas → enhorabuena.
+- Concreción (v1.3): huecos por dificultad 5 / 6 (7×7) y 8 / 11 (9×9); resultados de 0 a 30 en Fácil y de 0 a 100 en el resto; en Medio y superiores hay al menos una × o ÷, y en Difícil y Experto al menos una ÷. La solución es única contando con los números exactos de la bandeja. Si se tocan números sin haber elegido casilla y solo queda un hueco vacío, el número va ahí.
 - Diseños: `Calculos-Light`, `Calculos-H-Light` y oscuros (el diseño vertical ya funciona de forma interactiva y sirve de ejemplo de tablero correcto).
 
 ### 5.5 Rummy (fichas)

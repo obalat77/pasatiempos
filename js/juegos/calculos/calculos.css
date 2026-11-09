@@ -1,0 +1,125 @@
+/* Cálculos cruzados — diseños Calculos-Light (vertical) y Calculos-H-Light (horizontal). */
+
+.calculos {
+  --casilla: 88px;          /* lo ajusta index.js según el espacio libre */
+  --hueco: 6px;
+  --ficha: 96px;            /* botones de la bandeja */
+  height: 100vh;
+  height: 100dvh;
+  padding:
+    max(44px, env(safe-area-inset-top))
+    max(48px, env(safe-area-inset-right))
+    max(48px, env(safe-area-inset-bottom))
+    max(48px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.calculos.grande { --hueco: 5px; --ficha: 80px; }   /* tablero 9×9 */
+
+/* ---------- Cabecera ---------- */
+.calculos-cabecera { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.calculos-titulo { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.calculos-titulo h1 { font-size: 1.625rem; font-weight: 700; }
+.calculos-titulo .subtitulo { font-size: 1.125rem; color: var(--texto-2); }
+.calculos-tiempo { font-size: 1.625rem; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 7.5rem; text-align: right; }
+.calculos-instruccion { font-size: 1.3125rem; text-align: center; }
+.calculos-instruccion.aviso { font-weight: 700; }
+
+/* ---------- Tablero ---------- */
+.calculos-zona { flex: 1 1 0; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.calculos-tablero { display: grid; gap: var(--hueco); }
+.cc {
+  width: var(--casilla);
+  height: var(--casilla);
+  padding: 0;
+  margin: 0;
+  border-radius: calc(var(--casilla) * 0.16);
+  border: 0;
+  background: transparent;
+  color: var(--texto);
+  font-size: calc(var(--casilla) * 0.5);
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cc.dado { background: var(--superficie); border: 2px solid var(--borde); }
+.cc.resultado { background: var(--resaltado); border: 2px solid var(--borde); font-size: calc(var(--casilla) * 0.45); }
+.cc.operador { color: var(--texto-2); font-size: calc(var(--casilla) * 0.43); }
+.cc.hueco { background: var(--superficie); border: 3px dashed var(--acento); color: var(--acento-texto); }
+.cc.hueco.lleno { border: 2px solid var(--borde); }
+.cc.hueco.seleccionado { background: var(--seleccion); }
+.cc.hueco.error { color: var(--error); }
+.cc:focus-visible { outline-offset: 2px; }
+
+/* ---------- Bandeja ---------- */
+.calculos-bandeja { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.calculos-bandeja .etiqueta { font-size: 1.1875rem; color: var(--texto-2); }
+.fichas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; min-height: var(--ficha); }
+.ficha {
+  width: var(--ficha);
+  height: var(--ficha);
+  padding: 0;
+  border: 0;
+  border-radius: 20px;
+  background: var(--superficie);
+  color: var(--acento-texto);
+  font-size: calc(var(--ficha) * 0.48);
+  font-weight: 700;
+}
+.fichas .sin-fichas { align-self: center; font-size: 1.25rem; color: var(--texto-2); }
+
+/* ---------- Controles ---------- */
+.calculos-controles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.calculos .herramienta { min-height: 4.75rem; font-size: 1.25rem; }
+.calculos-preparando { margin: auto; font-size: 1.5rem; color: var(--texto-2); }
+
+/* ---------- Horizontal ---------- */
+@media (orientation: landscape) {
+  .calculos {
+    --ficha: 68px;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: 44px;
+    padding: max(40px, env(safe-area-inset-top)) max(40px, env(safe-area-inset-right))
+             max(40px, env(safe-area-inset-bottom)) max(40px, env(safe-area-inset-left));
+  }
+  .calculos.grande { --ficha: 64px; }
+  .calculos-zona { flex: 0 0 auto; width: min(calc(100dvh - 80px), calc(100vw - 80px - 44px - 360px)); }
+  .calculos-lateral {
+    flex: 1;
+    min-width: 0;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    overflow-y: auto;
+  }
+  .calculos-cabecera { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .calculos-titulo { align-items: flex-start; text-align: left; gap: 4px; }
+  .calculos-titulo h1 { font-size: 1.75rem; }
+  .calculos-titulo .subtitulo { font-size: 1.1875rem; }
+  .calculos-instruccion { text-align: left; font-size: 1.25rem; }
+  .calculos-bandeja { align-items: stretch; }
+  .calculos-bandeja .etiqueta { font-size: 1.125rem; }
+  .fichas { justify-content: flex-start; gap: 8px; }
+  .ficha { border-radius: 16px; }
+  /* Los tres botones en una fila, icono encima del texto, para que todo quepa sin desplazarse */
+  .calculos-controles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .calculos .herramienta { min-height: 76px; flex-direction: column; gap: 4px; font-size: 1.125rem; padding: 0 4px; }
+  .calculos .tarjeta-final { flex: 0 1 auto; }
+}
+@media (orientation: portrait) {
+  .calculos-lateral { display: contents; }
+  .calculos-cabecera { order: 0; }
+  .calculos-instruccion { order: 1; }
+  .calculos-zona { order: 2; }
+  .calculos-bandeja { order: 3; }
+  .calculos-controles, .calculos .tarjeta-final { order: 4; }
+}

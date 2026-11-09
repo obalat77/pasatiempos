@@ -25,7 +25,7 @@ export const JUEGOS = [
   { id: 'parejas', nombre: 'Parejas de números', nombreCorto: 'Parejas', subtitulo: 'Iguales o que sumen 10',
     dificultades: [], exito: 'ganadas', resultados: { perdida: 'Sin jugadas' }, disponible: true },
   { id: 'calculos', nombre: 'Cálculos cruzados', nombreCorto: 'Cálculos', subtitulo: 'Cuentas en forma de crucigrama',
-    dificultades: CUATRO, exito: 'terminadas', disponible: false },
+    dificultades: CUATRO, exito: 'terminadas', disponible: true },
   { id: 'rummy', nombre: 'Rummy', nombreCorto: 'Rummy', subtitulo: 'Contra 3 rivales',
     dificultades: [], exito: 'ganadas', disponible: false },
 ];

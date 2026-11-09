@@ -4,7 +4,7 @@ Juegos de mesa y lógica para iPad, pensados para una persona mayor: letra grand
 
 **Abrir la app:** https://obalat77.github.io/pasatiempos/
 
-Juegos: Sudoku y Parejas de números (disponibles) · Palabras · Cálculos cruzados · Rummy (próximamente).
+Juegos: Sudoku, Parejas de números y Cálculos cruzados (disponibles) · Palabras · Rummy (próximamente).
 
 ## Instalar en el iPad
 
