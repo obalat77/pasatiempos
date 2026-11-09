@@ -49,7 +49,20 @@ class PartidaPalabras {
     this.raiz = h('div', { class: 'palabras' }, h('p', { class: 'palabras-preparando' }, 'Preparando el nivel…'));
     this.contenedor.append(this.raiz);
     const todos = await cargarNiveles();
-    const guardada = ctx.nueva ? null : await ctx.partidas.obtener(ID);
+    let guardada = ctx.nueva ? null : await ctx.partidas.obtener(ID);
+    // Si los niveles han cambiado (nueva versión) y la partida guardada ya no casa con su nivel,
+    // se empieza ese nivel de nuevo.
+    const mismoNivel = (est) => {
+      const nv = todos[est.nivel - 1];
+      return nv && [...nv.letras].sort().join('') === [...est.letras].sort().join('')
+        && est.encontradas.every((w) => nv.palabras.includes(w));
+    };
+    if (guardada?.estado?.nivel && !mismoNivel(guardada.estado)) {
+      const nivelGuardado = guardada.estado.nivel;
+      await ctx.partidas.borrar(ID);
+      if (!(await ctx.db.obtener('progreso', CLAVE_NIVEL))) await ctx.db.poner('progreso', nivelGuardado, CLAVE_NIVEL);
+      guardada = null;
+    }
     if (guardada?.estado?.nivel) {
       this.p = guardada.estado;
       this.inicio = guardada.inicio;
