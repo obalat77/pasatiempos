@@ -153,3 +153,26 @@
 .dialogo-opciones { display: flex; flex-direction: column; gap: 12px; }
 .dialogo .boton-secundario { background: var(--superficie); }
 .dialogo-cancelar { min-height: 4rem; }
+
+/* ---------- Aviso de versión nueva ---------- */
+.aviso-version {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 10;
+  width: fit-content;
+  max-width: calc(100vw - 32px);
+  margin: 0 auto;
+  min-height: 3.5rem;
+  padding: 0 1.75rem;
+  border: 0;
+  border-radius: 1.75rem;
+  background: var(--texto);
+  color: var(--fondo);
+  font-size: 1.25rem;
+  font-weight: 700;
+  box-shadow: 0 4px 16px var(--velo);
+}
+/* Mientras se ve el aviso, se deja sitio debajo para que no tape ningún botón. */
+body.con-aviso { padding-bottom: calc(3.5rem + 32px + env(safe-area-inset-bottom)); }

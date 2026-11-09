@@ -63,6 +63,7 @@ export default {
   montar(contenedor, ctx),      // ctx: { db, ajustes, estadisticas, navegar }
   desmontar(),
   partidaEnCurso(),             // resumen para «Continuar partida» o null
+  guardar(),                    // (opcional) guardar ya, p. ej. antes de actualizar la app
 };
 ```
 

@@ -8,6 +8,7 @@ import { abrirBD } from './core/db.js';
 import { crearAjustes } from './core/ajustes.js';
 import { crearPartidas } from './core/partidas.js';
 import { iniciarTema } from './core/tema.js';
+import { iniciarActualizaciones } from './core/actualizacion.js';
 import { cargarJuego, JUEGOS } from './juegos/catalogo.js';
 import * as inicio from './pantallas/inicio.js';
 import * as estadisticas from './pantallas/estadisticas.js';
@@ -17,6 +18,7 @@ const contenedor = document.getElementById('app');
 const PANTALLAS = { '': inicio, estadisticas, ajustes: pantallaAjustes };
 
 let desmontarActual = null;
+let juegoActual = null; // módulo del juego montado (para guardar antes de actualizar)
 let turno = 0; // evita que una carga lenta pise una navegación posterior
 
 function navegar(ruta) {
@@ -51,6 +53,7 @@ async function mostrar() {
 
   try { desmontarActual?.(); } catch (e) { console.error(e); }
   desmontarActual = null;
+  juegoActual = null;
 
   // Cada pantalla se monta en su propio hueco: si se navega mientras carga,
   // el hueco viejo ya no está en la página y no estorba.
@@ -66,6 +69,7 @@ async function mostrar() {
       const juego = await cargarJuego(id);
       if (miTurno !== turno) return;
       await juego.montar(hueco, { ...ctx, nueva });
+      juegoActual = juego;
       desmontarActual = () => juego.desmontar();
       return;
     }
@@ -96,6 +100,9 @@ async function arrancar() {
 
   window.addEventListener('hashchange', mostrar);
   await mostrar();
+
+  // Modo sin conexión y aviso «Hay una versión nueva».
+  iniciarActualizaciones(() => juegoActual?.guardar?.());
 }
 
 arrancar();

@@ -360,6 +360,11 @@ export default {
     actual = null;
   },
 
+  /** Guarda la partida ahora (p. ej. antes de actualizar la app). */
+  guardar() {
+    return actual?.guardar();
+  },
+
   async partidaEnCurso() {
     return actual?.p ? R.resumen(actual.p) : null;
   },
