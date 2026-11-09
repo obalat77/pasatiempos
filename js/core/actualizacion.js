@@ -14,7 +14,19 @@ export async function iniciarActualizaciones(antesDeRecargar) {
   if (!('serviceWorker' in navigator)) return;
   // En el ordenador de desarrollo no se usa (la caché ocultaría los cambios),
   // salvo que se pida con ?sw en la dirección para probarlo.
-  if (EN_DESARROLLO && !new URLSearchParams(location.search).has('sw')) return;
+  if (EN_DESARROLLO && !new URLSearchParams(location.search).has('sw')) {
+    // Si quedó instalado de una prueba con ?sw, se quita: si no, seguiría sirviendo
+    // la copia vieja de la app y los cambios no se verían.
+    const registros = await navigator.serviceWorker.getRegistrations();
+    if (registros.length) {
+      await Promise.all(registros.map((r) => r.unregister()));
+      for (const nombre of await caches.keys()) {
+        if (nombre.startsWith('pasatiempos-')) await caches.delete(nombre);
+      }
+      location.reload();
+    }
+    return;
+  }
 
   // Si ya había una versión controlando la página, un cambio de control es una actualización.
   // La primera vez (instalación) no hay que recargar.
