@@ -28,7 +28,8 @@ function contenido(juego, resultados) {
     cifra(numero(e.jugadas), 'Partidas jugadas'),
     cifra(numero(e.exitos), juego.exito === 'ganadas' ? 'Partidas ganadas' : 'Partidas terminadas'),
     cifra(e.racha === 1 ? '1 día' : `${numero(e.racha)} días`, 'Racha actual'),
-    cifra(duracionTexto(e.tiempoTotal), 'Tiempo total', true));
+    // Espacio duro entre número y unidad: si no cabe, salta entre «12 h» y «30 min».
+    cifra(duracionTexto(e.tiempoTotal).replace(/(\d) (h|min)/g, '$1\u00a0$2'), 'Tiempo total', true));
 
   const dificultades = juego.dificultades.length ? juego.dificultades : ['unica'];
   const mejores = dificultades.map((dif) => {

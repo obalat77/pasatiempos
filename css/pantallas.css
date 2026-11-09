@@ -186,7 +186,7 @@
   justify-content: center;
   gap: 4px;
 }
-.cifra-valor { font-size: 2.75rem; font-weight: 700; line-height: 1.15; white-space: nowrap; }
+.cifra-valor { font-size: 2.75rem; font-weight: 700; line-height: 1.15; }
 .cifra-etiqueta { font-size: 1.25rem; color: var(--texto-2); }
 .estadisticas-listas { display: flex; flex-direction: column; gap: 32px; }
 .bloque-lista { display: flex; flex-direction: column; gap: 12px; }

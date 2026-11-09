@@ -171,7 +171,7 @@
 /* ---------- Horizontal: tablero a la izquierda, todo lo demás a la derecha ---------- */
 @media (orientation: landscape) {
   .sudoku {
-    --casilla: min(76px, calc((100dvh - 86px) / 9), calc((100vw - 520px) / 9));
+    --casilla: min(76px, calc((100dvh - 86px) / 9), calc((100vw - 490px) / 9));
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -196,8 +196,9 @@
   .sudoku-titulo h1 { font-size: 1.875rem; }
   .sudoku-tiempo { font-size: 1.875rem; }
   .sudoku-herramientas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .herramienta { min-height: 72px; }
   .sudoku-teclado { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-  .tecla { min-height: 6rem; font-size: 2.875rem; }
+  .tecla { min-height: 96px; font-size: 2.875rem; }   /* px: con texto Grande no cabría */
 }
 @media (orientation: portrait) {
   .sudoku-lateral { display: contents; }
@@ -208,6 +209,7 @@
   .sudoku-titulo { grid-column: 2; }
   .boton-pausa { grid-column: 3; justify-self: end; }
   .sudoku-tiempo { grid-column: 3; justify-self: end; margin-right: calc(7.5rem + 12px); }
+  .sudoku.terminada .sudoku-tiempo { margin-right: 0; }
   .sudoku-tablero { order: 1; }
   .sudoku-controles, .sudoku-aviso { order: 2; }
 }

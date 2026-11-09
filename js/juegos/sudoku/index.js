@@ -172,6 +172,7 @@ class PartidaSudoku {
     this.notasBtn.lastChild.textContent = this.modoNotas ? 'Notas: sí' : 'Notas: no';
     this.raiz.classList.toggle('modo-notas', this.modoNotas);
     this.raiz.classList.toggle('en-pausa', this.pausada);
+    this.raiz.classList.toggle('terminada', this.terminada);
     this.pausaBtn.replaceChildren(...(this.pausada ? [icono('seguir'), 'Seguir'] : [icono('pausa', 2.4), 'Pausa']));
     this.pausaBtn.hidden = this.terminada;
     this.pintarReloj();
