@@ -4,7 +4,9 @@
 //   #/estadisticas  Estadísticas
 //   #/ajustes       Ajustes
 //   #/juego/<id>    Un juego
-import { ajustes } from './core/ajustes.js';
+import { abrirBD } from './core/db.js';
+import { crearAjustes } from './core/ajustes.js';
+import { crearPartidas } from './core/partidas.js';
 import { iniciarTema } from './core/tema.js';
 import { cargarJuego, JUEGOS } from './juegos/catalogo.js';
 import * as inicio from './pantallas/inicio.js';
@@ -23,7 +25,8 @@ function navegar(ruta) {
   else location.hash = destino;
 }
 
-const ctx = { ajustes, navegar, db: null, estadisticas: null };
+/** Contexto que reciben las pantallas y los juegos (ESPECIFICACION.md §2.4). */
+const ctx = { db: null, ajustes: crearAjustes(), partidas: null, navegar };
 
 async function mostrar() {
   const miTurno = ++turno;
@@ -31,23 +34,49 @@ async function mostrar() {
 
   try { desmontarActual?.(); } catch (e) { console.error(e); }
   desmontarActual = null;
-  contenedor.replaceChildren();
+
+  // Cada pantalla se monta en su propio hueco: si se navega mientras carga,
+  // el hueco viejo ya no está en la página y no estorba.
+  const hueco = document.createElement('div');
+  contenedor.replaceChildren(hueco);
   window.scrollTo(0, 0);
 
   const [seccion, id] = ruta.split('/');
-  if (seccion === 'juego' && JUEGOS.some((j) => j.id === id && j.disponible)) {
-    const juego = await cargarJuego(id);
-    if (miTurno !== turno) return;
-    juego.montar(contenedor, ctx);
-    desmontarActual = () => juego.desmontar();
-    return;
+  try {
+    if (seccion === 'juego' && JUEGOS.some((j) => j.id === id && j.disponible)) {
+      const juego = await cargarJuego(id);
+      if (miTurno !== turno) return;
+      await juego.montar(hueco, ctx);
+      desmontarActual = () => juego.desmontar();
+      return;
+    }
+    const pantalla = PANTALLAS[seccion] || inicio;
+    const fin = await pantalla.montar(hueco, ctx);
+    if (typeof fin === 'function') {
+      if (miTurno === turno) desmontarActual = fin;
+      else fin();
+    }
+  } catch (error) {
+    console.error(error);
+    hueco.textContent = 'Algo ha fallado. Vuelve a abrir la app.';
   }
-
-  const pantalla = PANTALLAS[seccion] || inicio;
-  const fin = pantalla.montar(contenedor, ctx);
-  if (typeof fin === 'function') desmontarActual = fin;
 }
 
-iniciarTema(ajustes);
-window.addEventListener('hashchange', mostrar);
-mostrar();
+async function arrancar() {
+  ctx.db = await abrirBD();
+  ctx.partidas = crearPartidas(ctx.db);
+  try {
+    await ctx.ajustes.cargar(ctx.db);
+  } catch (error) {
+    console.error('No se pudieron leer los ajustes', error);
+  }
+  iniciarTema(ctx.ajustes);
+
+  // Pedir que el navegador no borre los datos por falta de espacio.
+  navigator.storage?.persist?.().catch(() => {});
+
+  window.addEventListener('hashchange', mostrar);
+  await mostrar();
+}
+
+arrancar();

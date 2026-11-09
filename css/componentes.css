@@ -39,7 +39,7 @@
   font-weight: 700;
   text-decoration: none;
 }
-.boton-inicio svg { width: 1.5rem; height: 1.5rem; }
+.boton-inicio svg { flex: none; width: 1.5rem; height: 1.5rem; }
 
 /* ---------- Tarjetas ---------- */
 .tarjeta {
