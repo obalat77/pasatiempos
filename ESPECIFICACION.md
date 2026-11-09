@@ -306,6 +306,6 @@ Cada fase termina con la app publicada en GitHub Pages y probada en el iPad.
 ## 8. Decisiones abiertas
 Para confirmar con el usuario cuando llegue cada fase:
 1. Fuente de la lista de palabras en español (licencia).
-2. Palabras: comprobar la palabra al soltar el dedo o con un botón «Comprobar» en modo toque.
+2. ~~Palabras: comprobar la palabra al soltar el dedo o con un botón «Comprobar» en modo toque.~~ **Decidido:** al soltar el dedo (y, en modo toque, al tocar la palabra en curso), sin botón «Comprobar».
 3. Rummy: ¿jugar a una sola partida o a varias rondas con puntuación acumulada?
 4. ¿Sonidos opcionales (desactivados por defecto)?
