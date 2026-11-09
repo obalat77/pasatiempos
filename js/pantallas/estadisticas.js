@@ -21,7 +21,30 @@ function lista(titulo, filas, vacia) {
     h('div', { class: 'lista' }, filas.length ? filas : h('div', { class: 'lista-fila texto-2' }, vacia)));
 }
 
+/** Estadísticas de un juego por niveles (Palabras): nivel alcanzado y palabras extra. */
+function contenidoNiveles(juego, resultados) {
+  const e = calcularEstadisticas(resultados, juego.id, new Date());
+  const propias = resultados.filter((r) => r.juego === juego.id && r.resultado === 'terminada');
+  const nivel = Math.max(0, ...propias.map((r) => r.detalles?.nivel || 0));
+  const extras = propias.reduce((s, r) => s + (r.detalles?.extras || 0), 0);
+  const cifras = h('section', { class: 'cifras-grid', 'aria-label': 'Resumen' },
+    cifra(nivel ? numero(nivel) : '—', 'Último nivel completado'),
+    cifra(numero(extras), 'Palabras extra'),
+    cifra(e.racha === 1 ? '1 día' : `${numero(e.racha)} días`, 'Racha actual'),
+    cifra(duracionTexto(e.tiempoTotal).replace(/(\d) (h|min)/g, '$1\u00a0$2'), 'Tiempo total', true));
+  const ultimas = e.ultimas.map((r) => h('div', { class: 'lista-fila' },
+    h('span', {}, `${fechaRelativa(new Date(r.fin))} · Nivel ${numero(r.detalles?.nivel || 0)}`),
+    h('span', { class: 'lista-derecha' },
+      h('span', { class: 'negrita cifras' }, tiempo(r.duracionSeg)),
+      h('span', { class: 'resultado-exito' }, juego.resultados?.[r.resultado] || NOMBRE_RESULTADO[r.resultado]))));
+  return h('div', { class: 'estadisticas-cuerpo' },
+    cifras,
+    h('div', { class: 'estadisticas-listas' },
+      lista('Últimos niveles', ultimas, 'Aún no has completado ningún nivel.')));
+}
+
 function contenido(juego, resultados) {
+  if (juego.porNiveles) return contenidoNiveles(juego, resultados);
   const e = calcularEstadisticas(resultados, juego.id, new Date());
 
   const cifras = h('section', { class: 'cifras-grid', 'aria-label': 'Resumen' },

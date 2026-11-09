@@ -30,6 +30,7 @@ function tarjetaJuego(juego, ctx) {
   const boton = juego.disponible
     ? h('button', { type: 'button', class: 'boton boton-secundario', 'aria-label': `Jugar a ${juego.nombre}`,
         on: { click: async () => {
+          if (juego.sinEleccion) { ctx.jugar(juego.id); return; }
           const eleccion = await elegirPartida(juego, ctx);
           if (eleccion) ctx.jugar(juego.id, eleccion);
         } } }, 'Jugar')
@@ -86,9 +87,19 @@ export async function montar(contenedor, ctx) {
     h('button', { type: 'button', class: 'boton boton-claro', on: { click: () => navegar('ajustes') } },
       icono('ajustes'), 'Ajustes'));
 
+  // Subtítulos que dependen del progreso (p. ej. «Nivel 3 de 1.000»)
+  const tarjetas = JUEGOS.map((j) => tarjetaJuego(j, ctx));
+  await Promise.all(JUEGOS.map(async (j, i) => {
+    if (!j.disponible || !j.subtituloDinamico) return;
+    try {
+      const texto = await j.subtituloDinamico(ctx.db);
+      tarjetas[i].querySelectorAll('.juego-sub').forEach((el) => { el.textContent = texto; });
+    } catch (e) { console.error(e); }
+  }));
+
   const juegos = h('section', { class: 'juegos', 'aria-labelledby': 'titulo-juegos' },
     h('h2', { class: 'titulo-seccion', id: 'titulo-juegos' }, 'Juegos'),
-    JUEGOS.map((j) => tarjetaJuego(j, ctx)));
+    tarjetas);
 
   contenedor.append(h('div', { class: 'pantalla inicio' },
     h('div', { class: 'inicio-izquierda' }, cabecera, continuar, nav),

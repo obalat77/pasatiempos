@@ -7,6 +7,11 @@
 //   exito           'terminadas' | 'ganadas' (cómo se llaman las partidas con éxito)
 //   resultados      (opcional) nombres propios de resultados en Estadísticas, p. ej. { perdida: 'Sin jugadas' }
 //   disponible      false → en Inicio aparece «Próximamente» y no sale en Ajustes ni Estadísticas
+//   sinEleccion     «Jugar» abre directamente la partida (sin preguntar dificultad ni «empezar otra»)
+//   porNiveles      Estadísticas por niveles (nivel alcanzado, palabras extra) en lugar de mejor tiempo
+//   subtituloDinamico (opcional) async (db) => texto para Inicio, p. ej. «Nivel 3 de 1.000»
+
+import { numero } from '../core/formato.js';
 
 export const DIFICULTADES = {
   facil: 'Fácil',
@@ -21,7 +26,12 @@ export const JUEGOS = [
   { id: 'sudoku', nombre: 'Sudoku', nombreCorto: 'Sudoku', subtitulo: 'Fácil · Medio · Difícil · Experto',
     subtituloCorto: '4 dificultades', dificultades: CUATRO, exito: 'terminadas', disponible: true },
   { id: 'palabras', nombre: 'Palabras', nombreCorto: 'Palabras', subtitulo: 'Forma palabras con las letras',
-    dificultades: [], exito: 'terminadas', disponible: false },
+    dificultades: [], exito: 'terminadas', disponible: true, sinEleccion: true, porNiveles: true,
+    resultados: { terminada: 'Completado' },
+    subtituloDinamico: async (db) => {
+      const n = (await db.obtener('progreso', 'palabras.nivel')) || 1;
+      return n > 1000 ? 'Todos los niveles completados' : `Nivel ${numero(n)} de 1.000`;
+    } },
   { id: 'parejas', nombre: 'Parejas de números', nombreCorto: 'Parejas', subtitulo: 'Iguales o que sumen 10',
     dificultades: [], exito: 'ganadas', resultados: { perdida: 'Sin jugadas' }, disponible: true },
   { id: 'calculos', nombre: 'Cálculos cruzados', nombreCorto: 'Cálculos', subtitulo: 'Cuentas en forma de crucigrama',

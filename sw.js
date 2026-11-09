@@ -5,13 +5,14 @@
 // comprueba que coinciden). Así el iPad detecta que hay versión nueva.
 // AL AÑADIR O QUITAR ARCHIVOS: actualizar ARCHIVOS (una prueba lo comprueba).
 
-const VERSION = 3;
+const VERSION = 4;
 const CACHE = `pasatiempos-v${VERSION}`;
 
 const ARCHIVOS = [
   './',
   'index.html',
   'manifest.webmanifest',
+  'data/palabras/niveles.json',
   'css/base.css',
   'css/componentes.css',
   'css/pantallas.css',
@@ -39,6 +40,9 @@ const ARCHIVOS = [
   'js/juegos/calculos/index.js',
   'js/juegos/calculos/reglas.js',
   'js/juegos/catalogo.js',
+  'js/juegos/palabras/index.js',
+  'js/juegos/palabras/palabras.css',
+  'js/juegos/palabras/reglas.js',
   'js/juegos/parejas/index.js',
   'js/juegos/parejas/parejas.css',
   'js/juegos/parejas/reglas.js',

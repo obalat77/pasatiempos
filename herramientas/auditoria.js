@@ -79,6 +79,9 @@ window.auditar = function auditar() {
     if (!el.textContent.trim() && !el.getAttribute('aria-label')) fallos.push(`botón sin texto ni aria-label: ${describir(el)}`);
   }
 
+  // Pantalla rota (app.js muestra este texto si una pantalla lanza un error)
+  if (document.getElementById('app')?.textContent.includes('Algo ha fallado')) fallos.push('la pantalla no se ha podido mostrar (ver la consola)');
+
   // Desbordes
   if (document.documentElement.scrollWidth > window.innerWidth + 1) {
     fallos.push(`desplazamiento horizontal: ${document.documentElement.scrollWidth} > ${window.innerWidth}`);

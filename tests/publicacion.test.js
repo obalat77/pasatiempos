@@ -32,7 +32,7 @@ test('la versión de la app coincide con la del service worker', () => {
 
 test('el service worker guarda todos los archivos de la app (y solo los que existen)', () => {
   const esperados = new Set([
-    'index.html', 'manifest.webmanifest',
+    'index.html', 'manifest.webmanifest', 'data/palabras/niveles.json',
     ...['css', 'js', 'icons'].flatMap(archivosDe),
     ...archivosDe('fonts').filter((f) => f.endsWith('.woff2')),
   ]);

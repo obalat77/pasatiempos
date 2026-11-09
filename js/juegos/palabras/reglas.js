@@ -61,6 +61,15 @@ export function problemasCrucigrama(crucigrama) {
   if (!mapa) return ['dos palabras ponen letras distintas en la misma casilla'];
   if (crucigrama.some((p) => p.fila < 0 || p.col < 0)) problemas.push('coordenadas negativas');
 
+  // Cada palabra ocupa una tira completa: ni pegada a otra letra por delante ni por detrás
+  // (si no, una palabra podría quedar «dentro» de otra más larga, como SER dentro de SERE).
+  for (const c of crucigrama) {
+    const [df, dc] = paso(c.dir);
+    const antes = `${c.fila - df},${c.col - dc}`;
+    const despues = `${c.fila + c.palabra.length * df},${c.col + c.palabra.length * dc}`;
+    if (mapa.has(antes) || mapa.has(despues)) problemas.push(`«${c.palabra}» está pegada a otras letras en su misma línea`);
+  }
+
   // Cada tira de 2+ letras seguidas (en horizontal o vertical) debe ser exactamente una palabra colocada.
   const colocadas = new Set(crucigrama.map((p) => `${p.dir}:${p.fila},${p.col}:${p.palabra}`));
   const { filas, columnas } = tamaño(crucigrama);
@@ -172,22 +181,35 @@ export function casillaVisible(p, nivel, clave) {
 }
 
 /**
+ * ¿Se ve la letra k de la palabra colocada `c`?
+ * En crucigrama, las letras compartidas se ven al encontrar cualquiera de las dos palabras;
+ * en modo lista cada palabra va por separado: solo si se encontró o se descubrió con Pista.
+ */
+export function letraVisible(p, nivel, c, k, modo = 'crucigrama') {
+  const clave = casillasDe(c)[k];
+  if (modo === 'lista') return p.encontradas.includes(c.palabra) || p.reveladas.includes(clave);
+  return casillaVisible(p, nivel, clave);
+}
+
+/**
  * Pista: descubre una letra de una palabra pendiente (la más corta; dentro de ella,
  * la primera letra aún oculta). Si con eso la palabra queda entera a la vista,
- * cuenta como encontrada. Devuelve { clave, palabra, completada } o null.
+ * cuenta como encontrada. `modo`: 'crucigrama' | 'lista' (ver letraVisible).
+ * Devuelve { clave, palabra, completada } o null.
  */
-export function darPista(p, nivel) {
+export function darPista(p, nivel, modo = 'crucigrama') {
   const pendientes = nivel.crucigrama
     .filter((c) => !p.encontradas.includes(c.palabra))
     .sort((a, b) => a.palabra.length - b.palabra.length);
   for (const c of pendientes) {
-    const clave = casillasDe(c).find((k) => !casillaVisible(p, nivel, k));
-    if (!clave) continue;
-    p.reveladas.push(clave);
+    const claves = casillasDe(c);
+    const k = claves.findIndex((_, i) => !letraVisible(p, nivel, c, i, modo));
+    if (k < 0) continue;
+    p.reveladas.push(claves[k]);
     p.pistas++;
-    const completada = casillasDe(c).every((k) => casillaVisible(p, nivel, k));
+    const completada = claves.every((_, i) => letraVisible(p, nivel, c, i, modo));
     if (completada) p.encontradas.push(c.palabra);
-    return { clave, palabra: c.palabra, completada };
+    return { clave: claves[k], palabra: c.palabra, completada };
   }
   return null;
 }

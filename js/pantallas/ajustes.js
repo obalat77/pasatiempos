@@ -13,7 +13,7 @@ export function montar(contenedor, { ajustes, navegar }) {
   const interruptor = (clave, texto) =>
     filaInterruptor(texto, ajustes.obtener(clave), (v) => ajustes.cambiar(clave, v));
   const seccionOpciones = (titulo, clave, opciones, orden) =>
-    h('section', { class: 'tarjeta seccion-ajustes', style: { order } },
+    h('section', { class: 'tarjeta seccion-ajustes', style: { order: orden } },
       h('div', { class: 'grupo-ajuste' }, h('h2', {}, titulo), opcion(clave, titulo, opciones)));
 
   const apariencia = h('section', { class: 'tarjeta seccion-ajustes', style: { order: 1 } },

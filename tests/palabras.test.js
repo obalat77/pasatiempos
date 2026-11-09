@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   sePuedeFormar, problemasCrucigrama, problemasNivel, tamaño,
-  crearPartida, comprobar, completo, darPista, casillaVisible, casillasDe, mezclar,
+  crearPartida, comprobar, completo, darPista, casillaVisible, casillasDe, mezclar, letraVisible,
 } from '../js/juegos/palabras/reglas.js';
 
 const raiz = new URL('..', import.meta.url);
@@ -77,6 +77,14 @@ test('crucigrama: detecta contradicciones, palabras accidentales y palabras suel
   // RAMO justo debajo de AMOR en paralelo: forma tiras verticales «AR», «MA»…
   const accidental = [...bien.slice(0, 1), { palabra: 'RAMO', fila: 1, col: 0, dir: 'H' }];
   assert.ok(problemasCrucigrama(accidental).some((p) => p.includes('accidental')));
+  // SER metida dentro de SERE, en la misma columna (caso real del nivel 2)
+  const dentro = [
+    { palabra: 'ERES', fila: 1, col: 0, dir: 'H' },
+    { palabra: 'SERE', fila: 0, col: 0, dir: 'V' },
+    { palabra: 'SER', fila: 0, col: 0, dir: 'V' },
+  ];
+  assert.ok(problemasCrucigrama(dentro).some((p) => p.includes('pegada')), 'una palabra dentro de otra');
+  assert.ok(problemasCrucigrama([{ palabra: 'SERE', fila: 0, col: 0, dir: 'H' }, { palabra: 'ERE', fila: 0, col: 1, dir: 'H' }]).length, 'también al final');
   const suelta = [...bien, { palabra: 'SOL', fila: 5, col: 5, dir: 'H' }];
   assert.ok(problemasCrucigrama(suelta).some((p) => p.includes('no se cruzan')));
 });
@@ -138,4 +146,17 @@ test('mezclar cambia el orden y conserva las letras', () => {
   mezclar(p);
   assert.notEqual(p.letras.join(''), antes);
   assert.equal([...p.letras].sort().join(''), [...antes].sort().join(''));
+});
+
+test('modo lista: las palabras no comparten letras; la pista empieza por la primera letra', () => {
+  const p = crearPartida(NIVEL);
+  comprobar(p, NIVEL, 'AMOR');
+  const mora = NIVEL.crucigrama[1];
+  assert.equal(letraVisible(p, NIVEL, mora, 0, 'lista'), false, 'la M de MORA no se ve en la lista');
+  assert.equal(letraVisible(p, NIVEL, mora, 0, 'crucigrama'), true);
+  const v = darPista(p, NIVEL, 'lista');
+  assert.equal(v.clave, '0,1', 'descubre la M');
+  for (let k = 0; k < 3; k++) darPista(p, NIVEL, 'lista');
+  assert.ok(p.encontradas.includes('MORA'));
+  assert.equal(p.pistas, 4);
 });

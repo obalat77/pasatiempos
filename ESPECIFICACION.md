@@ -1,6 +1,6 @@
 # Pasatiempos — Especificación
 
-Versión 1.3 · 9 de noviembre de 2026
+Versión 1.4 · 10 de noviembre de 2026
 
 Aplicación web instalable (PWA) para iPad con cinco juegos de mesa y lógica, pensada para **una persona mayor**. Uso personal: sin anuncios, sin servidores, sin cuentas, sin internet después de instalarla.
 
@@ -197,7 +197,7 @@ Rueda de letras con la que se forman palabras. **Dos modos** (ajuste):
 - **Lista** (estilo Zen Word): cada palabra en su propia fila de casillas, sin cruces; ordenadas por longitud, en dos columnas.
 
 Reglas:
-- **100 niveles fijos** en `data/palabras/niveles.json`, de 4 letras (inicio) a 7 letras (final). Sirven para ambos modos.
+- **1.000 niveles fijos** (v1.4; antes 100) en `data/palabras/niveles.json`, de 4 letras (niveles 1–100) a 7 letras (651–1.000), con las palabras más frecuentes al principio. Sirven para ambos modos. Se generan con `herramientas/palabras/` y se validan en las pruebas.
 - Formato de nivel:
 ```json
 { "id": 3, "letras": ["A","M","O","R"],
@@ -208,11 +208,11 @@ Reglas:
 ```
 - Palabras en **mayúsculas sin tildes** (Á→A, Ü→U); la **Ñ** es una letra propia. Solo palabras españolas comunes, sin nombres propios, sin palabras malsonantes ni ofensivas, de 3 letras o más.
 - Las palabras del nivel deben poder formarse con las letras (respetando cuántas veces aparece cada una). Las del crucigrama deben cruzarse sin contradicciones ni palabras accidentales en la cuadrícula.
-- Crear un **script de validación** (`tests/`) que compruebe los 100 niveles. Fuente de palabras: lista española con licencia libre, citada en el repositorio, o niveles revisados a mano.
+- Crear un **script de validación** (`tests/`) que compruebe los 1.000 niveles; además, cada palabra ocupa una tira completa del crucigrama (no puede quedar dentro de otra). Fuentes: diccionario es_ES de LibreOffice (MPL 1.1) y FrequencyWords (CC BY-SA 4.0), citadas en `data/palabras/FUENTES.md`; todas las palabras de los niveles revisadas a mano (`excluidas.txt`).
 - **Interacción:** deslizar el dedo por las letras **y también** tocar letras una a una. La palabra en curso aparece sobre la rueda; se comprueba al levantar el dedo o, en modo toque, al tocar la palabra en curso. Tocar fuera la borra.
 - Palabras **extra** (válidas pero no del nivel): se guardan y se muestran como «Palabras extra encontradas».
 - Botones: **Mezclar** (reordena la rueda) y **Pista** (descubre una letra de una palabra pendiente). Pistas ilimitadas pero contadas.
-- Al completar: «¡Nivel completado!» y «Siguiente nivel». Se guarda el nivel alcanzado.
+- Al completar: «¡Nivel completado!» y «Siguiente nivel». Se guarda el nivel alcanzado. «Jugar» en Inicio abre directamente el nivel en curso (sin ventana de elección); Inicio muestra «Nivel N de 1.000». Estadísticas de Palabras: último nivel completado, palabras extra, racha, tiempo total y últimos niveles.
 - Diseños: `Palabras-Light`, `Palabras-H-Light` (crucigrama), `Palabras-Lista-Light`, `Palabras-Lista-H-Light` (lista) y oscuros.
 
 ### 5.3 Parejas de números
@@ -305,7 +305,7 @@ Cada fase termina con la app publicada en GitHub Pages y probada en el iPad.
 
 ## 8. Decisiones abiertas
 Para confirmar con el usuario cuando llegue cada fase:
-1. Fuente de la lista de palabras en español (licencia).
+1. ~~Fuente de la lista de palabras en español (licencia).~~ **Decidido:** ver §5.2 y `data/palabras/FUENTES.md`.
 2. ~~Palabras: comprobar la palabra al soltar el dedo o con un botón «Comprobar» en modo toque.~~ **Decidido:** al soltar el dedo (y, en modo toque, al tocar la palabra en curso), sin botón «Comprobar».
 3. Rummy: ¿jugar a una sola partida o a varias rondas con puntuación acumulada?
 4. ¿Sonidos opcionales (desactivados por defecto)?

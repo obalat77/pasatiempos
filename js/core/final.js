@@ -5,16 +5,16 @@ import { tiempo } from './formato.js';
 
 /**
  * @param {{ titulo: string, texto: string, segundos?: number, destacado?: string,
- *           alOtraPartida: () => void, alInicio: () => void }} opciones
+ *           alOtraPartida: () => void, alInicio: () => void, textoOtra?: string }} opciones
  */
-export function tarjetaFinal({ titulo, texto, segundos, destacado, alOtraPartida, alInicio }) {
+export function tarjetaFinal({ titulo, texto, segundos, destacado, alOtraPartida, alInicio, textoOtra = 'Otra partida' }) {
   return h('section', { class: 'tarjeta-final', role: 'status' },
     h('h2', {}, titulo),
     h('p', {}, texto),
     segundos !== undefined ? h('p', { class: 'tiempo-final' }, tiempo(segundos)) : null,
     destacado ? h('p', { class: 'destacado' }, destacado) : null,
     h('div', { class: 'botones' },
-      h('button', { type: 'button', class: 'boton boton-principal', on: { click: alOtraPartida } }, 'Otra partida'),
+      h('button', { type: 'button', class: 'boton boton-principal', on: { click: alOtraPartida } }, textoOtra),
       h('button', { type: 'button', class: 'boton boton-secundario', on: { click: alInicio } }, 'Inicio')));
 }
 

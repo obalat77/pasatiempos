@@ -39,6 +39,7 @@ const TRAZOS = {
   pista: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>',
   pausa: '<path d="M9 6v12M15 6v12"/>',
   seguir: '<path d="M8 5l11 7-11 7z"/>',
+  mezclar: '<path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
 };
 
 export function icono(nombre, grosor = 2) {

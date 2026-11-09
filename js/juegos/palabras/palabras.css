@@ -1,0 +1,159 @@
+/* Palabras — diseños Palabras-Light, Palabras-H-Light (crucigrama) y Palabras-Lista-* (lista). */
+
+.palabras {
+  --casilla: 88px;       /* crucigrama; lo ajusta index.js según el espacio */
+  --caja: 64px;          /* modo lista; ídem */
+  --rueda: 360px;
+  height: 100vh;
+  height: 100dvh;
+  padding:
+    max(44px, env(safe-area-inset-top))
+    max(48px, env(safe-area-inset-right))
+    max(48px, env(safe-area-inset-bottom))
+    max(48px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---------- Cabecera ---------- */
+.palabras-cabecera { align-self: stretch; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; }
+.palabras-cabecera .boton-inicio { justify-self: start; }
+.palabras-titulo { justify-self: center; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.palabras-titulo h1 { font-size: 1.75rem; font-weight: 700; }
+.palabras-titulo .subtitulo, .palabras-cuenta { font-size: 1.125rem; color: var(--texto-2); }
+.palabras-cuenta { justify-self: end; font-size: 1.25rem; font-weight: 700; text-align: right; }
+
+/* ---------- Tablero (crucigrama o lista) ---------- */
+.palabras-zona { flex: 1 1 0; min-height: 0; align-self: stretch; display: flex; align-items: center; justify-content: center; }
+.crucigrama { display: grid; gap: calc(var(--casilla) * 0.09); }
+.letra-casilla {
+  width: var(--casilla);
+  height: var(--casilla);
+  border-radius: calc(var(--casilla) * 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--casilla) * 0.55);
+  font-weight: 700;
+}
+.letra-casilla.oculta { background: var(--superficie); border: 2px solid var(--borde); }
+.letra-casilla.vista { background: var(--acento); color: var(--sobre-acento); }
+.letra-casilla.pista { background: var(--superficie); border: 2px solid var(--acento); color: var(--acento-texto); }
+
+.lista-palabras {
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: calc(var(--caja) * 0.85);
+  row-gap: calc(var(--caja) * 0.3);
+  justify-content: center;
+}
+.palabra-fila { display: flex; gap: calc(var(--caja) * 0.125); }
+.palabra-fila .letra-casilla { --casilla: var(--caja); }
+
+/* ---------- Palabra en curso ---------- */
+.palabra-en-curso {
+  min-width: 160px;
+  min-height: 64px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 32px;
+  background: var(--acento);
+  color: var(--sobre-acento);
+  font-size: 2.125rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.palabra-en-curso.vacia { visibility: hidden; }
+.palabra-en-curso.mensaje { background: var(--superficie); color: var(--texto); letter-spacing: 0; font-size: 1.375rem; }
+
+/* ---------- Rueda ---------- */
+.palabras-mandos { display: flex; align-items: center; gap: 32px; }
+.rueda {
+  position: relative;
+  flex: none;
+  width: var(--rueda);
+  height: var(--rueda);
+  border-radius: 50%;
+  background: var(--superficie);
+  touch-action: none;           /* deslizar el dedo no mueve la página */
+}
+.rueda svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.rueda svg path { stroke: var(--acento); stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; fill: none; opacity: 0.55; }
+.letra-rueda {
+  position: absolute;
+  width: calc(var(--rueda) * 0.2667);    /* 96 px con rueda de 360 */
+  height: calc(var(--rueda) * 0.2667);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--resaltado);
+  color: var(--texto);
+  font-size: calc(var(--rueda) * 0.128); /* 46 px */
+  font-weight: 700;
+  touch-action: none;
+}
+.letra-rueda.elegida { background: var(--acento); color: var(--sobre-acento); }
+
+.boton-redondo {
+  flex: none;
+  width: 112px;
+  height: 112px;
+  border-radius: 56px;
+  border: 0;
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 1.125rem;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.boton-redondo svg { width: 28px; height: 28px; }
+
+.palabras-extra { font-size: 1.25rem; color: var(--texto-2); text-align: center; }
+.palabras-extra strong { color: var(--texto); }
+.palabras-preparando { margin: auto; font-size: 1.5rem; color: var(--texto-2); }
+.palabras .tarjeta-final { align-self: stretch; }
+
+/* ---------- Horizontal: tablero a la izquierda; rueda y botones a la derecha ---------- */
+@media (orientation: landscape) {
+  .palabras {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 48px;
+    padding: max(40px, env(safe-area-inset-top)) max(48px, env(safe-area-inset-right))
+             max(40px, env(safe-area-inset-bottom)) max(48px, env(safe-area-inset-left));
+  }
+  .palabras-izquierda { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
+  .palabras-derecha { flex: none; width: 420px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }
+  .palabras-cabecera { display: flex; align-items: center; gap: 20px; }
+  .palabras-titulo { justify-self: auto; align-items: flex-start; text-align: left; }
+  .palabras-cuenta { font-size: 1.125rem; font-weight: 400; text-align: left; }
+  .palabras-extra { text-align: left; }
+  .palabras-mandos { display: contents; }
+  .palabras-mandos .botones-rueda { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-self: stretch; order: 3; }
+  .rueda { order: 2; }
+  .boton-redondo { width: auto; height: 72px; border-radius: 36px; flex-direction: row; gap: 10px; font-size: 1.25rem; }
+}
+@media (orientation: portrait) {
+  .palabras-izquierda, .palabras-derecha { display: contents; }
+  .palabras-cabecera { order: 0; }
+  .palabras-zona { order: 1; }
+  .palabra-en-curso { order: 2; }
+  .palabras-mandos { order: 3; }
+  .palabras-extra { order: 4; }
+  .palabras .tarjeta-final { order: 5; }
+  .palabras-mandos .botones-rueda { display: contents; }
+  .palabras-mandos .boton-mezclar { order: 0; }
+  .palabras-mandos .rueda { order: 1; }
+  .palabras-mandos .boton-pista { order: 2; }
+}
