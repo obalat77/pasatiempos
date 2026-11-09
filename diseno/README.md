@@ -25,6 +25,7 @@ Referencia visual de todas las pantallas, exportada del lienzo de diseño.
 
 ## Diferencias conocidas con la especificación
 Cuando no coincidan, manda `ESPECIFICACION.md`:
+- **Ajustes** (todas las versiones) tiene la sección «Copia de seguridad»: se ha descartado (ESPECIFICACION v1.2), no se programa.
 - **Estadísticas vertical** no tiene el selector de juego. Añadirlo como en la versión horizontal (Sudoku · Palabras · Parejas · Cálculos · Rummy).
 - **Ajustes vertical** no tiene las secciones «Palabras: modo de juego», «Cálculos cruzados» ni «Rummy: nivel de los rivales». Añadirlas; la pantalla se desplaza.
 - **Ajustes horizontal** no tiene la sección «Cálculos cruzados: marcar errores». Añadirla.

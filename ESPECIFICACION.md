@@ -1,6 +1,6 @@
 # Pasatiempos — Especificación
 
-Versión 1.1 · 9 de noviembre de 2026
+Versión 1.2 · 9 de noviembre de 2026
 
 Aplicación web instalable (PWA) para iPad con cinco juegos de mesa y lógica, pensada para **una persona mayor**. Uso personal: sin anuncios, sin servidores, sin cuentas, sin internet después de instalarla.
 
@@ -13,7 +13,7 @@ Referencia visual: carpeta `diseno/` del repositorio (ver `diseno/README.md`). S
 1. **Fácil de leer y de usar.** Letra grande, mucho contraste, poca información en pantalla, botones grandes con texto (no solo iconos).
 2. **Todo en español** (España): textos, fechas (`lunes, 9 de noviembre`), números (`1.250`), mensajes de error.
 3. **Sin prisas ni presión.** Sin límites de tiempo, sin anuncios, sin sonidos obligatorios, sin notificaciones.
-4. **Nada sale del iPad.** Todos los datos se guardan en el dispositivo. La única forma de sacarlos es la copia de seguridad manual.
+4. **Nada sale del iPad.** Todos los datos se guardan solo en el dispositivo. No hay copia de seguridad (decisión del usuario, v1.2): si se borra la app o se cambia de iPad, se pierden partidas y estadísticas.
 5. **Funciona sin conexión** desde la primera vez que se abre.
 6. **Funciona en vertical y en horizontal.** Safari no permite bloquear la orientación en una web app; cada pantalla debe tener un diseño para cada orientación.
 
@@ -43,7 +43,7 @@ Referencia visual: carpeta `diseno/` del repositorio (ver `diseno/README.md`). S
 /fonts/          Atkinson Hyperlegible (woff2, 400 y 700) + licencia OFL
 /icons/
 /js/app.js       arranque, navegación entre pantallas
-/js/core/        db.js (IndexedDB), ajustes.js, estadisticas.js, tema.js, copia.js, ui.js
+/js/core/        db.js (IndexedDB), ajustes.js, estadisticas.js, tema.js, ui.js
 /js/juegos/<juego>/   index.js (interfaz común) + lógica + vista
 /js/juegos/rummy/worker.js   inteligencia de los rivales (Web Worker)
 /data/palabras/niveles.json
@@ -76,8 +76,7 @@ Base `pasatiempos`, almacenes:
 Las estadísticas se **calculan** a partir de `resultados` (no se guardan duplicadas).
 
 ### 2.6 Copia de seguridad
-- **Guardar copia:** exporta todos los almacenes a un archivo JSON `pasatiempos-copia-AAAA-MM-DD.json` (con `version` de esquema). En iPad, usar la hoja de compartir (Web Share API con archivo) para poder guardarlo en iCloud Drive / Archivos; alternativa: descarga.
-- **Recuperar copia:** selector de archivo; valida el formato y la versión; pide confirmación («Esto sustituirá tus partidas y estadísticas actuales») antes de sustituir.
+**Descartada** (v1.2): la app es para un familiar y no se considera necesaria. Si se recupera en el futuro: exportar los almacenes a un JSON con `version` de esquema (hoja de compartir en iPad) e importarlo con validación y confirmación. `db.reemplazarTodo` ya permite la importación.
 
 ### 2.7 Orientación y tamaños
 - Pantalla de referencia: iPad 820 × 1180 pt (vertical) y 1180 × 820 pt (horizontal). Debe verse bien en otros iPad (de 744 a 1032 pt de ancho en vertical): escalar el tablero, nunca recortar.
@@ -167,7 +166,6 @@ Secciones (en vertical la pantalla se desplaza). Las de cada juego solo aparecen
 - **Palabras: modo de juego:** Crucigrama / Lista (más difícil).
 - **Cálculos cruzados:** Marcar errores en rojo (sí).
 - **Rummy: nivel de los rivales:** Principiante / Intermedio / Experto (común a los tres; se aplica desde la próxima partida).
-- **Copia de seguridad:** Guardar copia / Recuperar copia.
 - Pie: versión de la app.
 
 ### 4.4 Comunes a todos los juegos
@@ -288,7 +286,7 @@ Cada fase termina con la app publicada en GitHub Pages y probada en el iPad.
 
 | Fase | Contenido | Se da por terminada cuando… |
 |---|---|---|
-| 1 | Plataforma (Inicio, Estadísticas, Ajustes, tema, tamaño de texto, IndexedDB, copia de seguridad, offline, instalación) + **Sudoku** | Se instala en el iPad, funciona sin conexión, se puede jugar un Sudoku completo de cada dificultad en vertical y horizontal, se guarda la partida al cerrar y las estadísticas y la copia se exportan e importan bien. |
+| 1 | Plataforma (Inicio, Estadísticas, Ajustes, tema, tamaño de texto, IndexedDB, offline, instalación) + **Sudoku** | Se instala en el iPad, funciona sin conexión, se puede jugar un Sudoku completo de cada dificultad en vertical y horizontal, se guarda la partida al cerrar y las estadísticas se ven bien. |
 | 2 | **Palabras** (ambos modos) + 100 niveles validados | Los 100 niveles pasan el validador y se pueden jugar en ambos modos, deslizando y tocando. |
 | 3 | **Parejas de números** | Reglas de conexión cubiertas por pruebas; partida completa jugable. |
 | 4 | **Cálculos cruzados** | El generador produce tableros con solución única en las 4 dificultades (pruebas); partida jugable. |
