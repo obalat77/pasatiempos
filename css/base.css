@@ -119,6 +119,8 @@ body {
 
 h1, h2, h3, p { margin: 0; }
 
+[hidden] { display: none !important; }
+
 button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; touch-action: manipulation; }
 

@@ -33,6 +33,12 @@ const TRAZOS = {
   atras: '<path d="M15 6l-6 6 6 6"/>',
   estadisticas: '<path d="M3 20h18M6 16v-5M11 16V6M16 16v-8"/>',
   ajustes: '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+  deshacer: '<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
+  borrar: '<path d="M20 20H9l-5-5a2 2 0 0 1 0-3l8-8a2 2 0 0 1 3 0l5 5a2 2 0 0 1 0 3l-8 8"/><path d="M9 8l7 7"/>',
+  notas: '<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/>',
+  pista: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>',
+  pausa: '<path d="M9 6v12M15 6v12"/>',
+  seguir: '<path d="M8 5l11 7-11 7z"/>',
 };
 
 export function icono(nombre, grosor = 2) {

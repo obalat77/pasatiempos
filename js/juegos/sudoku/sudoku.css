@@ -1,0 +1,213 @@
+/* Sudoku — diseños Sudoku-A (vertical) y Sudoku-Light-H (horizontal). Solo tokens de color. */
+
+.sudoku {
+  /* Tamaño de casilla: 76 px en la pantalla de referencia; menor si no cabe (nunca se recorta). */
+  --casilla: min(76px, calc((100vw - 102px) / 9), calc((100dvh - 500px) / 9));
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding:
+    max(44px, env(safe-area-inset-top))
+    max(48px, env(safe-area-inset-right))
+    max(48px, env(safe-area-inset-bottom))
+    max(48px, env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---------- Cabecera ---------- */
+.sudoku-cabecera {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+}
+.sudoku-cabecera .boton-inicio { justify-self: start; }
+.sudoku-titulo { justify-self: center; display: flex; flex-direction: column; align-items: center; }
+.sudoku-titulo h1 { font-size: 1.75rem; font-weight: 700; }
+.sudoku-titulo span { font-size: 1.125rem; color: var(--texto-2); }
+.sudoku-tiempo { font-size: 1.625rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.boton-pausa {
+  min-height: 3.5rem;
+  padding: 0 1.125rem 0 0.75rem;
+  border: 0;
+  border-radius: 1.75rem;
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 1.125rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 7.5rem;
+}
+.boton-pausa svg { flex: none; width: 1.5rem; height: 1.5rem; }
+
+/* ---------- Tablero ---------- */
+.sudoku-tablero {
+  align-self: center;
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(9, var(--casilla));
+  border: 3px solid var(--linea-fuerte);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--superficie);
+  touch-action: manipulation;
+}
+.casilla {
+  width: var(--casilla);
+  height: var(--casilla);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-right: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+  background: var(--superficie);
+  color: var(--acento-texto);                 /* números de la jugadora */
+  font-size: calc(var(--casilla) * 0.58);     /* 44 px con casillas de 76 */
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.casilla.borde-bloque-d { border-right: 3px solid var(--linea-fuerte); }
+.casilla.borde-bloque-a { border-bottom: 3px solid var(--linea-fuerte); }
+.casilla.ultima-columna { border-right: 0; }
+.casilla.ultima-fila { border-bottom: 0; }
+.casilla.dada { color: var(--texto); }
+.casilla.relacionada { background: var(--resaltado); }
+.casilla.mismo-numero { background: var(--mismo-numero); }
+.casilla.seleccionada { background: var(--seleccion); }
+.casilla.error { color: var(--error); }
+.casilla:focus-visible { outline-offset: -4px; }
+
+.notas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+  padding: 3px;
+}
+.notas > span {
+  font-size: max(18px, calc(var(--casilla) * 0.24));
+  line-height: 1;
+  font-weight: 700;
+  color: var(--texto-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Controles ---------- */
+.sudoku-controles { display: flex; flex-direction: column; gap: 16px; }
+.sudoku-herramientas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.herramienta {
+  min-height: 4.5rem;                         /* 72 px */
+  padding: 0 6px;
+  border: 3px solid transparent;
+  border-radius: 20px;
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 1.1875rem;                       /* 19 px */
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.herramienta svg { flex: none; width: 26px; height: 26px; }
+.herramienta[aria-pressed="true"] {
+  border-color: var(--acento);
+  background: var(--acento-suave);
+  color: var(--acento-texto);
+}
+
+.sudoku-teclado { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 8px; }
+.tecla {
+  min-height: 5.75rem;                        /* 92 px */
+  padding: 0;
+  border: 0;
+  border-radius: 18px;
+  background: var(--superficie);
+  color: var(--acento-texto);
+  font-size: 2.75rem;                         /* 44 px */
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tecla.completa { opacity: 0.35; }
+.sudoku.modo-notas .tecla { font-size: 2rem; color: var(--texto-2); }
+
+/* ---------- Pausa y final ---------- */
+.sudoku.en-pausa .sudoku-tablero .casilla { color: transparent; background: var(--superficie); }
+.sudoku.en-pausa .sudoku-tablero .notas { visibility: hidden; }
+.sudoku-aviso {
+  background: var(--superficie);
+  border-radius: 28px;
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+.sudoku-aviso h2 { font-size: 2rem; font-weight: 700; }
+.sudoku-aviso p { font-size: 1.25rem; color: var(--texto-2); }
+.sudoku-aviso .tiempo-final { font-size: 2.75rem; line-height: 1.1; font-weight: 700; color: var(--texto); font-variant-numeric: tabular-nums; }
+.sudoku-aviso .destacado { font-weight: 700; color: var(--acento-texto); }
+.sudoku-aviso .botones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
+@media (orientation: landscape) {
+  .sudoku-aviso { flex: 1; justify-content: center; gap: 14px; padding: 28px; }
+  .sudoku-aviso .botones { grid-template-columns: 1fr; }
+}
+.sudoku-preparando { margin: auto; font-size: 1.5rem; color: var(--texto-2); }
+
+/* ---------- Horizontal: tablero a la izquierda, todo lo demás a la derecha ---------- */
+@media (orientation: landscape) {
+  .sudoku {
+    --casilla: min(76px, calc((100dvh - 86px) / 9), calc((100vw - 520px) / 9));
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: max(40px, env(safe-area-inset-top)) max(40px, env(safe-area-inset-right))
+             max(40px, env(safe-area-inset-bottom)) max(40px, env(safe-area-inset-left));
+  }
+  .sudoku-lateral {
+    flex: 1;
+    min-width: 0;
+    max-width: 480px;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .sudoku-cabecera { display: flex; flex-direction: column; gap: 18px; align-items: stretch; }
+  .sudoku-cabecera .fila-botones { display: flex; justify-content: space-between; align-items: center; }
+  .sudoku-cabecera .fila-titulo { display: flex; justify-content: space-between; align-items: baseline; }
+  .sudoku-titulo { align-items: flex-start; }
+  .sudoku-titulo h1 { font-size: 1.875rem; }
+  .sudoku-tiempo { font-size: 1.875rem; }
+  .sudoku-herramientas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sudoku-teclado { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .tecla { min-height: 6rem; font-size: 2.875rem; }
+}
+@media (orientation: portrait) {
+  .sudoku-lateral { display: contents; }
+  .sudoku-cabecera .fila-botones, .sudoku-cabecera .fila-titulo { display: contents; }
+  .sudoku-cabecera { order: 0; }
+  .sudoku-cabecera > * > * { grid-row: 1; }
+  .sudoku-cabecera .boton-inicio { grid-column: 1; }
+  .sudoku-titulo { grid-column: 2; }
+  .boton-pausa { grid-column: 3; justify-self: end; }
+  .sudoku-tiempo { grid-column: 3; justify-self: end; margin-right: calc(7.5rem + 12px); }
+  .sudoku-tablero { order: 1; }
+  .sudoku-controles, .sudoku-aviso { order: 2; }
+}
