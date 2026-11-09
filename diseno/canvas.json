@@ -1,0 +1,426 @@
+{
+ "v": 3,
+ "attachments": {},
+ "boards": {
+  "Main.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Inicio",
+   "w": 820,
+   "x": 0,
+   "y": 300
+  },
+  "Sudoku-A.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Sudoku (vertical)",
+   "w": 820,
+   "x": 900,
+   "y": 300
+  },
+  "Sudoku-Light-H.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Sudoku (horizontal)",
+   "w": 1180,
+   "x": 1800,
+   "y": 300
+  },
+  "Stats-Light.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Estadísticas",
+   "w": 820,
+   "x": 3060,
+   "y": 300
+  },
+  "Settings-Light.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Ajustes",
+   "w": 820,
+   "x": 3960,
+   "y": 300
+  },
+  "Palabras-Light.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Palabras",
+   "w": 820,
+   "x": 4860,
+   "y": 300
+  },
+  "Rummy-Light.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Rummy (vertical)",
+   "w": 820,
+   "x": 5760,
+   "y": 300
+  },
+  "Home-C.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Inicio",
+   "w": 820,
+   "x": 0,
+   "y": 1880
+  },
+  "Sudoku-C.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Sudoku (vertical)",
+   "w": 820,
+   "x": 900,
+   "y": 1880
+  },
+  "Sudoku-Dark-H.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Sudoku (horizontal)",
+   "w": 1180,
+   "x": 1800,
+   "y": 1880
+  },
+  "Stats-Dark.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Estadísticas",
+   "w": 820,
+   "x": 3060,
+   "y": 1880
+  },
+  "Settings-Dark.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Ajustes",
+   "w": 820,
+   "x": 3960,
+   "y": 1880
+  },
+  "Palabras-Dark.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Palabras",
+   "w": 820,
+   "x": 4860,
+   "y": 1880
+  },
+  "Rummy-Dark.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Rummy (vertical)",
+   "w": 820,
+   "x": 5760,
+   "y": 1880
+  },
+  "Home-H-Light.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Inicio (horizontal)",
+   "w": 1180,
+   "x": 0,
+   "y": 3460
+  },
+  "Palabras-H-Light.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Palabras (horizontal)",
+   "w": 1180,
+   "x": 1260,
+   "y": 3460
+  },
+  "Stats-H-Light.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Estadísticas (horizontal)",
+   "w": 1180,
+   "x": 2520,
+   "y": 3460
+  },
+  "Settings-H-Light.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Ajustes (horizontal)",
+   "w": 1180,
+   "x": 3780,
+   "y": 3460
+  },
+  "Rummy-H-Light.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Rummy (horizontal)",
+   "w": 1180,
+   "x": 5040,
+   "y": 3460
+  },
+  "Home-H-Dark.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Inicio (horizontal)",
+   "w": 1180,
+   "x": 0,
+   "y": 4580
+  },
+  "Palabras-H-Dark.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Palabras (horizontal)",
+   "w": 1180,
+   "x": 1260,
+   "y": 4580
+  },
+  "Stats-H-Dark.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Estadísticas (horizontal)",
+   "w": 1180,
+   "x": 2520,
+   "y": 4580
+  },
+  "Settings-H-Dark.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Ajustes (horizontal)",
+   "w": 1180,
+   "x": 3780,
+   "y": 4580
+  },
+  "Rummy-H-Dark.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Rummy (horizontal)",
+   "w": 1180,
+   "x": 5040,
+   "y": 4580
+  },
+  "Parejas-Light.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Parejas de números (vertical)",
+   "w": 820,
+   "x": 6660,
+   "y": 300
+  },
+  "Parejas-Dark.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Parejas de números (vertical)",
+   "w": 820,
+   "x": 6660,
+   "y": 1880
+  },
+  "Parejas-H-Light.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Parejas de números (horizontal)",
+   "w": 1180,
+   "x": 6300,
+   "y": 3460
+  },
+  "Parejas-H-Dark.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Parejas de números (horizontal)",
+   "w": 1180,
+   "x": 6300,
+   "y": 4580
+  },
+  "Palabras-Lista-Light.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Palabras, modo lista (vertical)",
+   "w": 820,
+   "x": 7560,
+   "y": 300
+  },
+  "Palabras-Lista-Dark.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Palabras, modo lista (vertical)",
+   "w": 820,
+   "x": 7560,
+   "y": 1880
+  },
+  "Palabras-Lista-H-Light.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Palabras, modo lista (horizontal)",
+   "w": 1180,
+   "x": 7560,
+   "y": 3460
+  },
+  "Palabras-Lista-H-Dark.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Palabras, modo lista (horizontal)",
+   "w": 1180,
+   "x": 7560,
+   "y": 4580
+  },
+  "Calculos-Light.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Cálculos cruzados (vertical)",
+   "w": 820,
+   "x": 8460,
+   "y": 300
+  },
+  "Calculos-Dark.dc.html": {
+   "h": 1180,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Cálculos cruzados (vertical)",
+   "w": 820,
+   "x": 8460,
+   "y": 1880
+  },
+  "Calculos-H-Light.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Claro · Cálculos cruzados (horizontal)",
+   "w": 1180,
+   "x": 8820,
+   "y": 3460
+  },
+  "Calculos-H-Dark.dc.html": {
+   "h": 820,
+   "is_interactive": true,
+   "radius": 24,
+   "title": "Oscuro · Cálculos cruzados (horizontal)",
+   "w": 1180,
+   "x": 8820,
+   "y": 4580
+  }
+ },
+ "createdOnFiles": {
+  "at": "2026-11-09T12:00:00Z",
+  "v": 1
+ },
+ "designSystems": [],
+ "launch": {
+  "view": "canvas"
+ },
+ "noteOrder": [
+  "titleA",
+  "titleC",
+  "titleHA",
+  "titleHC",
+  "info"
+ ],
+ "notes": {
+  "info": {
+   "fill": "orange",
+   "text": "Pasatiempos — iPad. Vertical 820×1180, horizontal 1180×820. Las cifras, tiempos y fichas son ejemplos para mostrar el diseño. En modo Play: toca las casillas del Sudoku para mover la selección; los botones navegan entre pantallas.",
+   "w": 420,
+   "x": 10100,
+   "y": 300
+  },
+  "titleA": {
+   "kind": "title1",
+   "maxW": 10000,
+   "text": "Pasatiempos — Tema claro (vertical)",
+   "x": 0,
+   "y": 0,
+   "w": 240
+  },
+  "titleC": {
+   "kind": "title1",
+   "maxW": 10000,
+   "text": "Pasatiempos — Tema oscuro (vertical)",
+   "x": 0,
+   "y": 1580,
+   "w": 240
+  },
+  "titleHA": {
+   "kind": "title1",
+   "maxW": 10000,
+   "text": "Tema claro (horizontal)",
+   "x": 0,
+   "y": 3160,
+   "w": 240
+  },
+  "titleHC": {
+   "kind": "title1",
+   "maxW": 10000,
+   "text": "Tema oscuro (horizontal)",
+   "x": 0,
+   "y": 4320,
+   "w": 240
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "Sudoku-A.dc.html",
+  "Sudoku-Light-H.dc.html",
+  "Stats-Light.dc.html",
+  "Settings-Light.dc.html",
+  "Palabras-Light.dc.html",
+  "Rummy-Light.dc.html",
+  "Parejas-Light.dc.html",
+  "Palabras-Lista-Light.dc.html",
+  "Calculos-Light.dc.html",
+  "Home-C.dc.html",
+  "Sudoku-C.dc.html",
+  "Sudoku-Dark-H.dc.html",
+  "Stats-Dark.dc.html",
+  "Settings-Dark.dc.html",
+  "Palabras-Dark.dc.html",
+  "Rummy-Dark.dc.html",
+  "Parejas-Dark.dc.html",
+  "Palabras-Lista-Dark.dc.html",
+  "Calculos-Dark.dc.html",
+  "Home-H-Light.dc.html",
+  "Palabras-H-Light.dc.html",
+  "Stats-H-Light.dc.html",
+  "Settings-H-Light.dc.html",
+  "Rummy-H-Light.dc.html",
+  "Parejas-H-Light.dc.html",
+  "Palabras-Lista-H-Light.dc.html",
+  "Calculos-H-Light.dc.html",
+  "Home-H-Dark.dc.html",
+  "Palabras-H-Dark.dc.html",
+  "Stats-H-Dark.dc.html",
+  "Settings-H-Dark.dc.html",
+  "Rummy-H-Dark.dc.html",
+  "Parejas-H-Dark.dc.html",
+  "Palabras-Lista-H-Dark.dc.html",
+  "Calculos-H-Dark.dc.html"
+ ],
+ "pages": [],
+ "title": "Pasatiempos — Diseño"
+}

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Pasatiempos · Parejas de números horizontal (claro)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A6C}a:hover{color:#095F54}
+</style>
+</helmet>
+<div style="width: 1180px; height: 820px; box-sizing: border-box; padding: 40px; background: #F2F2F7; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #1C1C1E; display: flex; align-items: center; gap: 40px">
+
+<div style="display: grid; grid-template-columns: repeat(9, 76px); border: 3px solid #3A3A3C; border-radius: 12px; overflow: hidden; background: #FFFFFF; flex: none">
+<sc-for list="{{cells}}" as="cell" hint-placeholder-count="72">
+<button type="button" aria-label="{{cell.label}}" onClick="{{cell.pick}}" style="{{cell.style}}">{{cell.v}}</button>
+</sc-for>
+</div>
+
+<div style="flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between">
+<header style="display: flex; flex-direction: column; gap: 18px">
+<a href="Home-H-Light.dc.html" style="align-self: flex-start; height: 56px; padding: 0 20px 0 12px; border-radius: 28px; background: #FFFFFF; display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 700; text-decoration: none"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Inicio</a>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-size: 28px; font-weight: 700">Parejas de números</h1>
+<span style="font-size: 19px; color: #545458">Quedan 58 números · 03:05</span>
+</div>
+<p style="margin: 0; font-size: 21px">Toca dos números <strong>iguales</strong> o que <strong>sumen 10</strong>.</p>
+</header>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<button type="button" style="height: 76px; border-radius: 20px; border: 0; background: #FFFFFF; color: #1C1C1E; font-family: inherit; font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>Deshacer</button>
+<button type="button" style="height: 76px; border-radius: 20px; border: 0; background: #FFFFFF; color: #1C1C1E; font-family: inherit; font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>Pista</button>
+<button type="button" style="height: 76px; border-radius: 20px; border: 2px solid #0B7A6C; background: #FFFFFF; color: #0B6E62; font-family: inherit; font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px"><span>Añadir números</span><span style="font-size: 17px; font-weight: 400">(quedan 4)</span></button>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { sel: 30 }; }
+  renderVals() {
+    const T = { cell: '#FFFFFF', sel: '#B9E3DC', text: '#1C1C1E', done: '#C7C7CC', line: '#D1D1D6' };
+    const board = '123456789' + '111213141' + '516171819' + '735942816' + '284617359' + '962538147' + '471893625' + '5829';
+    const cleared = { 9: 1, 10: 1, 13: 1, 14: 1, 22: 1, 31: 1, 40: 1, 41: 1, 50: 1, 59: 1 };
+    const sel = this.state.sel;
+    const cells = [];
+    for (let i = 0; i < 72; i++) {
+      const r = Math.floor(i / 9), c = i % 9;
+      const v = i < board.length ? board[i] : '';
+      const done = !!cleared[i];
+      const active = v !== '' && !done;
+      cells.push({
+        v: v,
+        label: v === '' ? 'Vacía' : (done ? v + ', ya emparejado' : 'Número ' + v),
+        pick: () => { if (active) this.setState({ sel: i === sel ? -1 : i }); },
+        style: {
+          width: '76px', height: '76px', boxSizing: 'border-box', padding: 0, margin: 0, border: 0,
+          borderRight: c === 8 ? '0' : '1px solid ' + T.line, borderBottom: r === 7 ? '0' : '1px solid ' + T.line,
+          background: i === sel ? T.sel : T.cell, color: done ? T.done : T.text,
+          fontFamily: "'Atkinson Hyperlegible', system-ui, sans-serif", fontSize: '40px', fontWeight: 700,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: active ? 'pointer' : 'default'
+        }
+      });
+    }
+    return { cells: cells };
+  }
+}
+</script>
+</body>
+</html>

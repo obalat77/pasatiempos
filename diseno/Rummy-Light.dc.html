@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Pasatiempos · Rummy vertical (claro)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A6C}a:hover{color:#095F54}
+</style>
+</helmet>
+<div style="width: 820px; height: 1180px; box-sizing: border-box; padding: 20px 20px 20px; background: #F2F2F7; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #1C1C1E; display: flex; flex-direction: column; gap: 10px">
+
+<header style="display: flex; align-items: center; gap: 14px">
+<a href="Main.dc.html" style="height: 52px; padding: 0 18px 0 10px; border-radius: 26px; background: #FFFFFF; display: flex; align-items: center; gap: 6px; font-size: 19px; font-weight: 700; text-decoration: none"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Inicio</a>
+<h1 style="margin: 0; font-size: 26px; font-weight: 700">Rummy</h1>
+<button type="button" style="margin-left: auto; height: 52px; padding: 0 20px; border-radius: 26px; border: 0; background: #FFFFFF; color: #1C1C1E; font-family: inherit; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>Deshacer jugada</button>
+</header>
+<p style="margin: 0; font-size: 18px; color: #545458">Intermedio · Quedan 38 fichas por robar</p>
+
+<div style="display: flex; align-items: center; justify-content: center; gap: 14px; height: 44px">
+<span style="font-size: 20px; font-weight: 700">Paco</span>
+<div aria-hidden="true" style="display: flex; gap: 3px">
+<sc-for list="{{backsTop}}" as="b" hint-placeholder-count="9"><span style="width: 20px; height: 28px; border-radius: 4px; background: #E9DFCB; border: 1px solid #CBBEA6; box-sizing: border-box"></span></sc-for>
+</div>
+<span style="font-size: 18px; color: #545458">9 fichas</span>
+</div>
+
+<div style="flex: 1; min-height: 0; display: flex; gap: 12px">
+<div style="width: 84px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px">
+<span style="font-size: 20px; font-weight: 700">Lola</span>
+<span style="font-size: 17px; color: #545458">11 fichas</span>
+<div aria-hidden="true" style="display: grid; grid-template-columns: repeat(2, 28px); gap: 3px">
+<sc-for list="{{backsLeft}}" as="b" hint-placeholder-count="11"><span style="width: 28px; height: 20px; border-radius: 4px; background: #E9DFCB; border: 1px solid #CBBEA6; box-sizing: border-box"></span></sc-for>
+</div>
+</div>
+
+<section aria-label="Mesa" style="flex: 1; min-width: 0; background: #2F6F5E; box-shadow: inset 0 0 0 6px #275D4F; border-radius: 28px; padding: 28px 26px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 26px 26px">
+<sc-for list="{{sets}}" as="set" hint-placeholder-count="5">
+<div style="display: flex; gap: 4px">
+<sc-for list="{{set.tiles}}" as="t" hint-placeholder-count="3">
+<div aria-label="{{t.label}}" style="{{t.style}}"><sc-if value="{{t.isJoker}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="{{t.js}}" height="{{t.js}}" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14.5c1 1.6 2.4 2.4 4 2.4s3-.8 4-2.4"/><circle cx="9" cy="9.5" r="1.2" fill="#C62828" stroke="none"/><circle cx="15" cy="9.5" r="1.2" fill="#C62828" stroke="none"/></svg></sc-if><sc-if value="{{t.isNum}}" hint-placeholder-val="{{ true }}"><span style="{{t.numStyle}}">{{t.num}}</span><span style="{{t.symStyle}}">{{t.sym}}</span></sc-if></div>
+</sc-for>
+</div>
+</sc-for>
+<button type="button" style="width: 200px; height: 66px; border-radius: 12px; border: 3px dashed #CFE5DD; background: transparent; color: #FFFFFF; font-family: inherit; font-size: 18px; font-weight: 700">Nueva combinación</button>
+</section>
+
+<div style="width: 84px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px">
+<span style="font-size: 20px; font-weight: 700">Carmen</span>
+<span style="font-size: 17px; color: #545458">14 fichas</span>
+<div aria-hidden="true" style="display: grid; grid-template-columns: repeat(2, 28px); gap: 3px">
+<sc-for list="{{backsRight}}" as="b" hint-placeholder-count="14"><span style="width: 28px; height: 20px; border-radius: 4px; background: #E9DFCB; border: 1px solid #CBBEA6; box-sizing: border-box"></span></sc-for>
+</div>
+<span style="font-size: 15px; color: #545458; text-align: center">aún no ha bajado</span>
+</div>
+</div>
+
+<section aria-label="Tu atril" style="align-self: center; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 19px; font-weight: 700; color: #0B6E62">Tu turno · toca una ficha y después dónde ponerla</span>
+<div style="background: #A86B3C; border-radius: 16px; padding: 10px 14px 0; display: flex; flex-direction: column; box-shadow: 0 4px 0 #7A4A26">
+<div style="display: flex; gap: 6px; border-bottom: 12px solid #8A5428; height: 112px; align-items: flex-end">
+<sc-for list="{{rackTop}}" as="t" hint-placeholder-count="7">
+<button type="button" aria-label="{{t.label}}" aria-pressed="{{t.pressed}}" onClick="{{t.pick}}" style="{{t.style}}"><sc-if value="{{t.isJoker}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="{{t.js}}" height="{{t.js}}" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14.5c1 1.6 2.4 2.4 4 2.4s3-.8 4-2.4"/><circle cx="9" cy="9.5" r="1.2" fill="#C62828" stroke="none"/><circle cx="15" cy="9.5" r="1.2" fill="#C62828" stroke="none"/></svg></sc-if><sc-if value="{{t.isNum}}" hint-placeholder-val="{{ true }}"><span style="{{t.numStyle}}">{{t.num}}</span><span style="{{t.symStyle}}">{{t.sym}}</span></sc-if></button>
+</sc-for>
+</div>
+<div style="display: flex; gap: 6px; border-bottom: 12px solid #8A5428; height: 112px; align-items: flex-end">
+<sc-for list="{{rackBottom}}" as="t" hint-placeholder-count="7">
+<button type="button" aria-label="{{t.label}}" aria-pressed="{{t.pressed}}" onClick="{{t.pick}}" style="{{t.style}}"><sc-if value="{{t.isJoker}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="{{t.js}}" height="{{t.js}}" viewBox="0 0 24 24" fill="none" stroke="#C62828" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14.5c1 1.6 2.4 2.4 4 2.4s3-.8 4-2.4"/><circle cx="9" cy="9.5" r="1.2" fill="#C62828" stroke="none"/><circle cx="15" cy="9.5" r="1.2" fill="#C62828" stroke="none"/></svg></sc-if><sc-if value="{{t.isNum}}" hint-placeholder-val="{{ true }}"><span style="{{t.numStyle}}">{{t.num}}</span><span style="{{t.symStyle}}">{{t.sym}}</span></sc-if></button>
+</sc-for>
+</div>
+</div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<button type="button" style="height: 68px; border-radius: 18px; border: 0; background: #FFFFFF; color: #1C1C1E; font-family: inherit; font-size: 18px; font-weight: 700">Ordenar 1 2 3</button>
+<button type="button" style="height: 68px; border-radius: 18px; border: 0; background: #FFFFFF; color: #1C1C1E; font-family: inherit; font-size: 18px; font-weight: 700">Ordenar por color</button>
+<button type="button" style="height: 68px; border-radius: 18px; border: 2px solid #0B7A6C; background: #FFFFFF; color: #0B6E62; font-family: inherit; font-size: 19px; font-weight: 700">Robar ficha</button>
+<button type="button" style="height: 68px; border-radius: 18px; border: 0; background: #0B7A6C; color: #FFFFFF; font-family: inherit; font-size: 19px; font-weight: 700">Terminar turno</button>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":820,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { sel: 3 }; }
+  renderVals() {
+    const COL = { r: { c: '#C62828', s: '●', n: 'roja' }, b: { c: '#1565C0', s: '▲', n: 'azul' }, k: { c: '#222222', s: '■', n: 'negra' }, o: { c: '#B35900', s: '◆', n: 'naranja' } };
+    const FACE = '#FBF6E9', EDGE = '#D9CDB8', SEL = '#0B7A6C';
+    const mk = (code, w, h, fs, selected) => {
+      const joker = code === 'J';
+      const col = joker ? null : COL[code[0]];
+      return {
+        isJoker: joker, isNum: !joker, num: joker ? '' : code.slice(1), sym: joker ? '' : col.s, js: Math.round(w * 0.7),
+        label: joker ? 'Comodín' : 'Ficha ' + code.slice(1) + ' ' + col.n,
+        pressed: selected ? 'true' : 'false',
+        style: {
+          width: w + 'px', height: h + 'px', boxSizing: 'border-box', borderRadius: '8px', background: FACE,
+          border: selected ? '4px solid ' + SEL : '1px solid ' + EDGE, boxShadow: '0 2px 0 #CBBEA6',
+          display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'center', justifyContent: 'center', padding: 0, margin: 0, flex: 'none',
+          transform: selected ? 'translateY(-10px)' : 'none',
+          color: joker ? '#C62828' : col.c, fontFamily: "'Atkinson Hyperlegible', system-ui, sans-serif", cursor: 'pointer'
+        },
+        numStyle: { fontSize: fs + 'px', fontWeight: 700, lineHeight: 1 },
+        symStyle: { fontSize: Math.round(fs * 0.4) + 'px', lineHeight: 1 }
+      };
+    };
+    const table = [['r7', 'r8', 'r9'], ['b5', 'k5', 'o5'], ['k10', 'k11', 'k12', 'k13'], ['o1', 'o2', 'o3'], ['b9', 'r9', 'k9', 'J']];
+    const sets = table.map((s) => ({ tiles: s.map((c) => mk(c, 48, 66, 30, false)) }));
+    const hand = ['k1', 'r3', 'r4', 'k6', 'b7', 'b8', 'o9', 'o11', 'r12', 'b12', 'o13', 'J'];
+    const sel = this.state.sel;
+    const rack = hand.map((c, i) => Object.assign(mk(c, 76, 100, 46, i === sel), { pick: () => this.setState({ sel: i === sel ? -1 : i }) }));
+    const n = (k) => Array.from({ length: k }, (_, i) => ({ i: i }));
+    return { sets: sets, rackTop: rack.slice(0, 7), rackBottom: rack.slice(7), backsTop: n(9), backsLeft: n(11), backsRight: n(14) };
+  }
+}
+</script>
+</body>
+</html>

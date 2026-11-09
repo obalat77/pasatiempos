@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Pasatiempos · Palabras horizontal (oscuro)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#43C9B3}a:hover{color:#6FE0CC}
+</style>
+</helmet>
+<div style="width: 1180px; height: 820px; box-sizing: border-box; padding: 40px 48px; background: #0E151D; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #F0F4F8; display: flex; gap: 48px">
+
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between">
+<header style="display: flex; align-items: center; gap: 20px">
+<a href="Home-H-Dark.dc.html" style="height: 56px; padding: 0 20px 0 12px; border-radius: 28px; background: #16202B; display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 700; text-decoration: none"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Inicio</a>
+<div style="display: flex; flex-direction: column">
+<h1 style="margin: 0; font-size: 28px; font-weight: 700">Palabras · Nivel 3</h1>
+<span style="font-size: 18px; color: #A9B6C3">2 de 4 palabras</span>
+</div>
+</header>
+
+<div style="align-self: center; display: grid; grid-template-columns: repeat(5, 88px); gap: 8px">
+<sc-for list="{{grid}}" as="g" hint-placeholder-count="20">
+<div aria-label="{{g.label}}" style="{{g.style}}">{{g.ch}}</div>
+</sc-for>
+</div>
+
+<p style="margin: 0; font-size: 20px; color: #A9B6C3">Palabras extra encontradas: <strong style="color: #F0F4F8">MAR, AMO</strong></p>
+</div>
+
+<div style="width: 420px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px">
+<div style="min-width: 160px; height: 64px; padding: 0 28px; box-sizing: border-box; border-radius: 32px; background: #43C9B3; color: #0E151D; font-size: 34px; font-weight: 700; letter-spacing: 0.12em; display: flex; align-items: center; justify-content: center">RA</div>
+
+<div style="width: 360px; height: 360px; border-radius: 180px; background: #16202B; position: relative">
+<svg aria-hidden="true" width="360" height="360" viewBox="0 0 360 360" style="position: absolute; left: 0; top: 0"><path d="M58 180L180 58" stroke="#43C9B3" stroke-width="12" stroke-linecap="round" opacity="0.55"/></svg>
+<button type="button" aria-label="Letra A, elegida" style="position: absolute; left: 132px; top: 10px; width: 96px; height: 96px; border-radius: 48px; border: 0; background: #43C9B3; color: #0E151D; font-family: inherit; font-size: 46px; font-weight: 700">A</button>
+<button type="button" aria-label="Letra M" style="position: absolute; left: 254px; top: 132px; width: 96px; height: 96px; border-radius: 48px; border: 0; background: #1C2A38; color: #F0F4F8; font-family: inherit; font-size: 46px; font-weight: 700">M</button>
+<button type="button" aria-label="Letra O" style="position: absolute; left: 132px; top: 254px; width: 96px; height: 96px; border-radius: 48px; border: 0; background: #1C2A38; color: #F0F4F8; font-family: inherit; font-size: 46px; font-weight: 700">O</button>
+<button type="button" aria-label="Letra R, elegida" style="position: absolute; left: 10px; top: 132px; width: 96px; height: 96px; border-radius: 48px; border: 0; background: #43C9B3; color: #0E151D; font-family: inherit; font-size: 46px; font-weight: 700">R</button>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-self: stretch">
+<button type="button" style="height: 72px; border-radius: 36px; border: 0; background: #16202B; color: #F0F4F8; font-family: inherit; font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Mezclar</button>
+<button type="button" style="height: 72px; border-radius: 36px; border: 0; background: #16202B; color: #F0F4F8; font-family: inherit; font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px"><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>Pista</button>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = { box: '#16202B', found: '#43C9B3', foundText: '#0E151D', border: '#3A4A5A' };
+    const layout = ['AMOR.', '.O.O.', '.RAMO', '.A.A.'];
+    const shown = { '0,0': 1, '0,1': 1, '0,2': 1, '0,3': 1, '1,1': 1, '2,1': 1, '3,1': 1 };
+    const grid = [];
+    for (let r = 0; r < 4; r++) {
+      for (let c = 0; c < 5; c++) {
+        const ch = layout[r][c];
+        const base = { width: '88px', height: '88px', boxSizing: 'border-box', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', fontWeight: 700 };
+        if (ch === '.') { grid.push({ ch: '', label: '', style: base }); continue; }
+        const open = !!shown[r + ',' + c];
+        grid.push({
+          ch: open ? ch : '',
+          label: open ? 'Letra ' + ch : 'Casilla vacía',
+          style: Object.assign({}, base, open ? { background: T.found, color: T.foundText } : { background: T.box, border: '2px solid ' + T.border })
+        });
+      }
+    }
+    return { grid: grid };
+  }
+}
+</script>
+</body>
+</html>

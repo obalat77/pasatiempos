@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Pasatiempos · Ajustes horizontal (oscuro)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#43C9B3}a:hover{color:#6FE0CC}
+</style>
+</helmet>
+<div style="width: 1180px; height: 820px; box-sizing: border-box; padding: 40px 48px; background: #0E151D; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #F0F4F8; display: flex; flex-direction: column; gap: 28px">
+
+<header style="display: flex; align-items: center; gap: 20px">
+<a href="Home-H-Dark.dc.html" style="height: 56px; padding: 0 20px 0 12px; border-radius: 28px; background: #16202B; display: flex; align-items: center; gap: 6px; font-size: 20px; font-weight: 700; text-decoration: none"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Inicio</a>
+<h1 style="margin: 0; font-size: 36px; font-weight: 700">Ajustes</h1>
+</header>
+
+<div style="flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: start">
+
+<div style="display: flex; flex-direction: column; gap: 20px">
+<section style="background: #16202B; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 23px; font-weight: 700">Tema</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; background: #243140; border-radius: 20px; padding: 6px">
+<button type="button" aria-pressed="false" style="height: 60px; border-radius: 16px; border: 0; background: transparent; color: #F0F4F8; font-family: inherit; font-size: 20px; font-weight: 700">Claro</button>
+<button type="button" aria-pressed="true" style="height: 60px; border-radius: 16px; border: 0; background: #43C9B3; color: #0E151D; font-family: inherit; font-size: 20px; font-weight: 700">Oscuro</button>
+<button type="button" aria-pressed="false" style="height: 60px; border-radius: 16px; border: 0; background: transparent; color: #F0F4F8; font-family: inherit; font-size: 20px; font-weight: 700">Automático</button>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 23px; font-weight: 700">Tamaño del texto</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; background: #243140; border-radius: 20px; padding: 6px">
+<button type="button" aria-pressed="true" style="height: 60px; border-radius: 16px; border: 0; background: #43C9B3; color: #0E151D; font-family: inherit; font-size: 20px; font-weight: 700">Normal</button>
+<button type="button" aria-pressed="false" style="height: 60px; border-radius: 16px; border: 0; background: transparent; color: #F0F4F8; font-family: inherit; font-size: 24px; font-weight: 700">Grande</button>
+</div>
+</div>
+</section>
+
+<section style="background: #16202B; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 style="margin: 0; font-size: 23px; font-weight: 700">Copia de seguridad</h2>
+<p style="margin: 0; font-size: 19px; color: #A9B6C3">Guarda tus partidas y estadísticas en un archivo, por ejemplo en iCloud Drive.</p>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<button type="button" style="height: 60px; border-radius: 30px; border: 0; background: #43C9B3; color: #0E151D; font-family: inherit; font-size: 19px; font-weight: 700">Guardar copia</button>
+<button type="button" style="height: 60px; border-radius: 30px; border: 2px solid #43C9B3; background: transparent; color: #6FE0CC; font-family: inherit; font-size: 19px; font-weight: 700">Recuperar copia</button>
+</div>
+</section>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 20px">
+<section style="background: #16202B; border-radius: 24px; padding: 6px 24px; display: flex; flex-direction: column">
+<h2 style="margin: 16px 0 2px; font-size: 23px; font-weight: 700">Sudoku</h2>
+<div style="min-height: 64px; display: flex; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 1px solid #243140"><span style="font-size: 20px">Marcar errores en rojo</span><button type="button" aria-pressed="true" aria-label="Marcar errores en rojo" style="width: 76px; height: 44px; border-radius: 22px; border: 0; background: #43C9B3; padding: 4px; display: flex; justify-content: flex-end"><span style="width: 36px; height: 36px; border-radius: 18px; background: #F0F4F8"></span></button></div>
+<div style="min-height: 64px; display: flex; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 1px solid #243140"><span style="font-size: 20px">Mostrar cronómetro</span><button type="button" aria-pressed="true" aria-label="Mostrar cronómetro" style="width: 76px; height: 44px; border-radius: 22px; border: 0; background: #43C9B3; padding: 4px; display: flex; justify-content: flex-end"><span style="width: 36px; height: 36px; border-radius: 18px; background: #F0F4F8"></span></button></div>
+<div style="min-height: 64px; display: flex; justify-content: space-between; align-items: center; gap: 16px"><span style="font-size: 20px">Resaltar números iguales</span><button type="button" aria-pressed="false" aria-label="Resaltar números iguales" style="width: 76px; height: 44px; border-radius: 22px; border: 0; background: #3A4A5A; padding: 4px; display: flex; justify-content: flex-start"><span style="width: 36px; height: 36px; border-radius: 18px; background: #F0F4F8"></span></button></div>
+</section>
+
+<section style="background: #16202B; border-radius: 24px; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 23px; font-weight: 700">Palabras: modo de juego</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; background: #243140; border-radius: 20px; padding: 6px">
+<button type="button" aria-pressed="true" style="height: 56px; border-radius: 16px; border: 0; background: #43C9B3; color: #0E151D; font-family: inherit; font-size: 19px; font-weight: 700">Crucigrama</button>
+<button type="button" aria-pressed="false" style="height: 56px; border-radius: 16px; border: 0; background: transparent; color: #F0F4F8; font-family: inherit; font-size: 19px; font-weight: 700">Lista (más difícil)</button>
+</div>
+</section>
+
+<section style="background: #16202B; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 23px; font-weight: 700">Rummy: nivel de los rivales</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; background: #243140; border-radius: 20px; padding: 6px">
+<button type="button" aria-pressed="false" style="height: 60px; border-radius: 16px; border: 0; background: transparent; color: #F0F4F8; font-family: inherit; font-size: 19px; font-weight: 700">Principiante</button>
+<button type="button" aria-pressed="true" style="height: 60px; border-radius: 16px; border: 0; background: #43C9B3; color: #0E151D; font-family: inherit; font-size: 19px; font-weight: 700">Intermedio</button>
+<button type="button" aria-pressed="false" style="height: 60px; border-radius: 16px; border: 0; background: transparent; color: #F0F4F8; font-family: inherit; font-size: 19px; font-weight: 700">Experto</button>
+</div>
+</section>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1180,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
