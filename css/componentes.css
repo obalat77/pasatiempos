@@ -1,0 +1,131 @@
+/* Componentes comunes — ESPECIFICACION.md §3.3 */
+
+/* ---------- Botones ---------- */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 4rem;            /* 64 px */
+  padding: 0 1.75rem;
+  border-radius: 2rem;
+  border: 2px solid transparent;
+  font-size: 1.25rem;          /* 20 px */
+  font-weight: 700;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.boton:disabled, .boton[aria-disabled="true"] { opacity: 0.45; cursor: default; }
+
+.boton-principal { background: var(--acento); color: var(--sobre-acento); }
+.boton-secundario { background: transparent; color: var(--acento-texto); border-color: var(--acento); }
+.boton-claro { background: var(--superficie); color: var(--texto); border: 0; }
+.boton-grande { min-height: 4.75rem; font-size: 1.5rem; }   /* 76 px · 24 px */
+.boton-ancho { width: 100%; }
+
+/* Botón «Inicio» (arriba a la izquierda en todas las pantallas) */
+.boton-inicio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 3.5rem;          /* 56 px */
+  padding: 0 1.25rem 0 0.75rem;
+  border-radius: 1.75rem;
+  border: 0;
+  background: var(--superficie);
+  color: var(--acento-texto);
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.boton-inicio svg { width: 1.5rem; height: 1.5rem; }
+
+/* ---------- Tarjetas ---------- */
+.tarjeta {
+  background: var(--superficie);
+  border-radius: 24px;
+  padding: 28px;
+}
+
+/* ---------- Barra de progreso ---------- */
+.progreso {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--pista);
+  overflow: hidden;
+}
+.progreso > span {
+  display: block;
+  height: 100%;
+  border-radius: 6px;
+  background: var(--acento);
+}
+
+/* ---------- Selector segmentado ---------- */
+.segmentado {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 6px;
+  padding: 6px;
+  border-radius: 20px;
+  background: var(--pista);
+}
+.segmentado > button {
+  min-height: 4rem;            /* 64 px */
+  padding: 0 8px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--texto);
+  font-size: 1.3125rem;        /* 21 px */
+  font-weight: 700;
+}
+.segmentado > button[aria-pressed="true"] {
+  background: var(--acento);
+  color: var(--sobre-acento);
+}
+
+/* ---------- Interruptor (76 × 44) ---------- */
+.fila-ajuste {
+  min-height: 4.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--pista);
+  font-size: 1.3125rem;
+}
+.fila-ajuste:last-child { border-bottom: 0; }
+
+.interruptor {
+  flex: none;
+  width: 76px;
+  height: 44px;
+  padding: 4px;
+  border: 0;
+  border-radius: 22px;
+  background: var(--borde);
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+}
+.interruptor::after {             /* amplía el área táctil a 56 px */
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+.interruptor > span {
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  background: var(--superficie);
+  transition: transform 150ms ease-out;
+}
+.interruptor[aria-pressed="true"] { background: var(--acento); }
+.interruptor[aria-pressed="true"] > span { transform: translateX(32px); }
+:root[data-tema="oscuro"] .interruptor > span { background: var(--texto); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) .interruptor > span { background: var(--texto); }
+}

@@ -1,0 +1,147 @@
+/* Pasatiempos — tokens, tipografía y reglas generales.
+   Colores: ESPECIFICACION.md §3.2. No usar colores sueltos fuera de este archivo. */
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('../fonts/AtkinsonHyperlegible-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('../fonts/AtkinsonHyperlegible-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- Tema claro (por defecto) ---------- */
+:root {
+  color-scheme: light;
+  --fondo: #F2F2F7;
+  --superficie: #FFFFFF;
+  --texto: #1C1C1E;
+  --texto-2: #545458;
+  --acento: #0B7A6C;
+  --sobre-acento: #FFFFFF;
+  --acento-texto: #0B6E62;
+  --acento-suave: #DDF1EE;
+  --pista: #E5E5EA;
+  --borde: #C7C7CC;
+  --linea: #D1D1D6;
+  --linea-fuerte: #3A3A3C;
+  --seleccion: #B9E3DC;
+  --resaltado: #EDF5F4;
+  --mismo-numero: #D2ECE7;
+  --error: #C62828;
+  --eliminado: #C7C7CC;
+
+  /* Colores fijos (iguales en ambos temas) */
+  --icono-casilla: #FFF8EC;
+  --icono-rojo: #C62828;
+
+  --fuente: 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- Tema oscuro ---------- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    color-scheme: dark;
+    --fondo: #0E151D;
+    --superficie: #16202B;
+    --texto: #F0F4F8;
+    --texto-2: #A9B6C3;
+    --acento: #43C9B3;
+    --sobre-acento: #0E151D;
+    --acento-texto: #6FE0CC;
+    --acento-suave: #173A3A;
+    --pista: #243140;
+    --borde: #3A4A5A;
+    --linea: #2A3644;
+    --linea-fuerte: #7D8D9E;
+    --seleccion: #1F5552;
+    --resaltado: #1C2A38;
+    --mismo-numero: #1D4240;
+    --error: #EF5350;
+    --eliminado: #5B6B7C;
+  }
+}
+:root[data-tema="oscuro"] {
+  color-scheme: dark;
+  --fondo: #0E151D;
+  --superficie: #16202B;
+  --texto: #F0F4F8;
+  --texto-2: #A9B6C3;
+  --acento: #43C9B3;
+  --sobre-acento: #0E151D;
+  --acento-texto: #6FE0CC;
+  --acento-suave: #173A3A;
+  --pista: #243140;
+  --borde: #3A4A5A;
+  --linea: #2A3644;
+  --linea-fuerte: #7D8D9E;
+  --seleccion: #1F5552;
+  --resaltado: #1C2A38;
+  --mismo-numero: #1D4240;
+  --error: #EF5350;
+  --eliminado: #5B6B7C;
+}
+
+/* ---------- Tamaño del texto ----------
+   Todos los tamaños de letra y de controles van en rem (1rem = 16 px en «Normal»).
+   «Grande» multiplica todo por 1,2. */
+html { font-size: 100%; }
+html[data-texto="grande"] { font-size: 120%; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: var(--fuente);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-size: 1.25rem; /* 20 px */
+  line-height: 1.3;
+  min-height: 100vh;
+  min-height: 100dvh;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+h1, h2, h3, p { margin: 0; }
+
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; touch-action: manipulation; }
+
+/* Nada de animaciones bruscas */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+.solo-lectores {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.solo-horizontal { display: none !important; }
+@media (orientation: landscape) {
+  .solo-vertical { display: none !important; }
+  .solo-horizontal { display: revert !important; }
+}
+
+.cifras { font-variant-numeric: tabular-nums; }
+
+.aviso-sin-js { padding: 48px; font-size: 1.5rem; }
+
+:focus-visible { outline: 3px solid var(--acento); outline-offset: 3px; }

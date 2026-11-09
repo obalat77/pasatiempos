@@ -1,0 +1,9 @@
+{
+  "name": "pasatiempos",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.js\"",
+    "serve": "python3 herramientas/servidor.py 8000"
+  }
+}
