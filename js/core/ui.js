@@ -63,6 +63,27 @@ export function segmentado(etiqueta, opciones, valorActual, alCambiar) {
   return grupo;
 }
 
+/**
+ * Ventana modal sencilla (sin animaciones). `contenido` recibe la función `cerrar`
+ * y devuelve los nodos del cuerpo. Se cierra con «Cancelar» o al llamar a `cerrar`.
+ * Devuelve una promesa que se resuelve al cerrarse, con el valor pasado a `cerrar`.
+ */
+export function dialogo({ titulo, contenido, textoCancelar = 'Cancelar' }) {
+  return new Promise((resolver) => {
+    const d = h('dialog', { class: 'dialogo', 'aria-labelledby': 'titulo-dialogo' });
+    let valor;
+    const cerrar = (v) => { valor = v; d.close(); };
+    d.append(
+      h('h2', { id: 'titulo-dialogo', class: 'dialogo-titulo' }, titulo),
+      contenido(cerrar),
+      h('button', { type: 'button', class: 'boton boton-claro boton-ancho dialogo-cancelar',
+        on: { click: () => cerrar(undefined) } }, textoCancelar));
+    d.addEventListener('close', () => { d.remove(); resolver(valor); });
+    document.body.append(d);
+    d.showModal();
+  });
+}
+
 /** Fila con texto e interruptor (76 × 44). */
 export function filaInterruptor(texto, activo, alCambiar) {
   const boton = h('button', {

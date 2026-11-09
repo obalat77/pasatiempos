@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { fechaLarga, fechaRelativa, numero, cronometro, duracionTexto } from '../js/core/formato.js';
+import { fechaLarga, fechaRelativa, numero, cronometro, tiempo, duracionTexto } from '../js/core/formato.js';
 
 test('fecha larga en español', () => {
   assert.equal(fechaLarga(new Date(2026, 10, 9)), 'lunes, 9 de noviembre');
@@ -36,4 +36,11 @@ test('duración en texto', () => {
   assert.equal(duracionTexto(45 * 60), '45 min');
   assert.equal(duracionTexto(3 * 3600 + 20 * 60), '3 h 20 min');
   assert.equal(duracionTexto(2 * 3600), '2 h');
+});
+
+test('tiempo de partida', () => {
+  assert.equal(tiempo(0), '0:00');
+  assert.equal(tiempo(408), '6:48');
+  assert.equal(tiempo(692), '11:32');
+  assert.equal(tiempo(3725), '1:02:05');
 });

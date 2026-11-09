@@ -2,6 +2,7 @@
 import { h, icono } from '../core/ui.js';
 import { fechaLarga } from '../core/formato.js';
 import { JUEGOS } from '../juegos/catalogo.js';
+import { elegirPartida } from './elegir-partida.js';
 
 function iconoJuego(id) {
   const base = { class: `icono-juego icono-${id}`, 'aria-hidden': 'true' };
@@ -25,10 +26,13 @@ function iconoJuego(id) {
   }
 }
 
-function tarjetaJuego(juego, navegar) {
+function tarjetaJuego(juego, ctx) {
   const boton = juego.disponible
     ? h('button', { type: 'button', class: 'boton boton-secundario', 'aria-label': `Jugar a ${juego.nombre}`,
-        on: { click: () => navegar(`juego/${juego.id}`) } }, 'Jugar')
+        on: { click: async () => {
+          const eleccion = await elegirPartida(juego, ctx);
+          if (eleccion) ctx.jugar(juego.id, eleccion);
+        } } }, 'Jugar')
     : h('span', { class: 'juego-sub' }, 'Próximamente');
   return h('div', { class: 'juego' },
     iconoJuego(juego.id),
@@ -41,7 +45,7 @@ function tarjetaJuego(juego, navegar) {
     boton);
 }
 
-function tarjetaContinuar(partida, navegar) {
+function tarjetaContinuar(partida, jugar) {
   const juego = JUEGOS.find((j) => j.id === partida.juego);
   const { titulo, detalle, progreso } = partida.resumen || {};
   const porcentaje = Math.round(Math.min(1, Math.max(0, progreso ?? 0)) * 100);
@@ -54,10 +58,11 @@ function tarjetaContinuar(partida, navegar) {
       'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(porcentaje) },
       h('span', { style: { width: `${porcentaje}%` } })),
     h('button', { type: 'button', class: 'boton boton-principal boton-ancho',
-      on: { click: () => navegar(`juego/${juego.id}`) } }, 'Reanudar'));
+      on: { click: () => jugar(juego.id) } }, 'Reanudar'));
 }
 
-export async function montar(contenedor, { navegar, partidas }) {
+export async function montar(contenedor, ctx) {
+  const { navegar, partidas } = ctx;
   const cabecera = h('header', { class: 'inicio-cabecera' },
     h('div', { class: 'logo', 'aria-hidden': 'true' }, 'P'),
     h('div', {},
@@ -69,7 +74,7 @@ export async function montar(contenedor, { navegar, partidas }) {
   try {
     const partida = await partidas.masReciente();
     if (partida && JUEGOS.some((j) => j.id === partida.juego && j.disponible)) {
-      continuar = tarjetaContinuar(partida, navegar);
+      continuar = tarjetaContinuar(partida, ctx.jugar);
     }
   } catch (error) {
     console.error('No se pudo leer la partida en curso', error);
@@ -83,7 +88,7 @@ export async function montar(contenedor, { navegar, partidas }) {
 
   const juegos = h('section', { class: 'juegos', 'aria-labelledby': 'titulo-juegos' },
     h('h2', { class: 'titulo-seccion', id: 'titulo-juegos' }, 'Juegos'),
-    JUEGOS.map((j) => tarjetaJuego(j, navegar)));
+    JUEGOS.map((j) => tarjetaJuego(j, ctx)));
 
   contenedor.append(h('div', { class: 'pantalla inicio' },
     h('div', { class: 'inicio-izquierda' }, cabecera, continuar, nav),

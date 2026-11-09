@@ -129,3 +129,27 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) .interruptor > span { background: var(--texto); }
 }
+
+/* ---------- Ventana modal ---------- */
+.dialogo {
+  width: min(560px, calc(100vw - 48px));
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  border: 0;
+  border-radius: 28px;
+  padding: 32px;
+  background: var(--fondo);
+  color: var(--texto);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.dialogo:not([open]) { display: none; }
+.dialogo::backdrop { background: var(--velo); }
+.dialogo-titulo { font-size: 2rem; font-weight: 700; }
+.dialogo-cuerpo { display: flex; flex-direction: column; gap: 14px; }
+.dialogo-subtitulo { font-size: 1.375rem; font-weight: 700; margin-top: 4px; }
+.dialogo-nota { font-size: 1.25rem; color: var(--texto-2); text-align: center; }
+.dialogo-opciones { display: flex; flex-direction: column; gap: 12px; }
+.dialogo .boton-secundario { background: var(--superficie); }
+.dialogo-cancelar { min-height: 4rem; }

@@ -148,17 +148,19 @@ Ajuste **Tema: Claro / Oscuro / Automático** (Automático = `prefers-color-sche
 - **Juegos**, en este orden: Sudoku, Palabras, Parejas de números, Cálculos cruzados, Rummy. Cada tarjeta: icono, nombre, subtítulo y botón «Jugar».
 - Botones grandes **Estadísticas** y **Ajustes**.
 - Horizontal: «Continuar» + Estadísticas/Ajustes a la izquierda, juegos a la derecha.
-- Al elegir un juego con dificultades, preguntar la dificultad con botones grandes (Fácil / Medio / Difícil / Experto), recordando la última elegida.
+- Al elegir un juego con dificultades, preguntar la dificultad con botones grandes (Fácil / Medio / Difícil / Experto), recordando la última elegida (se resalta).
+- Si ese juego tiene una partida a medias, la ventana ofrece primero «Seguir con la partida empezada»; elegir una dificultad empieza una nueva y la anterior queda registrada como **abandonada**.
+- Mientras un juego no esté terminado (fases futuras), su tarjeta muestra «Próximamente» en lugar de «Jugar».
 
 ### 4.2 Estadísticas
-- Selector de juego: **Sudoku · Palabras · Parejas · Cálculos · Rummy** (también en vertical).
+- Selector de juego: **Sudoku · Palabras · Parejas · Cálculos · Rummy** (también en vertical). Solo aparecen los juegos ya disponibles; con uno solo no hay selector y el título es «Estadísticas · Sudoku».
 - Cuatro cifras: Partidas jugadas, Partidas terminadas (o ganadas), Racha actual (días seguidos con alguna partida terminada), Tiempo total.
 - **Mejor tiempo** por dificultad («Sin partidas» si no hay).
 - **Últimas partidas** (5 como máximo): fecha relativa («Hoy», «Ayer», «7 nov»), dificultad, duración, resultado.
 - Específicas: Palabras → nivel alcanzado y palabras extra; Rummy → partidas ganadas por jugador y puntos.
 
 ### 4.3 Ajustes
-Secciones (en vertical la pantalla se desplaza):
+Secciones (en vertical la pantalla se desplaza). Las de cada juego solo aparecen cuando ese juego está disponible:
 - **Tema:** Claro / Oscuro / Automático.
 - **Tamaño del texto:** Normal / Grande.
 - **Sudoku:** Marcar errores en rojo (sí), Mostrar cronómetro (sí), Resaltar números iguales (no).

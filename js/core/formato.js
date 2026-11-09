@@ -36,6 +36,15 @@ export function cronometro(segundos) {
   return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${ss}` : `${String(m).padStart(2, '0')}:${ss}`;
 }
 
+/** Tiempo de una partida terminada: 408 → «6:48»; 3725 → «1:02:05» */
+export function tiempo(segundos) {
+  const s = Math.max(0, Math.round(segundos));
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const ss = String(s % 60).padStart(2, '0');
+  return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${ss}` : `${m}:${ss}`;
+}
+
 /** Duración en palabras para totales: «45 min», «3 h 20 min», «menos de 1 min» */
 export function duracionTexto(segundos) {
   const min = Math.floor(segundos / 60);

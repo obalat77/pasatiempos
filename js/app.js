@@ -25,8 +25,25 @@ function navegar(ruta) {
   else location.hash = destino;
 }
 
-/** Contexto que reciben las pantallas y los juegos (ESPECIFICACION.md §2.4). */
-const ctx = { db: null, ajustes: crearAjustes(), partidas: null, navegar };
+/** Partida nueva pedida desde Inicio; el juego la recibe en `ctx.nueva` al montarse. */
+let nuevaPendiente = null;
+
+/**
+ * Abre un juego. `eleccion`: { continuar: true } para seguir la partida guardada,
+ * o { dificultad } para empezar una nueva.
+ */
+function jugar(id, eleccion = { continuar: true }) {
+  nuevaPendiente = eleccion.continuar ? null : { dificultad: eleccion.dificultad ?? null };
+  navegar(`juego/${id}`);
+}
+
+/**
+ * Contexto que reciben las pantallas y los juegos (ESPECIFICACION.md §2.4):
+ *   db, ajustes, partidas, navegar(ruta), jugar(id, eleccion)
+ * Los juegos reciben además `nueva`: { dificultad } si hay que empezar partida nueva,
+ * o null para reanudar la guardada (si no hay, el juego decide).
+ */
+const ctx = { db: null, ajustes: crearAjustes(), partidas: null, navegar, jugar };
 
 async function mostrar() {
   const miTurno = ++turno;
@@ -44,9 +61,11 @@ async function mostrar() {
   const [seccion, id] = ruta.split('/');
   try {
     if (seccion === 'juego' && JUEGOS.some((j) => j.id === id && j.disponible)) {
+      const nueva = nuevaPendiente;
+      nuevaPendiente = null;
       const juego = await cargarJuego(id);
       if (miTurno !== turno) return;
-      await juego.montar(hueco, ctx);
+      await juego.montar(hueco, { ...ctx, nueva });
       desmontarActual = () => juego.desmontar();
       return;
     }
