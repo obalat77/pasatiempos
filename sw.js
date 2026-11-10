@@ -5,7 +5,7 @@
 // comprueba que coinciden). Así el iPad detecta que hay versión nueva.
 // AL AÑADIR O QUITAR ARCHIVOS: actualizar ARCHIVOS (una prueba lo comprueba).
 
-const VERSION = 6;
+const VERSION = 7;
 const CACHE = `pasatiempos-v${VERSION}`;
 
 const ARCHIVOS = [

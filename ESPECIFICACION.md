@@ -117,7 +117,7 @@ Las estadísticas se **calculan** a partir de `resultados` (no se guardan duplic
 | `--error` | `#C62828` | `#EF5350` | número incorrecto |
 | `--eliminado` | `#C7C7CC` | `#5B6B7C` | números ya emparejados (Parejas) |
 
-Rummy (iguales en ambos temas): tapete `#2F6F5E` con borde interior `#275D4F`; ficha `#FBF6E9`, borde `#D9CDB8`, sombra `#CBBEA6`; dorso `#E9DFCB`; atril madera `#A86B3C`, balda `#8A5428`, sombra `#7A4A26`. Colores de ficha: rojo `#C62828` ●, azul `#1565C0` ▲, negro `#222222` ■, naranja `#B35900` ◆. Comodín: carita dibujada en rojo. Zona «Nueva combinación»: borde discontinuo `#CFE5DD` y texto `#FFFFFF` sobre el tapete.
+Rummy (iguales en ambos temas): tapete `#2F6F5E` con borde interior `#275D4F`; ficha `#FBF6E9`, borde `#D9CDB8`, sombra `#CBBEA6`; dorso `#E9DFCB`; atril madera `#A86B3C`, balda `#8A5428`, sombra `#7A4A26`. Colores de ficha: rojo `#C62828` ●, azul `#1565C0` ▲, negro `#222222` ■, naranja `#AD5700` ◆. Comodín: carita dibujada en rojo. Zona «Nueva combinación»: borde discontinuo `#CFE5DD` y texto `#FFFFFF` sobre el tapete.
 
 Iconos de los juegos en Inicio: sus colores internos son fijos y forman parte del dibujo (p. ej. el fondo `#FFF8EC` de las casillas del icono de Sudoku); no son texto y no siguen los tokens.
 

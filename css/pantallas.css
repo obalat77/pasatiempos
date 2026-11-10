@@ -147,6 +147,14 @@
   .inicio-izquierda { display: flex; flex-direction: column; gap: 32px; min-height: 100%; align-self: stretch; }
   .inicio .juegos { grid-column: 2; grid-row: 1; }
 }
+/* Texto grande: menos aire entre bloques para que Inicio quepa sin desplazarse */
+html[data-texto="grande"] .inicio { gap: 16px; }
+html[data-texto="grande"] .continuar { padding: 16px 32px; gap: 10px; }
+html[data-texto="grande"] .juegos { gap: 8px; }
+html[data-texto="grande"] .juego { padding-top: 8px; padding-bottom: 8px; }
+@media (orientation: landscape) {
+  html[data-texto="grande"] .inicio { padding-top: max(36px, env(safe-area-inset-top)); padding-bottom: max(36px, env(safe-area-inset-bottom)); }
+}
 @media (orientation: portrait) {
   .inicio-izquierda { display: contents; }
   .inicio .continuar { order: 1; }
