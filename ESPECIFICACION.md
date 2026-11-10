@@ -298,7 +298,7 @@ Cada fase termina con la app publicada en GitHub Pages y probada en el iPad.
 | Fase | Contenido | Se da por terminada cuando… |
 |---|---|---|
 | 1 | Plataforma (Inicio, Estadísticas, Ajustes, tema, tamaño de texto, IndexedDB, offline, instalación) + **Sudoku** | Se instala en el iPad, funciona sin conexión, se puede jugar un Sudoku completo de cada dificultad en vertical y horizontal, se guarda la partida al cerrar y las estadísticas se ven bien. |
-| 2 | **Palabras** (ambos modos) + 100 niveles validados | Los 100 niveles pasan el validador y se pueden jugar en ambos modos, deslizando y tocando. |
+| 2 | **Palabras** (ambos modos) + 1.000 niveles validados | Los 1.000 niveles pasan el validador y se pueden jugar en ambos modos, deslizando y tocando. |
 | 3 | **Parejas de números** | Reglas de conexión cubiertas por pruebas; partida completa jugable. |
 | 4 | **Cálculos cruzados** | El generador produce tableros con solución única en las 4 dificultades (pruebas); partida jugable. |
 | 5 | **Rummy** | Reglas cubiertas por pruebas; partidas completas contra 3 rivales en los 3 niveles; el iPad no se bloquea mientras piensan. |
