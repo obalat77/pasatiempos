@@ -154,6 +154,25 @@ export function puntosBajada(mesaAntes, mesa) {
   return mesa.filter((c) => c.every((id) => !antes.has(id)) && esValida(c)).reduce((s, c) => s + puntosDe(c), 0);
 }
 
+/**
+ * Mueve una ficha durante tu turno (sin validar el turno): de la mesa o del atril
+ * a 'combo:k', 'nueva' o 'atril'. Devuelve { mesa, atril } nuevos; no cambia los de entrada.
+ * Llevarla a la combinación donde ya está no cambia nada (las combinaciones se ordenan solas).
+ */
+export function moverFicha({ mesa, atril }, id, destino) {
+  const desde = mesa.findIndex((c) => c.includes(id));
+  if (desde >= 0 && destino === `combo:${desde}`) return { mesa, atril };
+  const destinoK = destino.startsWith('combo:') ? Number(destino.slice(6)) : -1;
+  let nuevaMesa = mesa.map((c) => c.filter((x) => x !== id));
+  let nuevoAtril = atril.filter((x) => x !== id);
+  if (destino === 'atril') nuevoAtril.push(id);
+  else if (destino === 'nueva') nuevaMesa.push([id]);
+  else if (nuevaMesa[destinoK]) nuevaMesa[destinoK].push(id);
+  else return { mesa, atril };  // destino que ya no existe: no se mueve nada
+  nuevaMesa = nuevaMesa.filter((c) => c.length);
+  return { mesa: nuevaMesa, atril: nuevoAtril };
+}
+
 /** Aplica un turno ya validado: nueva mesa y atril; si se ha quedado sin fichas, gana. */
 export function aplicarJugada(p, j, mesa, atril) {
   const jugador = p.jugadores[j];

@@ -227,18 +227,19 @@ class PartidaCalculos {
   }
 
   async terminar() {
+    if (this.terminada) return;
+    this.terminada = true; // desde ya, el tablero no admite más jugadas
     const segundos = this.reloj.detenerFinal();
     this.sel = -1;
+    this.pintar();
     const dificultad = this.p.dificultad;
-    const anteriores = (await this.ctx.partidas.resultados(ID))
+    const anteriores = (await this.ctx.partidas.resultados(ID).catch(() => []))
       .filter((r) => r.dificultad === dificultad && r.resultado === 'terminada');
     await this.ctx.partidas.cerrar(ID, 'terminada', {
       segundos,
       detalles: { pistas: this.p.pistas, errores: this.p.errores },
       partida: { dificultad, inicio: this.inicio, segundos },
-    });
-    this.terminada = true;
-    this.pintar();
+    }).catch((e) => console.error('No se pudo guardar el resultado', e));
     this.avisar('¡Todas las cuentas son correctas!');
     this.bandejaEl.hidden = true;
     this.controles.replaceWith(tarjetaFinal({

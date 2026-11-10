@@ -13,6 +13,7 @@ const ID = 'rummy';
 const RAPIDO = ['localhost', '127.0.0.1'].includes(location.hostname) && new URLSearchParams(location.search).has('rapido');
 const PASO_MS = RAPIDO ? 30 : 600;          // cada movimiento de un rival, despacio para poder seguirlo
 const PIENSA_MIN_MS = RAPIDO ? 30 : 900;    // «Paco está pensando…» se ve al menos este tiempo
+const PLAZO_MAXIMO_MS = 10000;              // si el Worker no contesta en este tiempo, el rival roba
 const NOMBRE_NIVEL = { principiante: 'Principiante', intermedio: 'Intermedio', experto: 'Experto' };
 const MOTIVOS = {
   invalida: 'Hay una combinación no válida en la mesa.',
@@ -59,12 +60,14 @@ class PartidaRummy {
       this.inicio = Date.now();
     }
     this.ordenAtril = R.ordenarPorNumero(this.p.jugadores[0].atril);
-    this.iniciarWorker();
+    // Se guarda antes de construir la pantalla: así no se puede tocar «Inicio» a mitad del arranque.
     if (actual !== this) return;
+    await this.guardar();
+    if (actual !== this) return;
+    this.iniciarWorker();
     this.construir();
     this.reloj.arrancar();
     document.addEventListener('visibilitychange', this.alCambiarVisibilidad);
-    await this.guardar();
     this.avanzar();
   }
 
@@ -77,6 +80,15 @@ class PartidaRummy {
         this.pendientes.get(e.data.id)?.(e.data.decision);
         this.pendientes.delete(e.data.id);
       });
+      // Si el Worker falla (no carga, se queda sin memoria…), los rivales que esperaban roban
+      // y desde entonces piensan en la página.
+      this.worker.addEventListener('error', (e) => {
+        console.error('El Worker de los rivales ha fallado', e);
+        this.worker?.terminate();
+        this.worker = null;
+        for (const resolver of this.pendientes.values()) resolver({ tipo: 'robar' });
+        this.pendientes.clear();
+      });
     } catch (error) {
       console.warn('Sin Web Worker: los rivales pensarán en la página', error);
       this.worker = null;
@@ -86,8 +98,13 @@ class PartidaRummy {
   async pensar(datos) {
     if (this.worker) {
       const id = this.siguienteId++;
+      // Nunca esperar para siempre: si no responde a tiempo, el rival roba y la partida sigue.
       return new Promise((resolver) => {
-        this.pendientes.set(id, resolver);
+        const plazo = setTimeout(() => {
+          this.pendientes.delete(id);
+          resolver({ tipo: 'robar' });
+        }, PLAZO_MAXIMO_MS);
+        this.pendientes.set(id, (decision) => { clearTimeout(plazo); resolver(decision); });
         this.worker.postMessage({ id, datos });
       });
     }
@@ -138,7 +155,9 @@ class PartidaRummy {
     this.raiz.addEventListener('pointerdown', (e) => this.alPulsar(e));
     this.raiz.addEventListener('pointermove', (e) => this.alMover(e));
     this.raiz.addEventListener('pointerup', (e) => this.alSoltar(e));
-    this.raiz.addEventListener('pointercancel', () => this.cancelarArrastre());
+    this.raiz.addEventListener('pointercancel', (e) => {
+      if (this.arrastre?.puntero === e.pointerId) this.cancelarArrastre();
+    });
   }
 
   /** Mi turno ya preparado (empezarMiTurno) y sin animaciones en curso. */
@@ -308,16 +327,7 @@ class PartidaRummy {
       this.pintar();
       return;
     }
-    // Sacarla de donde esté
-    const desde = this.mesaT.findIndex((c) => c.includes(id));
-    let destinoCombo = destino.startsWith('combo:') ? this.mesaT[Number(destino.slice(6))] : null;
-    if (desde >= 0) this.mesaT[desde] = this.mesaT[desde].filter((x) => x !== id);
-    else this.atrilT = this.atrilT.filter((x) => x !== id);
-    // Ponerla
-    if (destino === 'atril') this.atrilT.push(id);
-    else if (destino === 'nueva') this.mesaT.push([id]);
-    else if (destinoCombo) destinoCombo.push(id);
-    this.mesaT = this.mesaT.filter((c) => c.length);
+    ({ mesa: this.mesaT, atril: this.atrilT } = R.moverFicha({ mesa: this.mesaT, atril: this.atrilT }, id, destino));
     this.sel = null;
     this.mensaje = null;
     this.pintar();
@@ -373,7 +383,7 @@ class PartidaRummy {
 
   alPulsar(e) {
     const el = e.target.closest('[data-ficha]');
-    if (!el || !this.esMiTurno()) return;
+    if (this.arrastre || !el || !this.esMiTurno()) return;   // un solo arrastre a la vez
     const id = Number(el.dataset.ficha);
     if (!this.movible(id)) return;
     this.arrastre = { id, x: e.clientX, y: e.clientY, el, movido: false, puntero: e.pointerId };
@@ -400,8 +410,8 @@ class PartidaRummy {
 
   alSoltar(e) {
     const a = this.arrastre;
+    if (!a || e.pointerId !== a.puntero) return;   // otro dedo: no afecta al arrastre en curso
     this.arrastre = null;
-    if (!a || e.pointerId !== a.puntero) return;
     if (!a.movido) { this.tocarFicha(a.id, a.el); return; }
     a.fantasma.remove();
     const debajo = document.elementFromPoint(e.clientX, e.clientY);
@@ -533,7 +543,7 @@ class PartidaRummy {
       segundos,
       detalles: { nivel: p.nivel, ganador: p.ganador, nombres: p.jugadores.map((x) => x.nombre), puntos: p.puntos },
       partida: { dificultad: null, inicio: this.inicio, segundos },
-    });
+    }).catch((e) => console.error('No se pudo guardar el resultado', e));
     this.mensaje = null;
     this.pintar();
     const ganador = p.jugadores[p.ganador];

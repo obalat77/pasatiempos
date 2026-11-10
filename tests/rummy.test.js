@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { crearAzar } from '../js/core/azar.js';
 import {
   fichaDe, analizar, esValida, puntosDe, puntosAtril, crearPartida, motivoTurnoNoValido, aplicarJugada, robar,
-  ordenarPorNumero, ordenarPorColor, todasLasFichas, COMODINES, nombreFicha,
+  ordenarPorNumero, ordenarPorColor, todasLasFichas, COMODINES, nombreFicha, moverFicha,
 } from '../js/juegos/rummy/reglas.js';
 import { buscar } from '../js/juegos/rummy/buscador.js';
 
@@ -235,3 +235,26 @@ for (const nivel of ['principiante', 'intermedio', 'experto']) {
     }
   });
 }
+
+test('mover fichas en tu turno: nunca se pierde ni se duplica ninguna', () => {
+  const inicial = { mesa: [[1, 2, 3], [10, 11, 12]], atril: [40, 41] };
+  const contar = ({ mesa, atril }) => [...mesa.flat(), ...atril].sort((a, b) => a - b).join(',');
+
+  // Llevarla a su misma combinación no cambia nada (antes desaparecía)
+  assert.deepEqual(moverFicha(inicial, 2, 'combo:0'), inicial);
+  // De una combinación a otra, a una nueva y vuelta al atril
+  const a = moverFicha(inicial, 2, 'combo:1');
+  assert.deepEqual(a.mesa, [[1, 3], [10, 11, 12, 2]]);
+  const b = moverFicha(a, 40, 'nueva');
+  assert.deepEqual(b.mesa, [[1, 3], [10, 11, 12, 2], [40]]);
+  const c = moverFicha(b, 40, 'atril');
+  assert.deepEqual(c.atril, [41, 40]);
+  // Si su combinación se queda vacía desaparece, y el destino se cuenta antes de quitarla
+  const d = moverFicha({ mesa: [[5], [6, 7]], atril: [] }, 5, 'combo:1');
+  assert.deepEqual(d.mesa, [[6, 7, 5]]);
+  // Destino que no existe: no se mueve nada
+  assert.deepEqual(moverFicha(inicial, 40, 'combo:9'), inicial);
+  // No cambia los datos de entrada
+  assert.deepEqual(inicial, { mesa: [[1, 2, 3], [10, 11, 12]], atril: [40, 41] });
+  for (const r of [a, b, c, d]) assert.equal(contar(r), contar(r === d ? { mesa: [[5], [6, 7]], atril: [] } : inicial));
+});

@@ -238,8 +238,11 @@ class PartidaParejas {
   }
 
   async terminar(resultado) {
+    if (this.terminada) return;
+    this.terminada = true; // desde ya, el tablero no admite más jugadas
     const segundos = this.reloj.detenerFinal();
-    const anteriores = (await this.ctx.partidas.resultados(ID)).filter((r) => r.resultado === 'ganada');
+    this.pintar();
+    const anteriores = (await this.ctx.partidas.resultados(ID).catch(() => [])).filter((r) => r.resultado === 'ganada');
     const record = resultado === 'ganada' && esRecord(segundos, anteriores);
     const quedaban = R.quedan(this.p);
     await this.ctx.partidas.cerrar(ID, resultado, {
@@ -251,9 +254,7 @@ class PartidaParejas {
         quedaban,
       },
       partida: { dificultad: null, inicio: this.inicio, segundos },
-    });
-    this.terminada = true;
-    this.pintar();
+    }).catch((e) => console.error('No se pudo guardar el resultado', e));
 
     const opciones = { alOtraPartida: () => this.otraPartida(), alInicio: () => this.ctx.navegar('') };
     const tarjeta = resultado === 'ganada'

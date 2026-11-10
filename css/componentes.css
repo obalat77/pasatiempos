@@ -154,8 +154,9 @@
 .dialogo .boton-secundario { background: var(--superficie); }
 .dialogo-cancelar { min-height: 4rem; }
 
-/* ---------- Aviso de versión nueva ---------- */
-.aviso-version {
+/* ---------- Avisos de abajo: versión nueva y «no se puede guardar» ---------- */
+.aviso-version,
+.aviso-guardado {
   position: fixed;
   left: 0;
   right: 0;

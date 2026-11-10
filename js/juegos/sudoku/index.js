@@ -67,6 +67,8 @@ class PartidaSudoku {
     this.arrancarReloj();
     document.addEventListener('visibilitychange', this.alCambiarVisibilidad);
     document.addEventListener('keydown', this.alPulsarTecla);
+    // Una partida guardada ya resuelta (p. ej. se cerró la app al terminar): cerrarla al abrir.
+    if (R.resuelto(this.p)) this.terminar();
   }
 
   // ---------- Pantalla ----------
@@ -290,11 +292,14 @@ class PartidaSudoku {
   }
 
   async terminar() {
+    if (this.terminada) return;
+    this.terminada = true; // desde ya, el tablero no admite más jugadas
     const segundos = this.reloj.detenerFinal(); // el reloj de arriba y el tiempo final coinciden
     this.sel = -1;
+    this.pintar();
     const dificultad = this.p.dificultad;
     // Mejor tiempo anterior en esta dificultad (para el dato destacado)
-    const anteriores = (await this.ctx.partidas.resultados(ID))
+    const anteriores = (await this.ctx.partidas.resultados(ID).catch(() => []))
       .filter((r) => r.dificultad === dificultad && r.resultado === 'terminada');
     const record = esRecord(segundos, anteriores);
 
@@ -302,9 +307,7 @@ class PartidaSudoku {
       segundos,
       detalles: { pistas: this.p.pistas, errores: this.p.errores },
       partida: { dificultad, inicio: this.inicio, segundos },
-    });
-    this.terminada = true;
-    this.pintar();
+    }).catch((e) => console.error('No se pudo guardar el resultado', e));
 
     const aviso = tarjetaFinal({
       titulo: '¡Enhorabuena!',

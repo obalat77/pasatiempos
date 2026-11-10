@@ -9,6 +9,7 @@ import { crearAjustes } from './core/ajustes.js';
 import { crearPartidas } from './core/partidas.js';
 import { iniciarTema } from './core/tema.js';
 import { iniciarActualizaciones } from './core/actualizacion.js';
+import { h } from './core/ui.js';
 import { cargarJuego, JUEGOS } from './juegos/catalogo.js';
 import * as inicio from './pantallas/inicio.js';
 import * as estadisticas from './pantallas/estadisticas.js';
@@ -94,6 +95,7 @@ async function arrancar() {
     console.error('No se pudieron leer los ajustes', error);
   }
   iniciarTema(ctx.ajustes);
+  if (ctx.db.tipo === 'memoria') avisarSinGuardado();
 
   // Pedir que el navegador no borre los datos por falta de espacio.
   navigator.storage?.persist?.().catch(() => {});
@@ -103,6 +105,16 @@ async function arrancar() {
 
   // Modo sin conexión y aviso «Hay una versión nueva».
   iniciarActualizaciones(() => juegoActual?.guardar?.());
+}
+
+/** IndexedDB no se ha podido abrir: lo que se juegue ahora no se guardará. */
+function avisarSinGuardado() {
+  document.body.append(h('button', {
+    type: 'button',
+    class: 'aviso-guardado',
+    on: { click: () => location.reload() },
+  }, 'No se puede guardar el progreso. Toca para volver a intentarlo.'));
+  document.body.classList.add('con-aviso');
 }
 
 arrancar();

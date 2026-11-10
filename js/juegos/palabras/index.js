@@ -404,8 +404,9 @@ class PartidaPalabras {
       segundos,
       detalles: { nivel: p.nivel, extras: p.extras.length, pistas: p.pistas },
       partida: { dificultad: null, inicio: this.inicio, segundos },
-    });
-    await this.ctx.db.poner('progreso', p.nivel + 1, CLAVE_NIVEL);
+    }).catch((e) => console.error('No se pudo guardar el resultado', e));
+    await this.ctx.db.poner('progreso', p.nivel + 1, CLAVE_NIVEL)
+      .catch((e) => console.error('No se pudo guardar el nivel', e));
     this.camino = [];
     this.pintar();
     this.enCurso.hidden = true;

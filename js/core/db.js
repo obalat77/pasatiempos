@@ -33,7 +33,7 @@ function comprobarAlmacen(almacen) {
 export async function abrirBD(fabrica = globalThis.indexedDB) {
   if (!fabrica) return crearBDMemoria();
   try {
-    return envolverIDB(await abrirIDB(fabrica));
+    return envolverIDB(await abrirIDB(fabrica), fabrica);
   } catch (error) {
     console.warn('IndexedDB no disponible; los datos solo se guardarán mientras la app esté abierta.', error);
     return crearBDMemoria();
@@ -93,28 +93,61 @@ function abrirIDBVersion(fabrica, version) {
   });
 }
 
-function envolverIDB(bd) {
-  const almacen = (nombre, modo = 'readonly') => {
-    comprobarAlmacen(nombre);
-    return bd.transaction(nombre, modo).objectStore(nombre);
+function envolverIDB(bdInicial, fabrica) {
+  let bd = null;
+  const usar = (nueva) => {
+    bd = nueva;
+    // Safari puede cerrar la conexión (p. ej. tras mucho tiempo en segundo plano).
+    nueva.onclose = () => { if (bd === nueva) bd = null; };
+    return nueva;
   };
+  usar(bdInicial);
+
+  let reabriendo = null; // una sola reapertura aunque fallen varias operaciones a la vez
+  const reabrir = () => (reabriendo ??= abrirIDB(fabrica).then(usar).finally(() => { reabriendo = null; }));
+  const conexion = async () => bd || reabrir();
+
+  /**
+   * Ejecuta una operación en su propia transacción y espera a que se confirme.
+   * Si falla (conexión perdida o cerrada), reabre la base de datos y lo intenta una vez más.
+   */
+  async function ejecutar(nombre, modo, operacion) {
+    comprobarAlmacen(nombre);
+    const intento = async (con) => {
+      const tx = con.transaction(nombre, modo);
+      const fin = finTransaccion(tx);
+      fin.catch(() => {}); // el error llega también por la operación; se evita el aviso de promesa sin capturar
+      const valor = await operacion(tx.objectStore(nombre));
+      await fin;
+      return valor;
+    };
+    const usada = await conexion();
+    try {
+      return await intento(usada);
+    } catch (error) {
+      console.warn('Fallo en la base de datos; se reabre y se reintenta', error);
+      if (bd === usada) {
+        bd = null;
+        try { usada.close(); } catch { /* ya estaba cerrada */ }
+      }
+      return intento(await conexion());
+    }
+  }
+
   return {
     tipo: 'indexeddb',
-    obtener: (nombre, clave) => promesa(almacen(nombre).get(clave)),
-    todos: (nombre) => promesa(almacen(nombre).getAll()),
-    async entradas(nombre) {
-      const a = almacen(nombre);
+    obtener: (nombre, clave) => ejecutar(nombre, 'readonly', (a) => promesa(a.get(clave))),
+    todos: (nombre) => ejecutar(nombre, 'readonly', (a) => promesa(a.getAll())),
+    entradas: (nombre) => ejecutar(nombre, 'readonly', async (a) => {
       const [claves, valores] = await Promise.all([promesa(a.getAllKeys()), promesa(a.getAll())]);
       return claves.map((c, i) => [c, valores[i]]);
-    },
-    poner(nombre, valor, clave) {
-      const a = almacen(nombre, 'readwrite');
-      return promesa(a.keyPath ? a.put(valor) : a.put(valor, clave));
-    },
-    borrar: (nombre, clave) => promesa(almacen(nombre, 'readwrite').delete(clave)),
-    vaciar: (nombre) => promesa(almacen(nombre, 'readwrite').clear()),
+    }),
+    poner: (nombre, valor, clave) => ejecutar(nombre, 'readwrite',
+      (a) => promesa(a.keyPath ? a.put(valor) : a.put(valor, clave))),
+    borrar: (nombre, clave) => ejecutar(nombre, 'readwrite', (a) => promesa(a.delete(clave))),
+    vaciar: (nombre) => ejecutar(nombre, 'readwrite', (a) => promesa(a.clear())),
     async reemplazarTodo(datos) {
-      const tx = bd.transaction(NOMBRES, 'readwrite');
+      const tx = (await conexion()).transaction(NOMBRES, 'readwrite');
       const fin = finTransaccion(tx);
       for (const nombre of NOMBRES) {
         const a = tx.objectStore(nombre);

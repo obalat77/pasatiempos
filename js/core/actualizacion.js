@@ -72,7 +72,9 @@ function mostrarAviso(registro, antesDeRecargar) {
         aviso.disabled = true;
         aviso.textContent = 'Actualizando…';
         try { await antesDeRecargar?.(); } catch (e) { console.error(e); }
-        registro.waiting?.postMessage({ tipo: 'actualizar' });
+        // Si ya no hay versión esperando (p. ej. se activó por otro lado), basta con recargar.
+        if (registro.waiting) registro.waiting.postMessage({ tipo: 'actualizar' });
+        else location.reload();
       },
     },
   }, 'Hay una versión nueva. Toca para actualizar.');
