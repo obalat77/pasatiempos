@@ -13,6 +13,10 @@ export const VALOR_COMODIN_ATRIL = 30;
 export const PRIMERA_BAJADA = 30;
 export const FICHAS_INICIALES = 14;
 
+/** Ajuste «Tiempo por turno» → segundos (0 = sin límite). Valores desconocidos: sin límite. */
+export const TIEMPO_POR_TURNO = Object.freeze({ no: 0, '2min': 120, '1min': 60, '30s': 30 });
+export const segundosPorTurno = (valor) => TIEMPO_POR_TURNO[valor] ?? 0;
+
 const FICHAS = (() => {
   const lista = [];
   for (let copia = 0; copia < 2; copia++) {

@@ -54,7 +54,17 @@ export function montar(contenedor, { ajustes, navegar }) {
         { valor: 'intermedio', texto: 'Intermedio' },
         { valor: 'experto', texto: 'Experto' },
       ]),
-      h('p', { class: 'nota' }, 'Se aplica desde la próxima partida.')));
+      h('p', { class: 'nota' }, 'Se aplica desde la próxima partida.')),
+    h('div', { class: 'grupo-ajuste' },
+      h('h2', {}, 'Rummy: tiempo por turno'),
+      opcion('rummy.tiempoTurno', 'Rummy: tiempo por turno', [
+        { valor: 'no', texto: 'Sin límite' },
+        { valor: '2min', texto: '2 min' },
+        { valor: '1min', texto: '1 min' },
+        { valor: '30s', texto: '30 s' },
+      ]),
+      h('p', { class: 'nota' }, 'Si se acaba, robas una ficha. Se aplica desde tu próximo turno.')),
+    interruptor('rummy.cronometro', 'Rummy: mostrar cronómetro'));
 
   contenedor.append(h('div', { class: 'pantalla ajustes' },
     barraJuego({ alInicio: () => navegar(''), titulo: 'Ajustes', clase: 'barra-neutra' }),

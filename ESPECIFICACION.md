@@ -14,7 +14,7 @@ Desde la v1.6 el **estilo** (colores, bordes, barra de juego, baldosas de Inicio
 
 1. **Fácil de leer y de usar.** Letra grande, mucho contraste, poca información en pantalla, botones grandes con texto (no solo iconos).
 2. **Todo en español** (España): textos, fechas (`lunes, 9 de noviembre`), números (`1.250`), mensajes de error.
-3. **Sin prisas ni presión.** Sin límites de tiempo, sin anuncios, sin sonidos obligatorios, sin notificaciones.
+3. **Sin prisas ni presión.** Sin límites de tiempo, sin anuncios, sin sonidos obligatorios, sin notificaciones. Única excepción, a petición del usuario (v1.6): el ajuste opcional «Tiempo por turno» del Rummy, que por defecto es «Sin límite».
 4. **Nada sale del iPad.** Todos los datos se guardan solo en el dispositivo. No hay copia de seguridad (decisión del usuario, v1.2): si se borra la app o se cambia de iPad, se pierden partidas y estadísticas.
 5. **Funciona sin conexión** desde la primera vez que se abre.
 6. **Funciona en vertical y en horizontal.** Safari no permite bloquear la orientación en una web app; cada pantalla debe tener un diseño para cada orientación.
@@ -196,6 +196,8 @@ Secciones (en vertical la pantalla se desplaza). Las de cada juego solo aparecen
 - **Palabras: modo de juego:** Crucigrama / Lista (más difícil).
 - **Cálculos cruzados:** Marcar errores en rojo (sí).
 - **Rummy: nivel de los rivales:** Principiante / Intermedio / Experto (común a los tres; se aplica desde la próxima partida).
+- **Rummy: tiempo por turno** (v1.6): Sin límite (por defecto) / 2 min / 1 min / 30 s. Nota: «Si se acaba, robas una ficha. Se aplica desde tu próximo turno.»
+- **Rummy: mostrar cronómetro** (v1.6): sí por defecto.
 - Pie: versión de la app.
 
 ### 4.4 Comunes a todos los juegos
@@ -308,6 +310,12 @@ Juego de fichas numeradas al estilo del Rummikub clásico (no usar ese nombre ni
 - Si el límite de tiempo se agota, usar la mejor solución encontrada hasta entonces.
 
 **Pantalla** (ver diseños `Rummy-Light`, `Rummy-H-Light` y oscuros): tapete verde en el centro con las combinaciones; rivales alrededor mostrando dorsos y número de fichas («aún no ha bajado» si procede); atril de madera de dos pisos abajo (7 + 7 huecos); botones Ordenar 1 2 3, Ordenar por color, Robar ficha, Terminar turno; «Deshacer jugada» arriba a la derecha; fichas que quedan por robar.
+
+**Turno y tiempo (v1.6):**
+- **De quién es el turno:** el rival que juega se destaca con una tarjeta en el color del Rummy (`--j-fondo`, contorno `--j-texto`), su nombre más grande y la cápsula «Le toca». Además, arriba del tapete, un cartel: «Tu turno» (píldora blanca) o «Juega Paco…» (contorno blanco); en el instante entre la última jugada de un rival y tu turno, «Ahora te toca…».
+- **Cronómetro** de la partida en la barra, a la derecha (ajuste «Rummy: mostrar cronómetro»). Se para cuando la app pasa a segundo plano.
+- **Tiempo por turno** (ajuste; por defecto sin límite): solo para tu turno. El cartel muestra «Tu turno · te quedan 0:45»; con 10 s o menos, el cartel lleva un contorno rojo (sin parpadeos ni sonidos). Al acabarse, ocurre lo mismo que con «Robar ficha» (lo puesto vuelve al atril; con el pozo vacío se pasa el turno) y se avisa «Se acabó tu tiempo: has robado una ficha.». La cuenta se para con la app en segundo plano; al reanudar una partida guardada, el turno empieza de nuevo con todo su tiempo.
+- La barra muestra «N fichas por robar» (el nivel se ve en Inicio).
 - Cada ficha: número grande en su color + **símbolo del color debajo** (● ▲ ■ ◆) para distinguirlas aunque cueste ver los colores. Comodín: carita.
 
 **Concreción (v1.5):**

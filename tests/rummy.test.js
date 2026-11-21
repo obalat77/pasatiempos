@@ -258,3 +258,14 @@ test('mover fichas en tu turno: nunca se pierde ni se duplica ninguna', () => {
   assert.deepEqual(inicial, { mesa: [[1, 2, 3], [10, 11, 12]], atril: [40, 41] });
   for (const r of [a, b, c, d]) assert.equal(contar(r), contar(r === d ? { mesa: [[5], [6, 7]], atril: [] } : inicial));
 });
+
+test('tiempo por turno: el ajuste se traduce a segundos y por defecto no hay límite', async () => {
+  const { AJUSTES_POR_DEFECTO } = await import('../js/core/ajustes.js');
+  const R = await import('../js/juegos/rummy/reglas.js');
+  assert.equal(AJUSTES_POR_DEFECTO['rummy.tiempoTurno'], 'no');
+  assert.equal(R.segundosPorTurno('no'), 0);
+  assert.equal(R.segundosPorTurno('2min'), 120);
+  assert.equal(R.segundosPorTurno('1min'), 60);
+  assert.equal(R.segundosPorTurno('30s'), 30);
+  assert.equal(R.segundosPorTurno('otra cosa'), 0);
+});

@@ -9,6 +9,8 @@ export const AJUSTES_POR_DEFECTO = Object.freeze({
   'palabras.modo': 'crucigrama',   // 'crucigrama' | 'lista'
   'calculos.marcarErrores': true,
   'rummy.nivel': 'intermedio',     // 'principiante' | 'intermedio' | 'experto'
+  'rummy.cronometro': true,
+  'rummy.tiempoTurno': 'no',       // 'no' | '2min' | '1min' | '30s' (v1.6; por defecto sin límite)
 });
 
 /** Valor guardado válido = mismo tipo que el valor por defecto. */

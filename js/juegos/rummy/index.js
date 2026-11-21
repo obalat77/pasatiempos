@@ -1,7 +1,7 @@
 // Rummy — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.5).
 // Tú contra Lola (izquierda), Paco (arriba) y Carmen (derecha), que piensan en un Web Worker.
 import { h, icono, barraJuego } from '../../core/ui.js';
-import { numero } from '../../core/formato.js';
+import { numero, cronometro } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { crearAzar } from '../../core/azar.js';
 import { buscarJuego } from '../catalogo.js';
@@ -35,7 +35,8 @@ class PartidaRummy {
   constructor(contenedor, ctx) {
     this.ctx = ctx;
     this.contenedor = contenedor;
-    this.reloj = new Reloj();
+    this.reloj = new Reloj(0, () => this.pintarReloj());
+    this.relojTurno = null;       // cuenta atrás de tu turno, si hay «Tiempo por turno»
     this.vivo = true;
     this.sel = null;              // id de la ficha elegida
     this.nuevas = new Set();      // fichas que acaba de poner un rival (resaltadas)
@@ -115,12 +116,20 @@ class PartidaRummy {
   // ---------- Pantalla ----------
 
   construir() {
+    const { ajustes } = this.ctx;
+    this.mostrarReloj = ajustes.obtener('rummy.cronometro');
+    this.limiteTurno = R.segundosPorTurno(ajustes.obtener('rummy.tiempoTurno'));
+    this.tiempoEl = h('span', { class: 'barra-tiempo', role: 'timer', 'aria-label': 'Tiempo de juego',
+      hidden: !this.mostrarReloj });
+    // Cartel sobre el tapete: de quién es el turno (y cuánto te queda si hay límite).
+    // Lo mismo se anuncia en el estado de abajo (aria-live), así que aquí no se lee dos veces.
+    this.cartelEl = h('div', { class: 'cartel-turno', 'aria-hidden': 'true' }, this.cartelTexto = h('span'));
     this.info = h('span', { class: 'rummy-info' });
     this.deshacerBtn = h('button', { type: 'button', class: 'boton-deshacer', on: { click: () => this.deshacer() } },
       icono('deshacer'), 'Deshacer jugada');
     const cabecera = barraJuego({
       alInicio: () => this.ctx.navegar(''), titulo: 'Rummy', subtitulo: this.info,
-      derecha: [this.deshacerBtn], clase: 'rummy-cabecera',
+      derecha: [this.tiempoEl, this.deshacerBtn], clase: 'rummy-cabecera',
     });
 
     this.rivalesEl = [1, 2, 3].map((j) => {
@@ -184,8 +193,8 @@ class PartidaRummy {
     const antes = new Set((this.mesaAntes || []).flat());
     const puedoMoverMesa = turnoMio && p.jugadores[0].bajado;
 
-    this.info.textContent =
-      `${NOMBRE_NIVEL[p.nivel]} · ${p.pozo.length === 1 ? '1 ficha' : `${numero(p.pozo.length)} fichas`} por robar`;
+    // El nivel ya se ve en Inicio; aquí, solo lo que cambia durante la partida.
+    this.info.textContent = `${p.pozo.length === 1 ? '1 ficha' : `${numero(p.pozo.length)} fichas`} por robar`;
 
     // Rivales
     [1, 2, 3].forEach((j, k) => {
@@ -196,6 +205,7 @@ class PartidaRummy {
       el.classList.toggle('activo', activo);
       el.replaceChildren(...[
         h('span', { class: 'rival-nombre' }, x.nombre),
+        activo ? h('span', { class: 'rival-turno' }, 'Le toca') : null,
         j === 2 ? null : h('span', { class: 'rival-fichas' }, n === 1 ? '1 ficha' : `${n} fichas`),
         h('div', { class: 'dorsos', 'aria-hidden': 'true' }, Array.from({ length: Math.min(n, 14) }, () => h('span', { class: 'dorso' }))),
         j === 2 ? h('span', { class: 'rival-fichas' }, n === 1 ? '1 ficha' : `${n} fichas`) : null,
@@ -228,7 +238,8 @@ class PartidaRummy {
     const nueva = turnoMio
       ? h('button', { type: 'button', class: 'zona-nueva', dataset: { destino: 'nueva' }, on: { click: () => this.soltarEn('nueva') } }, 'Nueva combinación')
       : null;
-    this.mesaEl.replaceChildren(...combos, ...(nueva ? [nueva] : []));
+    this.mesaEl.replaceChildren(this.cartelEl, ...combos, ...(nueva ? [nueva] : []));
+    this.pintarCartel();
 
     // Atril (dos baldas)
     const mio = turnoMio ? this.atrilT : p.jugadores[0].atril;
@@ -264,15 +275,20 @@ class PartidaRummy {
   ajustarTamaños() {
     if (!this.atrilEl) return;
     const horizontal = matchMedia('(orientation: landscape)').matches;
-    const anchoDisponible = horizontal ? this.raiz.clientWidth * 0.62 : this.raiz.clientWidth - 40;
+    const estilo = getComputedStyle(this.raiz);
+    const interior = this.raiz.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight);
+    const anchoDisponible = horizontal ? interior * 0.66 : interior;
     const maxAtril = horizontal ? 68 : 76;
     const fa = Math.floor(Math.min(maxAtril, (anchoDisponible - 28 - (this.porBalda - 1) * 6) / this.porBalda));
     this.raiz.style.setProperty('--fa-ancho', `${fa}px`);
-    // Mesa: empezar grande e ir reduciendo hasta que quepa (o llegar a 34 px y desplazar)
+    // Mesa: empezar grande e ir reduciendo hasta que quepa (o llegar a 34 px y desplazar;
+    // si aun así una combinación no cabe a lo ancho, se parte en dos líneas)
     const mesa = this.mesaEl;
     let fm = horizontal ? 68 : 56;
     this.raiz.style.setProperty('--fm-ancho', `${fm}px`);
-    while (fm > 34 && mesa.scrollHeight > mesa.clientHeight + 1) {
+    // Que quepa a lo alto y también a lo ancho (una escalera larga no debe cortarse)
+    const desborda = () => mesa.scrollHeight > mesa.clientHeight + 1 || mesa.scrollWidth > mesa.clientWidth + 1;
+    while (fm > 34 && desborda()) {
       fm -= 4;
       this.raiz.style.setProperty('--fm-ancho', `${fm}px`);
     }
@@ -289,9 +305,62 @@ class PartidaRummy {
     for (const id of yo.atril) if (!this.ordenAtril.includes(id)) this.ordenAtril.push(id);
     this.sel = null;
     this.miTurno = true;
+    this.iniciarTiempoTurno();
     // Al empezar tu turno manda «Tu turno…» (lo que han puesto los rivales sigue resaltado en la mesa)
     if (this.mensaje && !this.mensaje.aviso) this.mensaje = null;
     this.pintar();
+  }
+
+  // ---------- Tiempo: cronómetro de la partida y límite por turno (ajustes) ----------
+
+  pintarReloj() {
+    if (this.tiempoEl && this.mostrarReloj) this.tiempoEl.textContent = cronometro(this.reloj.segundos());
+  }
+
+  /** Segundos que te quedan en este turno (null si no hay límite). */
+  restanteTurno() {
+    if (!this.relojTurno) return null;
+    return Math.max(0, Math.ceil(this.limiteTurno - this.relojTurno.segundos()));
+  }
+
+  pintarCartel() {
+    if (!this.cartelEl) return;
+    const { p } = this;
+    this.cartelEl.hidden = !!p.terminada;
+    const restante = this.restanteTurno();
+    // Tras la jugada del último rival hay un momento en que el turno ya es tuyo pero aún no puedes tocar.
+    const mio = p.turno === 0 && this.miTurno;
+    this.cartelTexto.textContent = mio
+      ? (restante === null ? 'Tu turno' : `Tu turno · te quedan ${Math.floor(restante / 60)}:${String(restante % 60).padStart(2, '0')}`)
+      : (p.turno === 0 ? 'Ahora te toca…' : `Juega ${p.jugadores[p.turno].nombre}…`);
+    this.cartelEl.classList.toggle('rival', !mio);
+    this.cartelEl.classList.toggle('apurado', mio && restante !== null && restante <= 10);
+  }
+
+  iniciarTiempoTurno() {
+    this.pararTiempoTurno();
+    if (!this.limiteTurno) return;
+    this.relojTurno = new Reloj(0, () => this.alPasarSegundoTurno());
+    if (document.visibilityState !== 'hidden') this.relojTurno.arrancar();
+  }
+
+  pararTiempoTurno() {
+    this.relojTurno?.parar();
+    this.relojTurno = null;
+  }
+
+  alPasarSegundoTurno() {
+    this.pintarCartel();
+    if (this.restanteTurno() === 0 && this.esMiTurno()) this.tiempoAgotado();
+  }
+
+  /** Se acabó tu tiempo: lo mismo que tocar «Robar ficha» (lo puesto vuelve a tu atril). */
+  tiempoAgotado() {
+    this.pararTiempoTurno();
+    this.cancelarArrastre();
+    this.sel = null;
+    this.mensaje = { texto: this.p.pozo.length ? 'Se acabó tu tiempo: has robado una ficha.' : 'Se acabó tu tiempo: pasas el turno.' };
+    this.robar();
   }
 
   hayCambios() {
@@ -354,6 +423,7 @@ class PartidaRummy {
       return;
     }
     this.miTurno = false;
+    this.pararTiempoTurno();
     this.ultimaRobada = null;
     R.aplicarJugada(this.p, 0, this.mesaT, this.atrilT);
     this.ordenAtril = this.ordenAtril.filter((id) => this.p.jugadores[0].atril.includes(id));
@@ -366,6 +436,7 @@ class PartidaRummy {
     if (!this.esMiTurno()) return;
     if (this.hayCambios()) this.deshacer();   // se devuelven al atril las fichas puestas
     this.miTurno = false;
+    this.pararTiempoTurno();
     const ficha = R.robar(this.p, 0);
     this.atrilT = null;
     this.nuevas.clear();
@@ -508,8 +579,8 @@ class PartidaRummy {
 
   visibilidad() {
     if (this.p?.terminada) return;
-    if (document.visibilityState === 'hidden') { this.reloj.parar(); this.guardar(); }
-    else this.reloj.arrancar();
+    if (document.visibilityState === 'hidden') { this.reloj.parar(); this.relojTurno?.parar(); this.guardar(); }
+    else { this.reloj.arrancar(); if (this.esMiTurno()) this.relojTurno?.arrancar(); }
   }
 
   // ---------- Guardar y terminar ----------
@@ -538,6 +609,7 @@ class PartidaRummy {
     if (this.cerrada) return;
     this.cerrada = true;
     const { p } = this;
+    this.pararTiempoTurno();
     const segundos = this.reloj.detenerFinal();
     await this.ctx.partidas.cerrar(ID, p.ganador === 0 ? 'ganada' : 'perdida', {
       segundos,
@@ -577,6 +649,7 @@ class PartidaRummy {
     this.cancelarArrastre();
     this.worker?.terminate();
     this.reloj.parar();
+    this.pararTiempoTurno();
     this.guardar();
     this.raiz?.remove();
   }

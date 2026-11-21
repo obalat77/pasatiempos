@@ -44,9 +44,26 @@
 .boton-deshacer:disabled { opacity: 0.45; }
 
 /* ---------- Rivales ---------- */
-.rival { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.rival { display: flex; align-items: center; justify-content: center; gap: 12px; border-radius: 18px; }
 .rival-nombre { font-size: 1.25rem; font-weight: 700; }
-.rival.activo .rival-nombre { color: var(--acento-texto); }
+/* El rival al que le toca: tarjeta con el color del Rummy, contorno y «Le toca» (v1.6) */
+.rival.activo {
+  background: var(--j-fondo);
+  color: var(--j-texto);
+  box-shadow: 0 0 0 3px var(--j-texto);
+  padding: 6px 14px;
+}
+.rival.activo .rival-nombre { font-size: 1.5rem; font-weight: 800; }
+.rival.activo .rival-fichas { color: inherit; }
+.rival-turno {
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: var(--j-texto);
+  color: var(--j-fondo);
+  font-size: 1.125rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
 .rival-fichas, .rival-estado { font-size: 1.125rem; color: var(--texto-2); text-align: center; }
 .rival-estado:not(:empty) {          /* «aún no ha bajado» */
   padding: 2px 12px;
@@ -57,8 +74,12 @@
 }
 .dorsos { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; }
 .dorso { width: 20px; height: 28px; border-radius: 4px; background: var(--dorso); border: 1px solid var(--ficha-sombra); }
-.rival-arriba { min-height: 44px; }
-.rival-lado { width: 96px; flex: none; flex-direction: column; gap: 8px; }
+.rival-arriba { min-height: 44px; flex-wrap: wrap; row-gap: 4px; }
+.rival-arriba > span { white-space: nowrap; }
+.rival-arriba .dorsos { flex-wrap: nowrap; }
+.rival-lado { width: 104px; flex: none; align-self: center; flex-direction: column; gap: 8px; padding: 6px 0; }
+.rival-lado.activo { padding: 12px 4px; }
+.rival.activo .rival-estado { background: transparent; padding: 0; white-space: normal; }
 .rival-lado .dorsos { display: grid; grid-template-columns: repeat(2, 28px); }
 .rival-lado .dorso { width: 28px; height: 20px; }
 
@@ -79,7 +100,7 @@
   align-content: flex-start;
   gap: calc(var(--fm-ancho) * 0.5) calc(var(--fm-ancho) * 0.5);
 }
-.combinacion { display: flex; gap: 4px; padding: 4px; margin: -4px; border-radius: 10px; }
+.combinacion { display: flex; flex-wrap: wrap; max-width: 100%; gap: 4px; padding: 4px; margin: -4px; border-radius: 10px; }
 .combinacion.no-valida { box-shadow: 0 0 0 3px var(--error); }
 .combinacion.destino { cursor: pointer; }
 .zona-nueva {
@@ -93,6 +114,21 @@
   font-size: 1.125rem;
   font-weight: 700;
 }
+
+/* Cartel de turno, arriba del tapete: «Tu turno» / «Juega Paco…» (v1.6) */
+.cartel-turno { flex: 0 0 100%; display: flex; justify-content: center; }
+.cartel-turno[hidden] { display: none; }
+.cartel-turno > span {
+  padding: 6px 24px;
+  border-radius: 999px;
+  background: var(--sobre-tapete);
+  color: var(--tapete);
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.cartel-turno.rival > span { background: transparent; color: var(--sobre-tapete); box-shadow: inset 0 0 0 3px var(--sobre-tapete); }
+.cartel-turno.apurado > span { box-shadow: inset 0 0 0 4px var(--rojo); }
 
 /* ---------- Fichas ---------- */
 .ficha-r {
