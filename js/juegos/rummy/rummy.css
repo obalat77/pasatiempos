@@ -36,6 +36,8 @@
   color: var(--texto);
   font-size: 1.1875rem;
   font-weight: 700;
+  line-height: 1.1;            /* si no cabe, «Deshacer / jugada» en dos líneas sin crecer */
+  text-align: left;
   display: inline-flex;
   align-items: center;
   gap: 8px;

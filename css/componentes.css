@@ -52,8 +52,11 @@
   padding: 12px;
   min-height: calc(3.5rem + 24px);
   display: grid;
-  /* Los lados nunca menos que su contenido; el sobrante se reparte para centrar el título */
-  grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr);
+  /* El sobrante se reparte para centrar el título. Si falta sitio, el título y el subtítulo
+     se quedan en una línea y es un botón de un lado el que parte su texto en dos dentro de su
+     píldora (p. ej. «Deshacer jugada» del Rummy en vertical con texto Grande): así la barra
+     mide lo mismo en todas las pantallas */
+  grid-template-columns: minmax(min-content, 1fr) minmax(0, auto) minmax(min-content, 1fr);
   align-items: center;
   gap: 12px;
 }
