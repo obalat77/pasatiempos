@@ -1,4 +1,5 @@
-/* Parejas de números — diseños Parejas-Light (vertical) y Parejas-H-Light (horizontal). */
+/* Parejas de números — disposición de Parejas-Light (vertical) y Parejas-H-Light (horizontal);
+   estilo v1.6 (diseno/estilo-a.html): barra, selección y «Añadir números» en lila. */
 
 .parejas {
   --casilla: min(76px, calc((100vw - 102px) / 9));
@@ -20,9 +21,9 @@
 /* ---------- Cabecera ---------- */
 .parejas-cabecera { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; }
 .parejas-titulo { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.parejas-titulo h1 { font-size: 1.625rem; font-weight: 700; }
-.parejas-titulo .subtitulo { font-size: 1.125rem; color: var(--texto-2); }
-.parejas-tiempo { font-size: 1.625rem; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 7.5rem; text-align: right; }
+.parejas-titulo h1 { font-size: 1.75rem; line-height: 1.1; }
+.parejas-titulo .subtitulo { font-size: 1.25rem; }
+.parejas-tiempo { font-size: 1.75rem; font-weight: 800; font-variant-numeric: tabular-nums; min-width: 7.5rem; text-align: right; }
 .parejas-instruccion { font-size: 1.3125rem; text-align: center; min-height: 1.6em; }
 .parejas-instruccion.aviso { font-weight: 700; }
 
@@ -34,7 +35,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   border: 3px solid var(--linea-fuerte);
-  border-radius: 12px;
+  border-radius: 18px;
   background: var(--superficie);
 }
 .parejas-rejilla { display: grid; grid-template-columns: repeat(9, var(--casilla)); }
@@ -49,7 +50,7 @@
   background: var(--superficie);
   color: var(--texto);
   font-size: calc(var(--casilla) * 0.53);   /* 40 px con casillas de 76 */
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
   display: flex;
   align-items: center;
@@ -57,16 +58,16 @@
 }
 .celda:nth-child(9n) { border-right: 0; }
 .celda.quitada { color: var(--eliminado); }
-.celda.seleccionada { background: var(--seleccion); }
-.celda.pista { box-shadow: inset 0 0 0 4px var(--acento); }
+.celda.seleccionada { background: var(--j-fuerte); color: var(--j-texto); }
+.celda.pista { box-shadow: inset 0 0 0 4px var(--j-texto); }
 .celda:focus-visible { outline-offset: -4px; }
 
 /* ---------- Controles ---------- */
 .parejas-controles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .parejas .herramienta { min-height: 4.75rem; font-size: 1.25rem; }
-.boton-añadir { border: 2px solid var(--acento); color: var(--acento-texto); flex-direction: column; gap: 2px; }
-.boton-añadir .quedan-añadir { font-size: 1.125rem; font-weight: 400; }
-.boton-añadir.pista { box-shadow: inset 0 0 0 4px var(--acento); }
+.boton-añadir { background: var(--j-fondo); color: var(--j-texto); border-color: transparent; flex-direction: column; gap: 2px; }
+.boton-añadir .quedan-añadir { font-size: 1.125rem; font-weight: 700; }
+.boton-añadir.pista { box-shadow: inset 0 0 0 4px var(--j-texto); }
 .parejas-preparando { margin: auto; font-size: 1.5rem; color: var(--texto-2); }
 
 /* ---------- Horizontal ---------- */
