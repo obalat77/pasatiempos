@@ -131,11 +131,11 @@ Las estadísticas se **calculan** a partir de `resultados` (no se guardan duplic
 | Rummy | `#CDEBDD` / `#183A30` | `#0F3A2E` / `#CDEBDD` | — | — |
 
 Uso por juego:
-- **Sudoku:** barra en `--j-fondo`; casilla seleccionada `--j-fuerte` (sustituye a `--seleccion`); casillas con el mismo número `--j-suave` (sustituye a `--mismo-numero`); fila, columna y bloque en `--resaltado`.
+- **Sudoku:** barra en `--j-fondo`; casilla seleccionada `--j-fuerte` (sustituye a `--seleccion`); casillas con el mismo número `--j-suave` (sustituye a `--mismo-numero`); fila, columna y bloque en `--resaltado`. Si la casilla seleccionada tiene un número equivocado, va en `--superficie` con un anillo `--j-texto` (el rojo sobre `--j-fuerte` no llega a 3:1 en oscuro); las notas de la casilla seleccionada van en `--texto`.
 - **Palabras:** barra, letras de la rueda y casillas de palabras encontradas en `--j-fondo` con letra `--j-texto`; letras ya tocadas y la línea que las une, invertidas (`--j-fuerte` de fondo, `--j-fondo` de letra); palabra en curso en una píldora `--j-fondo`. Letra descubierta con Pista en `--acento-texto`.
 - **Parejas:** barra y botón «Añadir números» en `--j-fondo`; número seleccionado `--j-fuerte` (sustituye a `--seleccion`).
 - **Cálculos:** barra en `--j-fondo`; huecos con borde discontinuo de 3 px `--j-fuerte`; hueco seleccionado con fondo `--j-fondo` y borde continuo `--j-texto`.
-- **Rummy:** barra, aviso de turno y «aún no ha bajado» en `--j-fondo` con `--j-texto`; «Terminar turno» en el verde del tapete (`#2F6F5E`) con texto `#FFFFFF`. Tapete, atril y fichas no cambian.
+- **Rummy:** barra, aviso de turno y «aún no ha bajado» en `--j-fondo` con `--j-texto`; «Terminar turno» en el verde del tapete (`#2F6F5E`) con texto `#FFFFFF`. Los avisos en rojo de la línea de estado («Hay una combinación no válida…») van en `--superficie` con contorno `--error` (sobre `--j-fondo` no llegan a 4,5:1). Tapete, atril y fichas no cambian.
 
 Contrastes comprobados: `--j-texto` sobre `--j-fondo` ≥ 7:1 en los dos temas; `--acento-texto` sobre `--j-fuerte` del Sudoku ≥ 3:1 (números de 44 px en negrita).
 

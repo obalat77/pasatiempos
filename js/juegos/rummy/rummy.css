@@ -181,7 +181,9 @@
   font-weight: 700;
 }
 .estado-turno:empty { background: transparent; }
-.estado-turno.aviso { color: var(--error); }
+/* Aviso («no se puede terminar el turno»): rojo sobre --superficie, que sí llega a 4,5:1 en los dos
+   temas (sobre --j-fondo se quedaba en 4,4 y 3,6) */
+.estado-turno.aviso { background: var(--superficie); color: var(--error); box-shadow: inset 0 0 0 2px var(--error); }
 .atril {
   background: var(--madera);
   border-radius: 16px;
