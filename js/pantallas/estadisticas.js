@@ -133,7 +133,7 @@ export async function montar(contenedor, { navegar, partidas }) {
   };
 
   const selector = disponibles.length > 1
-    ? segmentado('Juego', disponibles.map((j) => ({ valor: j.id, texto: j.nombreCorto })), juegoElegido,
+    ? segmentado('Juego', disponibles.map((j) => ({ valor: j.id, texto: j.nombreCorto, clase: `juego-${j.id}` })), juegoElegido,
         (id) => { juegoElegido = id; pintar(); })
     : null;
   selector?.classList.add('selector-juego');

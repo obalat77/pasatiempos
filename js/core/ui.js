@@ -71,13 +71,14 @@ export function segmentado(etiqueta, opciones, valorActual, alCambiar) {
 }
 
 /**
- * Ventana modal sencilla (sin animaciones). `contenido` recibe la función `cerrar`
+ * Ventana modal sencilla (sin animaciones). `clase` (opcional) añade p. ej. el color de un juego
+ * (`juego-sudoku`): el título se pinta como su barra. `contenido` recibe la función `cerrar`
  * y devuelve los nodos del cuerpo. Se cierra con «Cancelar» o al llamar a `cerrar`.
  * Devuelve una promesa que se resuelve al cerrarse, con el valor pasado a `cerrar`.
  */
-export function dialogo({ titulo, contenido, textoCancelar = 'Cancelar' }) {
+export function dialogo({ titulo, contenido, textoCancelar = 'Cancelar', clase = '' }) {
   return new Promise((resolver) => {
-    const d = h('dialog', { class: 'dialogo', 'aria-labelledby': 'titulo-dialogo' });
+    const d = h('dialog', { class: `dialogo ${clase}`.trim(), 'aria-labelledby': 'titulo-dialogo' });
     let valor;
     const cerrar = (v) => { valor = v; d.close(); };
     d.append(

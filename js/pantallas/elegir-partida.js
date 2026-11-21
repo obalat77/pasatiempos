@@ -18,6 +18,7 @@ export async function elegirPartida(juego, { db, partidas }) {
 
   const eleccion = await dialogo({
     titulo: juego.nombre,
+    clase: `juego-${juego.id}`,
     contenido: (cerrar) => {
       const partes = [];
       if (enCurso) {

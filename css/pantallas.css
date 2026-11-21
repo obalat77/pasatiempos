@@ -230,7 +230,17 @@ html[data-texto="grande"] .baldosa.juego-rummy { gap: 18px; }
 /* ---------- Estadísticas ---------- */
 .estadisticas { gap: 32px; }
 .selector-juego { width: 100%; }
-.selector-juego > button { min-height: 3.5rem; font-size: 1.25rem; }
+.selector-juego > button { min-height: 3.5rem; font-size: 1.25rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+/* Muestra pequeña del color de cada juego junto a su nombre (v1.6) */
+.selector-juego > button::before {
+  content: '';
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--j-fondo);
+  box-shadow: 0 0 0 1.5px var(--j-texto);
+}
 .estadisticas-cuerpo { display: flex; flex-direction: column; gap: 32px; }
 .cifras-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .cifra {

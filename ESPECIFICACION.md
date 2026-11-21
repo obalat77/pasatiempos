@@ -150,9 +150,9 @@ Todo texto debe cumplir contraste 4,5:1 (3:1 a partir de 24 px). **Excepción de
 ### 3.3 Componentes
 - **Botón principal:** fondo `--acento`, texto `--sobre-acento`, 64–76 px de alto, forma de píldora o radio 20 px, texto 20–24 px negrita.
 - **Botón secundario:** fondo `--superficie` con borde 2 px `--borde` (o 2 px `--acento`), mismo alto. Las teclas de números y las herramientas (Deshacer, Borrar, Notas, Pista) son botones secundarios con radio 18–22 px.
-- **Barra de juego (v1.6):** arriba en todas las pantallas de juego; bloque de radio 30 px y fondo `--j-fondo`, texto `--j-texto`, relleno 16 px. Tres zonas: a la izquierda el botón «Inicio»; en el centro el nombre del juego (30 px, 800) y debajo el subtítulo (dificultad o nivel, 20 px); a la derecha el cronómetro, el contador o la acción del juego («Pausa», «1 de 3 palabras», «Deshacer jugada») como píldora `--chip`.
+- **Barra de juego (v1.6):** arriba en todas las pantallas de juego; bloque de radio 30 px y fondo `--j-fondo`, texto `--j-texto`, relleno 16 px. Tres zonas: a la izquierda el botón «Inicio»; en el centro el nombre del juego (28–30 px, 800) y debajo el subtítulo (dificultad o nivel, 20 px); a la derecha el cronómetro (texto, 28 px) y el contador o la acción del juego («Pausa», «1 de 3 palabras», «Deshacer jugada») como píldora `--chip`. En horizontal la barra ocupa la cabecera de la columna lateral y puede repartirse en dos filas.
 - **Botón «Inicio»:** píldora `--chip` de 56 px con flecha «‹» + texto «Inicio», dentro de la barra de juego, a la izquierda.
-- **Baldosa de juego (Inicio, v1.6):** radio 30 px, fondo `--j-fondo`, texto `--j-texto`; icono arriba (84 px), nombre (31 px, 800), subtítulo (20 px) y píldora «Jugar» `--chip` abajo. Toda la baldosa es el botón.
+- **Baldosa de juego (Inicio, v1.6):** radio 30 px, fondo `--j-fondo`, texto `--j-texto`; dibujo arriba (72 px; 64 px en horizontal y menos con texto grande, para que Inicio quepa sin desplazarse), nombre (30 px, 800), subtítulo (20 px; en horizontal el corto, p. ej. «4 dificultades») y píldora «Jugar» `--chip` abajo. Toda la baldosa es el botón.
 - **Selector segmentado** (Ajustes, pestañas): fondo `--pista`, opción activa con fondo `--acento`; alto 56–64 px.
 - **Interruptor** 76 × 44 px.
 - Áreas táctiles de **56 px como mínimo** (nunca menos de 44 px).
@@ -345,4 +345,4 @@ Para confirmar con el usuario cuando llegue cada fase:
 2. ~~Palabras: comprobar la palabra al soltar el dedo o con un botón «Comprobar» en modo toque.~~ **Decidido:** al soltar el dedo (y, en modo toque, al tocar la palabra en curso), sin botón «Comprobar».
 3. ~~Rummy: ¿jugar a una sola partida o a varias rondas con puntuación acumulada?~~ **Decidido:** una sola partida (por ahora).
 4. ~~¿Sonidos opcionales (desactivados por defecto)?~~ **Decidido:** sin sonidos.
-5. Rediseño (fase 6), sin maqueta todavía: Palabras en modo crucigrama, las ventanas (elegir dificultad, pausa, enhorabuena), Estadísticas, Ajustes, y los cuatro juegos distintos del Sudoku en horizontal y en tema oscuro. Se aplicarán las reglas de §3 y se enseñarán antes de darlas por buenas.
+5. Rediseño (fase 6), pantallas sin maqueta resueltas aplicando §3 (pendientes de visto bueno): Palabras en modo crucigrama igual que el modo lista; la ventana de elegir partida lleva el título en una barra con el color del juego; las tarjetas de pausa y enhorabuena, una franja superior con el color del juego; Estadísticas y Ajustes, sobrias, con una muestra del color de cada juego en el selector de Estadísticas.

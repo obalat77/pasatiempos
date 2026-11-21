@@ -164,7 +164,14 @@
 }
 .dialogo:not([open]) { display: none; }
 .dialogo::backdrop { background: var(--velo); }
-.dialogo-titulo { font-size: 2rem; font-weight: 700; }
+.dialogo-titulo { font-size: 2rem; font-weight: 800; }
+/* Ventana de un juego: el título va en una barra con su color (v1.6) */
+.dialogo[class*="juego-"] .dialogo-titulo {
+  background: var(--j-fondo);
+  color: var(--j-texto);
+  border-radius: 1.375rem;
+  padding: 12px 20px;
+}
 .dialogo-cuerpo { display: flex; flex-direction: column; gap: 14px; }
 .dialogo-subtitulo { font-size: 1.375rem; font-weight: 700; margin-top: 4px; }
 .dialogo-nota { font-size: 1.25rem; color: var(--texto-2); text-align: center; }
@@ -222,6 +229,7 @@ body.con-aviso { padding-bottom: calc(3.5rem + 32px + env(safe-area-inset-bottom
 /* ---------- Juegos: tarjeta de aviso (pausa, final de partida) ---------- */
 .tarjeta-final {
   background: var(--superficie);
+  border-top: 10px solid var(--j-fondo, var(--acento-suave));   /* franja con el color del juego (v1.6) */
   border-radius: 28px;
   padding: 20px 28px;
   display: flex;
