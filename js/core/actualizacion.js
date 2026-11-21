@@ -6,6 +6,8 @@
 import { h } from './ui.js';
 
 const EN_DESARROLLO = ['localhost', '127.0.0.1'].includes(location.hostname);
+// Se tocó el aviso «Hay una versión nueva»: al cambiar de versión hay que recargar siempre.
+let actualizacionPedida = false;
 
 /**
  * @param {() => Promise<void>|void} antesDeRecargar  guarda la partida antes de recargar
@@ -29,7 +31,8 @@ export async function iniciarActualizaciones(antesDeRecargar) {
   }
 
   // Si ya había una versión controlando la página, un cambio de control es una actualización.
-  // La primera vez (instalación) no hay que recargar.
+  // La primera vez (instalación) no hay que recargar… salvo que en esa misma sesión llegue
+  // otra versión y se toque el aviso (si no, se quedaría en «Actualizando…»).
   const habiaVersion = !!navigator.serviceWorker.controller;
 
   let registro;
@@ -60,7 +63,7 @@ export async function iniciarActualizaciones(antesDeRecargar) {
 
   let recargando = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (recargando || !habiaVersion) return;
+    if (recargando || !(habiaVersion || actualizacionPedida)) return;
     recargando = true;
     location.reload();
   });
@@ -75,6 +78,7 @@ function mostrarAviso(registro, antesDeRecargar) {
       click: async () => {
         aviso.disabled = true;
         aviso.textContent = 'Actualizando…';
+        actualizacionPedida = true;
         try { await antesDeRecargar?.(); } catch (e) { console.error(e); }
         // Si ya no hay versión esperando (p. ej. se activó por otro lado), basta con recargar.
         if (registro.waiting) registro.waiting.postMessage({ tipo: 'actualizar' });
