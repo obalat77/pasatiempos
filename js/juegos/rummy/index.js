@@ -359,8 +359,7 @@ class PartidaRummy {
     this.pararTiempoTurno();
     this.cancelarArrastre();
     this.sel = null;
-    this.mensaje = { texto: this.p.pozo.length ? 'Se acabó tu tiempo: has robado una ficha.' : 'Se acabó tu tiempo: pasas el turno.' };
-    this.robar();
+    this.robar(this.p.pozo.length ? 'Se acabó tu tiempo: has robado una ficha.' : 'Se acabó tu tiempo: pasas el turno.');
   }
 
   hayCambios() {
@@ -432,9 +431,14 @@ class PartidaRummy {
     await this.despuesDeTurno();
   }
 
-  async robar() {
+  /**
+   * `avisoTiempo`: texto si se roba porque se acabó el tiempo. Ese aviso es «fijo»: se ve durante
+   * toda la ronda de los rivales (no lo tapan sus mensajes) y se quita al empezar tu turno.
+   */
+  async robar(avisoTiempo = null) {
     if (!this.esMiTurno()) return;
     if (this.hayCambios()) this.deshacer();   // se devuelven al atril las fichas puestas
+    if (avisoTiempo) this.mensaje = { texto: avisoTiempo, fijo: true };
     this.miTurno = false;
     this.pararTiempoTurno();
     const ficha = R.robar(this.p, 0);
@@ -526,7 +530,7 @@ class PartidaRummy {
     const yo = p.jugadores[j];
     this.animando = true;
     this.textoRival = 'pensando…';
-    this.mensaje = null;
+    if (!this.mensaje?.fijo) this.mensaje = null;
     this.nuevas.clear();
     this.pintar();
     const inicio = Date.now();
@@ -559,16 +563,21 @@ class PartidaRummy {
       }
       this.vistaMesa = null;
       R.aplicarJugada(p, j, decision.mesa, decision.atril);
-      this.mensaje = { texto: `${yo.nombre} ha puesto ${puestas.length === 1 ? '1 ficha' : `${puestas.length} fichas`}.` };
+      this.avisarRival(`${yo.nombre} ha puesto ${puestas.length === 1 ? '1 ficha' : `${puestas.length} fichas`}.`);
     } else {
       const ficha = R.robar(p, j);
-      this.mensaje = { texto: ficha === undefined ? `${yo.nombre} pasa.` : `${yo.nombre} roba una ficha.` };
+      this.avisarRival(ficha === undefined ? `${yo.nombre} pasa.` : `${yo.nombre} roba una ficha.`);
       this.textoRival = null;
     }
     this.animando = false;
     this.pintar();
     await this.guardar();
     await espera(PASO_MS);
+  }
+
+  /** Lo que ha hecho un rival, salvo que haya que seguir enseñando que se te acabó el tiempo. */
+  avisarRival(texto) {
+    if (!this.mensaje?.fijo) this.mensaje = { texto };
   }
 
   async despuesDeTurno() {
