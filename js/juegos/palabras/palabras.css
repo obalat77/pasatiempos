@@ -1,4 +1,5 @@
-/* Palabras — diseños Palabras-Light, Palabras-H-Light (crucigrama) y Palabras-Lista-* (lista). */
+/* Palabras — disposición de Palabras-Light, Palabras-H-Light (crucigrama) y Palabras-Lista-* (lista);
+   estilo v1.6 (diseno/estilo-a.html): barra, rueda y palabras encontradas en el color del juego. */
 
 .palabras {
   --casilla: 88px;       /* crucigrama; lo ajusta index.js según el espacio */
@@ -23,9 +24,22 @@
 .palabras-cabecera { align-self: stretch; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; }
 .palabras-cabecera .boton-inicio { justify-self: start; }
 .palabras-titulo { justify-self: center; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.palabras-titulo h1 { font-size: 1.75rem; font-weight: 700; }
-.palabras-titulo .subtitulo, .palabras-cuenta { font-size: 1.125rem; color: var(--texto-2); }
-.palabras-cuenta { justify-self: end; font-size: 1.25rem; font-weight: 700; text-align: right; }
+.palabras-titulo h1 { font-size: 1.875rem; line-height: 1.1; }
+.palabras-titulo .subtitulo { font-size: 1.25rem; }
+.palabras-cuenta .palabras-cuenta { all: unset; }   /* el contador va dentro de una sola píldora */
+.palabras-cuenta {
+  justify-self: end;
+  white-space: nowrap;
+  min-height: 3.5rem;
+  padding: 0 1.25rem;
+  border-radius: 1.75rem;
+  background: var(--chip);
+  font-size: 1.25rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  text-align: right;
+}
 
 /* ---------- Tablero (crucigrama o lista) ---------- */
 .palabras-zona { flex: 1 1 0; min-height: 0; align-self: stretch; display: flex; align-items: center; justify-content: center; }
@@ -38,11 +52,11 @@
   align-items: center;
   justify-content: center;
   font-size: calc(var(--casilla) * 0.55);
-  font-weight: 700;
+  font-weight: 800;
 }
-.letra-casilla.oculta { background: var(--superficie); border: 2px solid var(--borde); }
-.letra-casilla.vista { background: var(--acento); color: var(--sobre-acento); }
-.letra-casilla.pista { background: var(--superficie); border: 2px solid var(--acento); color: var(--acento-texto); }
+.letra-casilla.oculta { background: var(--superficie); border: 3px solid var(--borde); }
+.letra-casilla.vista { background: var(--j-fondo); color: var(--j-texto); }
+.letra-casilla.pista { background: var(--superficie); border: 3px solid var(--borde); color: var(--acento-texto); }
 
 .lista-palabras {
   display: grid;
@@ -61,17 +75,17 @@
   padding: 0 28px;
   border: 0;
   border-radius: 32px;
-  background: var(--acento);
-  color: var(--sobre-acento);
+  background: var(--j-fondo);
+  color: var(--j-texto);
   font-size: 2.125rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.12em;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .palabra-en-curso.vacia { visibility: hidden; }
-.palabra-en-curso.mensaje { background: var(--superficie); color: var(--texto); letter-spacing: 0; font-size: 1.375rem; }
+.palabra-en-curso.mensaje { background: var(--superficie); color: var(--texto); border: 2px solid var(--borde); letter-spacing: 0; font-size: 1.375rem; }
 
 /* ---------- Rueda ---------- */
 .palabras-mandos { display: flex; align-items: center; gap: 32px; }
@@ -82,10 +96,11 @@
   height: var(--rueda);
   border-radius: 50%;
   background: var(--superficie);
+  border: 2px solid var(--borde);
   touch-action: none;           /* deslizar el dedo no mueve la página */
 }
 .rueda svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.rueda svg path { stroke: var(--acento); stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; fill: none; opacity: 0.55; }
+.rueda svg path { stroke: var(--j-fuerte); stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; fill: none; opacity: 0.8; }
 .letra-rueda {
   position: absolute;
   width: calc(var(--rueda) * 0.2667);    /* 96 px con rueda de 360 */
@@ -93,20 +108,20 @@
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: var(--resaltado);
-  color: var(--texto);
+  background: var(--j-fondo);
+  color: var(--j-texto);
   font-size: calc(var(--rueda) * 0.128); /* 46 px */
-  font-weight: 700;
+  font-weight: 800;
   touch-action: none;
 }
-.letra-rueda.elegida { background: var(--acento); color: var(--sobre-acento); }
+.letra-rueda.elegida { background: var(--j-fuerte); color: var(--j-fondo); }
 
 .boton-redondo {
   flex: none;
   width: 112px;
   height: 112px;
   border-radius: 56px;
-  border: 0;
+  border: 2px solid var(--borde);
   background: var(--superficie);
   color: var(--texto);
   font-size: 1.125rem;
