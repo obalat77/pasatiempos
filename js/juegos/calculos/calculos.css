@@ -1,4 +1,5 @@
-/* Cálculos cruzados — diseños Calculos-Light (vertical) y Calculos-H-Light (horizontal). */
+/* Cálculos cruzados — disposición de Calculos-Light (vertical) y Calculos-H-Light (horizontal);
+   estilo v1.6 (diseno/estilo-a.html): barra y huecos en azul. */
 
 .calculos {
   --casilla: 88px;          /* lo ajusta index.js según el espacio libre */
@@ -22,9 +23,9 @@
 /* ---------- Cabecera ---------- */
 .calculos-cabecera { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; }
 .calculos-titulo { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.calculos-titulo h1 { font-size: 1.625rem; font-weight: 700; }
-.calculos-titulo .subtitulo { font-size: 1.125rem; color: var(--texto-2); }
-.calculos-tiempo { font-size: 1.625rem; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 7.5rem; text-align: right; }
+.calculos-titulo h1 { font-size: 1.75rem; line-height: 1.1; }
+.calculos-titulo .subtitulo { font-size: 1.25rem; }
+.calculos-tiempo { font-size: 1.75rem; font-weight: 800; font-variant-numeric: tabular-nums; min-width: 7.5rem; text-align: right; }
 .calculos-instruccion { font-size: 1.3125rem; text-align: center; }
 .calculos-instruccion.aviso { font-weight: 700; }
 
@@ -41,18 +42,18 @@
   background: transparent;
   color: var(--texto);
   font-size: calc(var(--casilla) * 0.5);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .cc.dado { background: var(--superficie); border: 2px solid var(--borde); }
-.cc.resultado { background: var(--resaltado); border: 2px solid var(--borde); font-size: calc(var(--casilla) * 0.45); }
+.cc.resultado { background: var(--resaltado); border: 2px solid transparent; font-size: calc(var(--casilla) * 0.45); }
 .cc.operador { color: var(--texto-2); font-size: calc(var(--casilla) * 0.43); }
-.cc.hueco { background: var(--superficie); border: 3px dashed var(--acento); color: var(--acento-texto); }
+.cc.hueco { background: var(--superficie); border: 3px dashed var(--j-fuerte); color: var(--acento-texto); }
 .cc.hueco.lleno { border: 2px solid var(--borde); }
-.cc.hueco.seleccionado { background: var(--seleccion); }
+.cc.hueco.seleccionado { background: var(--j-fondo); border: 3px solid var(--j-texto); }
 .cc.hueco.error { color: var(--error); }
 .cc:focus-visible { outline-offset: 2px; }
 
@@ -64,12 +65,12 @@
   width: var(--ficha);
   height: var(--ficha);
   padding: 0;
-  border: 0;
+  border: 2px solid var(--borde);
   border-radius: 20px;
   background: var(--superficie);
-  color: var(--acento-texto);
+  color: var(--texto);
   font-size: calc(var(--ficha) * 0.48);
-  font-weight: 700;
+  font-weight: 800;
 }
 .fichas .sin-fichas { align-self: center; font-size: 1.25rem; color: var(--texto-2); }
 
