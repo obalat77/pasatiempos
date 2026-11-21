@@ -43,15 +43,19 @@ export async function iniciarActualizaciones(antesDeRecargar) {
   const hayVersionNueva = () => registro.waiting && navigator.serviceWorker.controller;
   const comprobar = () => { if (hayVersionNueva()) mostrarAviso(registro, antesDeRecargar); };
 
-  comprobar();
-  registro.addEventListener('updatefound', () => {
-    const nuevo = registro.installing;
+  // Vigilar una versión que se está descargando hasta que quede lista.
+  const vigilar = (nuevo) => {
     nuevo?.addEventListener('statechange', () => { if (nuevo.state === 'installed') comprobar(); });
-  });
+  };
+  comprobar();
+  // La descarga puede haber empezado ya al registrar (antes de escuchar «updatefound»).
+  vigilar(registro.installing);
+  registro.addEventListener('updatefound', () => vigilar(registro.installing));
 
   // La app puede quedarse abierta días: buscar versión nueva cada vez que se vuelve a ella.
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') registro.update().catch(() => {});
+    if (document.visibilityState !== 'visible') return;
+    registro.update().then(comprobar, () => {});
   });
 
   let recargando = false;
