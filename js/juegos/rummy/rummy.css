@@ -28,9 +28,10 @@
 
 /* ---------- Cabecera ---------- */
 .rummy-cabecera { display: flex; align-items: center; gap: 14px; }
-.rummy-cabecera h1 { font-size: 1.625rem; font-weight: 700; }
+.rummy-cabecera h1 { font-size: 1.75rem; }
 .rummy-cabecera .boton-inicio { min-height: 3.5rem; }
 .rummy-info { font-size: 1.125rem; color: var(--texto-2); }
+.barra-juego .rummy-info { color: inherit; }
 .boton-deshacer {
   margin-left: auto;
   min-height: 3.5rem;
@@ -53,6 +54,13 @@
 .rival-nombre { font-size: 1.25rem; font-weight: 700; }
 .rival.activo .rival-nombre { color: var(--acento-texto); }
 .rival-fichas, .rival-estado { font-size: 1.125rem; color: var(--texto-2); text-align: center; }
+.rival-estado:not(:empty) {          /* «aún no ha bajado» */
+  padding: 2px 12px;
+  border-radius: 1rem;
+  background: var(--j-fondo);
+  color: var(--j-texto);
+  font-weight: 700;
+}
 .dorsos { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; }
 .dorso { width: 20px; height: 28px; border-radius: 4px; background: var(--dorso); border: 1px solid var(--ficha-sombra); }
 .rival-arriba { min-height: 44px; }
@@ -87,7 +95,7 @@
   border-radius: 12px;
   border: 3px dashed var(--nueva-zona);
   background: transparent;
-  color: #FFFFFF;
+  color: var(--sobre-tapete);
   font-size: 1.125rem;
   font-weight: 700;
 }
@@ -132,7 +140,17 @@
 /* ---------- Atril ---------- */
 .rummy-abajo { display: flex; flex-direction: column; gap: 10px; }
 .zona-atril { align-self: center; display: flex; flex-direction: column; gap: 6px; max-width: 100%; }
-.estado-turno { font-size: 1.1875rem; font-weight: 700; color: var(--acento-texto); min-height: 1.4em; }
+.estado-turno {
+  align-self: flex-start;
+  min-height: 1.4em;
+  padding: 2px 16px;
+  border-radius: 1rem;
+  background: var(--j-fondo);
+  color: var(--j-texto);
+  font-size: 1.1875rem;
+  font-weight: 700;
+}
+.estado-turno:empty { background: transparent; }
 .estado-turno.aviso { color: var(--error); }
 .atril {
   background: var(--madera);
@@ -153,15 +171,14 @@
 .rummy-botones button {
   min-height: 4.25rem;
   padding: 0 6px;
-  border: 0;
+  border: 2px solid var(--borde);
   border-radius: 18px;
   background: var(--superficie);
   color: var(--texto);
   font-size: 1.125rem;
   font-weight: 700;
 }
-.rummy-botones .robar { border: 2px solid var(--acento); color: var(--acento-texto); }
-.rummy-botones .terminar { background: var(--acento); color: var(--sobre-acento); }
+.rummy-botones .terminar { background: var(--tapete); color: var(--sobre-tapete); border-color: transparent; font-weight: 800; }
 .rummy-botones button:disabled { opacity: 0.45; }
 
 /* ---------- Final ---------- */
