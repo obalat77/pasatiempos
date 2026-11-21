@@ -1,7 +1,7 @@
 // Pantalla de Ajustes (ESPECIFICACION.md §4.3; diseños Settings-*).
 // Solo se muestran las secciones de los juegos disponibles.
 // La copia de seguridad se añade en el paso 6.
-import { h, botonInicio, segmentado, filaInterruptor } from '../core/ui.js';
+import { h, barraJuego, segmentado, filaInterruptor } from '../core/ui.js';
 import { buscarJuego } from '../juegos/catalogo.js';
 import { VERSION } from '../version.js';
 
@@ -57,9 +57,7 @@ export function montar(contenedor, { ajustes, navegar }) {
       h('p', { class: 'nota' }, 'Se aplica desde la próxima partida.')));
 
   contenedor.append(h('div', { class: 'pantalla ajustes' },
-    h('header', { class: 'cabecera-pantalla' },
-      botonInicio(() => navegar('')),
-      h('h1', { class: 'titulo-pantalla' }, 'Ajustes')),
+    barraJuego({ alInicio: () => navegar(''), titulo: 'Ajustes', clase: 'barra-neutra' }),
     h('div', { class: 'ajustes-columnas' },
       h('div', { class: 'ajustes-columna' }, apariencia),
       h('div', { class: 'ajustes-columna' }, sudoku, palabras, calculos, rummy)),

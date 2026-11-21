@@ -22,27 +22,26 @@ export async function elegirPartida(juego, { db, partidas }) {
     contenido: (cerrar) => {
       const partes = [];
       if (enCurso) {
+        const detalle = [DIFICULTADES[enCurso.dificultad], enCurso.resumen?.detalle].filter(Boolean).join(' · ');
         partes.push(
-          h('button', { type: 'button', class: 'boton boton-principal boton-grande boton-ancho',
-            on: { click: () => cerrar({ continuar: true }) } },
-            'Seguir con la partida empezada'),
-          h('p', { class: 'dialogo-nota' },
-            [DIFICULTADES[enCurso.dificultad], enCurso.resumen?.detalle].filter(Boolean).join(' · ')),
+          h('button', { type: 'button', class: 'dialogo-seguir', on: { click: () => cerrar({ continuar: true }) } },
+            h('span', { class: 'dialogo-seguir-titulo' }, 'Seguir con la partida empezada'),
+            detalle ? h('span', { class: 'dialogo-seguir-detalle' }, detalle) : null),
           h('p', { class: 'dialogo-subtitulo' },
             juego.dificultades.length ? 'O empieza una nueva:' : 'O empieza otra:'));
       } else {
         partes.push(h('p', { class: 'dialogo-subtitulo' }, 'Elige la dificultad'));
       }
       if (juego.dificultades.length) {
-        partes.push(h('div', { class: 'dialogo-opciones' }, juego.dificultades.map((dif) =>
+        partes.push(h('div', { class: 'dialogo-niveles' }, juego.dificultades.map((dif) =>
           h('button', {
             type: 'button',
-            class: `boton boton-grande boton-ancho ${dif === ultima && !enCurso ? 'boton-principal' : 'boton-secundario'}`,
+            class: `dialogo-nivel${dif === ultima ? ' ultima' : ''}`,
             'aria-label': dif === ultima ? `${DIFICULTADES[dif]} (la última que elegiste)` : DIFICULTADES[dif],
             on: { click: () => cerrar({ dificultad: dif }) },
-          }, DIFICULTADES[dif]))));
+          }, DIFICULTADES[dif], dif === ultima ? h('span', { class: 'dialogo-nivel-nota', 'aria-hidden': 'true' }, 'la última vez') : null))));
       } else {
-        partes.push(h('button', { type: 'button', class: 'boton boton-secundario boton-grande boton-ancho',
+        partes.push(h('button', { type: 'button', class: 'dialogo-nivel dialogo-nivel-ancho',
           on: { click: () => cerrar({ dificultad: null }) } }, 'Nueva partida'));
       }
       return h('div', { class: 'dialogo-cuerpo' }, partes);

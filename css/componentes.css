@@ -45,12 +45,26 @@
    La cabecera de cada juego lleva la clase .barra-juego y la raíz del juego su color
    (.juego-sudoku…, en base.css). La disposición interna la decide cada juego. */
 .barra-juego {
+  flex: none;
   background: var(--j-fondo);
   color: var(--j-texto);
   border-radius: 1.875rem;     /* 30 px */
   padding: 12px;
+  min-height: calc(3.5rem + 24px);
+  display: grid;
+  /* Los lados nunca menos que su contenido; el sobrante se reparte para centrar el título */
+  grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr);
+  align-items: center;
+  gap: 12px;
 }
-.barra-juego h1 { font-weight: 800; }
+.barra-juego > .boton-inicio { justify-self: start; }
+.barra-centro { min-width: 0; text-align: center; display: flex; flex-direction: column; gap: 2px; }
+.barra-centro h1 { font-size: 1.75rem; font-weight: 800; line-height: 1.1; }   /* 28 px */
+.barra-sub { font-size: 1.1875rem; line-height: 1.25; }                          /* 19 px */
+.barra-derecha { justify-self: end; display: flex; align-items: center; gap: 12px; }
+.barra-tiempo { font-size: 1.75rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+/* Estadísticas y Ajustes: misma barra, sin color de juego */
+.barra-neutra { --j-fondo: var(--pista); --j-texto: var(--texto); }
 .barra-juego .boton-inicio,
 .barra-juego button {
   background: var(--chip);
@@ -148,15 +162,16 @@
   :root:not([data-tema="claro"]) .interruptor > span { background: var(--texto); }
 }
 
-/* ---------- Ventana modal ---------- */
+/* ---------- Ventana modal (v1.6) ----------
+   Barra con el color del juego (título + «Cerrar»), «Seguir» destacado y niveles en 2 × 2. */
 .dialogo {
-  width: min(560px, calc(100vw - 48px));
+  width: min(600px, calc(100vw - 48px));
   max-height: calc(100dvh - 48px);
   overflow-y: auto;
   border: 0;
-  border-radius: 28px;
-  padding: 32px;
-  background: var(--fondo);
+  border-radius: 32px;
+  padding: 20px 24px 28px;
+  background: var(--superficie);
   color: var(--texto);
   display: flex;
   flex-direction: column;
@@ -164,20 +179,68 @@
 }
 .dialogo:not([open]) { display: none; }
 .dialogo::backdrop { background: var(--velo); }
-.dialogo-titulo { font-size: 2rem; font-weight: 800; }
-/* Ventana de un juego: el título va en una barra con su color (v1.6) */
-.dialogo[class*="juego-"] .dialogo-titulo {
-  background: var(--j-fondo);
-  color: var(--j-texto);
-  border-radius: 1.375rem;
-  padding: 12px 20px;
+.dialogo-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 10px 10px 24px;
+  border-radius: 1.5rem;
+  background: var(--j-fondo, var(--pista));
+  color: var(--j-texto, var(--texto));
 }
+.dialogo-titulo { font-size: 1.875rem; font-weight: 800; line-height: 1.1; }
+.dialogo-cerrar {
+  flex: none;
+  min-height: 3.5rem;
+  padding: 0 1.125rem 0 0.875rem;
+  border: 0;
+  border-radius: 1.75rem;
+  background: var(--chip);
+  color: inherit;
+  font-size: 1.1875rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.dialogo-cerrar svg { width: 1.375rem; height: 1.375rem; }
 .dialogo-cuerpo { display: flex; flex-direction: column; gap: 14px; }
-.dialogo-subtitulo { font-size: 1.375rem; font-weight: 700; margin-top: 4px; }
-.dialogo-nota { font-size: 1.25rem; color: var(--texto-2); text-align: center; }
-.dialogo-opciones { display: flex; flex-direction: column; gap: 12px; }
-.dialogo .boton-secundario { background: var(--superficie); }
-.dialogo-cancelar { min-height: 4rem; }
+.dialogo-subtitulo { font-size: 1.3125rem; font-weight: 700; margin-top: 4px; }
+.dialogo-seguir {
+  min-height: 5.5rem;
+  padding: 16px 24px;
+  border: 0;
+  border-radius: 1.5rem;
+  background: var(--j-texto, var(--acento));
+  color: var(--j-fondo, var(--sobre-acento));
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.dialogo-seguir-titulo { font-size: 1.5rem; font-weight: 800; }
+.dialogo-seguir-detalle { font-size: 1.1875rem; }
+.dialogo-niveles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.dialogo-nivel {
+  min-height: 5.5rem;
+  padding: 8px 12px;
+  border: 2px solid var(--borde);
+  border-radius: 1.375rem;
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.dialogo-nivel.ultima { background: var(--j-fondo, var(--acento-suave)); color: var(--j-texto, var(--texto)); border-color: transparent; }
+.dialogo-nivel-nota { font-size: 1.125rem; font-weight: 700; }
+.dialogo-nivel-ancho { width: 100%; }
 
 /* ---------- Avisos de abajo: versión nueva y «no se puede guardar» ---------- */
 .aviso-version,

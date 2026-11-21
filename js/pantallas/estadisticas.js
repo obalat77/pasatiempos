@@ -1,5 +1,5 @@
 // Pantalla de Estadísticas (ESPECIFICACION.md §4.2; diseños Stats-*).
-import { h, botonInicio, segmentado } from '../core/ui.js';
+import { h, barraJuego, segmentado } from '../core/ui.js';
 import { calcularEstadisticas, esExito } from '../core/estadisticas.js';
 import { fechaRelativa, numero, tiempo, duracionTexto } from '../core/formato.js';
 import { DIFICULTADES, juegosDisponibles, buscarJuego } from '../juegos/catalogo.js';
@@ -122,7 +122,7 @@ export async function montar(contenedor, { navegar, partidas }) {
   if (!juegoElegido || !disponibles.some((j) => j.id === juegoElegido)) juegoElegido = disponibles[0].id;
 
   const resultados = await partidas.resultados();
-  const titulo = h('h1', { class: 'titulo-pantalla' });
+  const titulo = h('h1', {});
   const zona = h('div', { class: 'estadisticas-zona' });
 
   const pintar = () => {
@@ -140,7 +140,7 @@ export async function montar(contenedor, { navegar, partidas }) {
 
   pintar();
   contenedor.append(h('div', { class: 'pantalla estadisticas' },
-    h('header', { class: 'cabecera-pantalla cabecera-estadisticas' },
-      botonInicio(() => navegar('')), titulo, selector),
+    barraJuego({ alInicio: () => navegar(''), titulo, clase: 'barra-neutra' }),
+    selector,
     zona));
 }

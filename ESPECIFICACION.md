@@ -150,9 +150,11 @@ Todo texto debe cumplir contraste 4,5:1 (3:1 a partir de 24 px). **Excepción de
 ### 3.3 Componentes
 - **Botón principal:** fondo `--acento`, texto `--sobre-acento`, 64–76 px de alto, forma de píldora o radio 20 px, texto 20–24 px negrita.
 - **Botón secundario:** fondo `--superficie` con borde 2 px `--borde` (o 2 px `--acento`), mismo alto. Las teclas de números y las herramientas (Deshacer, Borrar, Notas, Pista) son botones secundarios con radio 18–22 px.
-- **Barra de juego (v1.6):** arriba en todas las pantallas de juego; bloque de radio 30 px y fondo `--j-fondo`, texto `--j-texto`, relleno 16 px. Tres zonas: a la izquierda el botón «Inicio»; en el centro el nombre del juego (28–30 px, 800) y debajo el subtítulo (dificultad o nivel, 20 px); a la derecha el cronómetro (texto, 28 px) y el contador o la acción del juego («Pausa», «1 de 3 palabras», «Deshacer jugada») como píldora `--chip`. En horizontal la barra ocupa la cabecera de la columna lateral y puede repartirse en dos filas.
+- **Disposición común (v1.6):** todas las pantallas menos Inicio empiezan con la **barra** a todo el ancho, en las dos orientaciones, siempre en el mismo sitio. Márgenes exteriores iguales en todas las pantallas: 44 px arriba y 48 px a los lados y abajo en vertical; 40 px en horizontal. En los juegos, en horizontal: barra arriba, tablero a la izquierda y controles a la derecha.
+- **Barra de juego (v1.6):** arriba en todas las pantallas de juego (en Estadísticas y Ajustes, la misma barra en gris `--pista`, sin color de juego); bloque de radio 30 px y fondo `--j-fondo`, texto `--j-texto`, relleno 16 px. Tres zonas: a la izquierda el botón «Inicio»; en el centro el nombre del juego (28–30 px, 800) y debajo el subtítulo (dificultad o nivel, 20 px); a la derecha el cronómetro (texto, 28 px) y el contador o la acción del juego («Pausa», «1 de 3 palabras», «Deshacer jugada») como píldora `--chip`. La barra es la misma en vertical y en horizontal.
 - **Botón «Inicio»:** píldora `--chip` de 56 px con flecha «‹» + texto «Inicio», dentro de la barra de juego, a la izquierda.
 - **Baldosa de juego (Inicio, v1.6):** radio 30 px, fondo `--j-fondo`, texto `--j-texto`; dibujo arriba (72 px; 64 px en horizontal y menos con texto grande, para que Inicio quepa sin desplazarse), nombre (30 px, 800), subtítulo (20 px; en horizontal el corto, p. ej. «4 dificultades») y píldora «Jugar» `--chip` abajo. Toda la baldosa es el botón.
+- **Ventana (v1.6):** fondo `--superficie`, radio 32 px. Arriba, una barra con el color del juego: título a la izquierda y botón «✕ Cerrar» (icono y texto) a la derecha. También se cierra al tocar fuera o con Escape. Al elegir partida: «Seguir con la partida empezada» destacado (fondo `--j-texto`, texto `--j-fondo`) con el detalle debajo; las dificultades en una cuadrícula de 2 × 2 de botones de 88 px; la última elegida, con fondo `--j-fondo` y la nota «la última vez».
 - **Selector segmentado** (Ajustes, pestañas): fondo `--pista`, opción activa con fondo `--acento`; alto 56–64 px.
 - **Interruptor** 76 × 44 px.
 - Áreas táctiles de **56 px como mínimo** (nunca menos de 44 px).
@@ -179,7 +181,7 @@ Ajuste **Tema: Claro / Oscuro / Automático** (Automático = `prefers-color-sche
 ### 4.2 Estadísticas
 - Estilo (v1.6): pantalla sobria, con `--acento` y sin colores de juego salvo una muestra pequeña del color del juego elegido junto a su nombre en el selector.
 - Selector de juego: **Sudoku · Palabras · Parejas · Cálculos · Rummy** (también en vertical). Solo aparecen los juegos ya disponibles; con uno solo no hay selector y el título es «Estadísticas · Sudoku».
-- Cuatro cifras: Partidas jugadas, Partidas terminadas (o ganadas), Racha actual (días seguidos con alguna partida terminada), Tiempo total.
+- Cuatro cifras: Partidas jugadas, Partidas terminadas (o ganadas), Racha actual (días seguidos con alguna partida terminada), Tiempo total. Las cuatro cajas miden lo mismo en todos los juegos y sus números tienen el mismo tamaño (v1.6).
 - **Mejor tiempo** por dificultad («Sin partidas» si no hay).
 - **Últimas partidas** (5 como máximo): fecha relativa («Hoy», «Ayer», «7 nov»), dificultad, duración, resultado.
 - Específicas: Palabras → nivel alcanzado y palabras extra; Rummy → partidas ganadas por jugador y puntos.

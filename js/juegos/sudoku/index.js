@@ -1,6 +1,6 @@
 // Sudoku — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.1).
 // Une la lógica (reglas.js, generador.js) con la pantalla y el guardado.
-import { h, icono, botonInicio } from '../../core/ui.js';
+import { h, icono, barraJuego } from '../../core/ui.js';
 import { cronometro } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { tarjetaFinal, datoDestacado, esRecord } from '../../core/final.js';
@@ -78,15 +78,14 @@ class PartidaSudoku {
     const dificultad = DIFICULTADES[this.p.dificultad];
     this.mostrarReloj = ctx.ajustes.obtener('sudoku.cronometro');
 
-    this.tiempoEl = h('span', { class: 'sudoku-tiempo', role: 'timer', 'aria-label': 'Tiempo de juego',
+    this.tiempoEl = h('span', { class: 'barra-tiempo', role: 'timer', 'aria-label': 'Tiempo de juego',
       hidden: !this.mostrarReloj });
     this.pausaBtn = h('button', { type: 'button', class: 'boton-pausa', on: { click: () => this.alternarPausa() } });
 
-    const cabecera = h('header', { class: 'sudoku-cabecera barra-juego' },
-      h('div', { class: 'fila-botones' }, botonInicio(() => ctx.navegar('')), this.pausaBtn),
-      h('div', { class: 'fila-titulo' },
-        h('div', { class: 'sudoku-titulo' }, h('h1', {}, 'Sudoku'), h('span', {}, dificultad)),
-        this.tiempoEl));
+    const cabecera = barraJuego({
+      alInicio: () => ctx.navegar(''), titulo: 'Sudoku', subtitulo: dificultad,
+      derecha: [this.tiempoEl, this.pausaBtn], clase: 'sudoku-cabecera',
+    });
 
     this.casillas = [];
     const tablero = h('div', { class: 'sudoku-tablero', role: 'group', 'aria-label': 'Tablero de Sudoku' });
@@ -127,8 +126,8 @@ class PartidaSudoku {
         }))),
       h('div', { class: 'sudoku-teclado' }, this.teclas));
 
-    this.lateral = h('div', { class: 'sudoku-lateral' }, cabecera, this.controles);
-    this.raiz.replaceChildren(tablero, this.lateral);
+    this.lateral = h('div', { class: 'sudoku-lateral' }, this.controles);
+    this.raiz.replaceChildren(cabecera, tablero, this.lateral);
   }
 
   pintar() {

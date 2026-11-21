@@ -1,5 +1,5 @@
 // Parejas de números — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.3).
-import { h, icono, botonInicio } from '../../core/ui.js';
+import { h, icono, barraJuego } from '../../core/ui.js';
 import { cronometro } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { tarjetaFinal, datoDestacado, esRecord } from '../../core/final.js';
@@ -69,14 +69,11 @@ class PartidaParejas {
 
   construir() {
     this.quedanEl = h('span', {});
-    this.tiempoVertical = h('span', { class: 'parejas-tiempo solo-vertical', role: 'timer', 'aria-label': 'Tiempo de juego' });
-    this.tiempoHorizontal = h('span', { class: 'solo-horizontal' });
-    const cabecera = h('header', { class: 'parejas-cabecera barra-juego' },
-      botonInicio(() => this.ctx.navegar('')),
-      h('div', { class: 'parejas-titulo' },
-        h('h1', {}, 'Parejas de números'),
-        h('span', { class: 'subtitulo' }, this.quedanEl, this.tiempoHorizontal)),
-      this.tiempoVertical);
+    this.tiempoEl = h('span', { class: 'barra-tiempo', role: 'timer', 'aria-label': 'Tiempo de juego' });
+    const cabecera = barraJuego({
+      alInicio: () => this.ctx.navegar(''), titulo: 'Parejas de números', subtitulo: this.quedanEl,
+      derecha: [this.tiempoEl], clase: 'parejas-cabecera',
+    });
 
     this.instruccion = h('p', { class: 'parejas-instruccion', 'aria-live': 'polite' }, INSTRUCCION());
 
@@ -94,8 +91,8 @@ class PartidaParejas {
       herramienta('pista', 'Pista', () => this.pista()),
       this.añadirBtn);
 
-    this.lateral = h('div', { class: 'parejas-lateral' }, cabecera, this.instruccion, this.controles);
-    this.raiz.replaceChildren(this.tablero, this.lateral);
+    this.lateral = h('div', { class: 'parejas-lateral' }, this.instruccion, this.controles);
+    this.raiz.replaceChildren(cabecera, this.tablero, this.lateral);
   }
 
   pintar() {
@@ -136,10 +133,7 @@ class PartidaParejas {
   }
 
   pintarReloj() {
-    if (!this.tiempoVertical) return;
-    const t = cronometro(this.reloj.segundos());
-    this.tiempoVertical.textContent = t;
-    this.tiempoHorizontal.textContent = ` · ${t}`;
+    if (this.tiempoEl) this.tiempoEl.textContent = cronometro(this.reloj.segundos());
   }
 
   avisar(texto) {

@@ -20,25 +20,18 @@
   -webkit-user-select: none;
 }
 
-/* ---------- Cabecera ---------- */
-.palabras-cabecera { align-self: stretch; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; }
-.palabras-cabecera .boton-inicio { justify-self: start; }
-.palabras-titulo { justify-self: center; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.palabras-titulo h1 { font-size: 1.875rem; line-height: 1.1; }
-.palabras-titulo .subtitulo { font-size: 1.25rem; }
-.palabras-cuenta .palabras-cuenta { all: unset; }   /* el contador va dentro de una sola píldora */
+/* ---------- Barra: común (.barra-juego); el contador va en una píldora ---------- */
+.palabras-cabecera { align-self: stretch; }
 .palabras-cuenta {
-  justify-self: end;
-  white-space: nowrap;
   min-height: 3.5rem;
   padding: 0 1.25rem;
   border-radius: 1.75rem;
   background: var(--chip);
   font-size: 1.25rem;
   font-weight: 800;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
-  text-align: right;
 }
 
 /* ---------- Tablero (crucigrama o lista) ---------- */
@@ -142,17 +135,17 @@
 /* ---------- Horizontal: tablero a la izquierda; rueda y botones a la derecha ---------- */
 @media (orientation: landscape) {
   .palabras {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 420px;
+    grid-template-rows: auto minmax(0, 1fr);
     align-items: stretch;
-    gap: 48px;
-    padding: max(40px, env(safe-area-inset-top)) max(48px, env(safe-area-inset-right))
-             max(40px, env(safe-area-inset-bottom)) max(48px, env(safe-area-inset-left));
+    gap: 20px 48px;
+    padding: max(40px, env(safe-area-inset-top)) max(40px, env(safe-area-inset-right))
+             max(40px, env(safe-area-inset-bottom)) max(40px, env(safe-area-inset-left));
   }
-  .palabras-izquierda { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
-  .palabras-derecha { flex: none; width: 420px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }
-  .palabras-cabecera { display: flex; align-items: center; gap: 20px; }
-  .palabras-titulo { justify-self: auto; align-items: flex-start; text-align: left; }
-  .palabras-cuenta { font-size: 1.125rem; font-weight: 400; text-align: left; }
+  .palabras-cabecera { grid-column: 1 / -1; }
+  .palabras-izquierda { min-width: 0; min-height: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
+  .palabras-derecha { min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }
   .palabras-extra { text-align: left; }
   .palabras-mandos { display: contents; }
   .palabras-mandos .botones-rueda { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-self: stretch; order: 3; }

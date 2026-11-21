@@ -1,5 +1,5 @@
 // Cálculos cruzados — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.4).
-import { h, icono, botonInicio } from '../../core/ui.js';
+import { h, icono, barraJuego } from '../../core/ui.js';
 import { cronometro } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { tarjetaFinal, datoDestacado, esRecord } from '../../core/final.js';
@@ -65,14 +65,11 @@ class PartidaCalculos {
     const dificultad = DIFICULTADES[p.dificultad];
     this.raiz.classList.toggle('grande', p.m === 4);
 
-    this.tiempoVertical = h('span', { class: 'calculos-tiempo solo-vertical', role: 'timer', 'aria-label': 'Tiempo de juego' });
-    this.tiempoHorizontal = h('span', { class: 'solo-horizontal' });
-    const cabecera = h('header', { class: 'calculos-cabecera barra-juego' },
-      botonInicio(() => this.ctx.navegar('')),
-      h('div', { class: 'calculos-titulo' },
-        h('h1', {}, 'Cálculos cruzados'),
-        h('span', { class: 'subtitulo' }, dificultad, this.tiempoHorizontal)),
-      this.tiempoVertical);
+    this.tiempoEl = h('span', { class: 'barra-tiempo', role: 'timer', 'aria-label': 'Tiempo de juego' });
+    const cabecera = barraJuego({
+      alInicio: () => this.ctx.navegar(''), titulo: 'Cálculos cruzados', subtitulo: dificultad,
+      derecha: [this.tiempoEl], clase: 'calculos-cabecera',
+    });
 
     this.instruccion = h('p', { class: 'calculos-instruccion', 'aria-live': 'polite' }, INSTRUCCION());
 
@@ -126,8 +123,8 @@ class PartidaCalculos {
         return k >= 0;
       })));
 
-    this.lateral = h('div', { class: 'calculos-lateral' }, cabecera, this.instruccion, this.bandejaEl, this.controles);
-    this.raiz.replaceChildren(this.zona, this.lateral);
+    this.lateral = h('div', { class: 'calculos-lateral' }, this.instruccion, this.bandejaEl, this.controles);
+    this.raiz.replaceChildren(cabecera, this.zona, this.lateral);
   }
 
   /** Casillas tan grandes como quepan (máximo 88 px), sin recortar nunca el tablero. */
@@ -160,10 +157,7 @@ class PartidaCalculos {
   }
 
   pintarReloj() {
-    if (!this.tiempoVertical) return;
-    const t = cronometro(this.reloj.segundos());
-    this.tiempoVertical.textContent = t;
-    this.tiempoHorizontal.textContent = ` · ${t}`;
+    if (this.tiempoEl) this.tiempoEl.textContent = cronometro(this.reloj.segundos());
   }
 
   avisar(texto) {

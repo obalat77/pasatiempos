@@ -40,6 +40,7 @@ const TRAZOS = {
   pausa: '<path d="M9 6v12M15 6v12"/>',
   seguir: '<path d="M8 5l11 7-11 7z"/>',
   mezclar: '<path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
+  cerrar: '<path d="M6 6l12 12M18 6L6 18"/>',
 };
 
 export function icono(nombre, grosor = 2) {
@@ -52,6 +53,21 @@ export function icono(nombre, grosor = 2) {
 export function botonInicio(alPulsar) {
   return h('button', { type: 'button', class: 'boton-inicio', on: { click: alPulsar } },
     icono('atras', 2.4), 'Inicio');
+}
+
+/**
+ * Barra de arriba, igual en todas las pantallas menos Inicio (ESPECIFICACION.md §3.3):
+ * «‹ Inicio» a la izquierda, título (y subtítulo) en el centro, y a la derecha el cronómetro,
+ * el contador o la acción de la pantalla. `clase`: p. ej. la del juego para ajustes propios,
+ * o 'barra-neutra' en Estadísticas y Ajustes (sin color de juego).
+ */
+export function barraJuego({ alInicio, titulo, subtitulo = null, derecha = [], clase = '' }) {
+  return h('header', { class: `barra-juego ${clase}`.trim() },
+    botonInicio(alInicio),
+    h('div', { class: 'barra-centro' },
+      titulo instanceof Node ? titulo : h('h1', {}, titulo),
+      subtitulo === null ? null : h('p', { class: 'barra-sub' }, subtitulo)),
+    h('div', { class: 'barra-derecha' }, derecha));
 }
 
 /** Selector segmentado. `opciones`: [{ valor, texto, clase? }]. */
@@ -71,21 +87,30 @@ export function segmentado(etiqueta, opciones, valorActual, alCambiar) {
 }
 
 /**
- * Ventana modal sencilla (sin animaciones). `clase` (opcional) añade p. ej. el color de un juego
- * (`juego-sudoku`): el título se pinta como su barra. `contenido` recibe la función `cerrar`
- * y devuelve los nodos del cuerpo. Se cierra con «Cancelar» o al llamar a `cerrar`.
- * Devuelve una promesa que se resuelve al cerrarse, con el valor pasado a `cerrar`.
+ * Ventana modal sencilla (sin animaciones). Arriba, una barra con el título y el botón
+ * «Cerrar» (con texto, no solo la X); también se cierra al tocar fuera o con Escape.
+ * `clase` (opcional) añade p. ej. el color de un juego (`juego-sudoku`) a la barra.
+ * `contenido` recibe la función `cerrar` y devuelve los nodos del cuerpo.
+ * Devuelve una promesa que se resuelve al cerrarse, con el valor pasado a `cerrar`
+ * (undefined si se cerró sin elegir).
  */
-export function dialogo({ titulo, contenido, textoCancelar = 'Cancelar', clase = '' }) {
+export function dialogo({ titulo, contenido, clase = '' }) {
   return new Promise((resolver) => {
     const d = h('dialog', { class: `dialogo ${clase}`.trim(), 'aria-labelledby': 'titulo-dialogo' });
     let valor;
     const cerrar = (v) => { valor = v; d.close(); };
     d.append(
-      h('h2', { id: 'titulo-dialogo', class: 'dialogo-titulo' }, titulo),
-      contenido(cerrar),
-      h('button', { type: 'button', class: 'boton boton-claro boton-ancho dialogo-cancelar',
-        on: { click: () => cerrar(undefined) } }, textoCancelar));
+      h('div', { class: 'dialogo-cabecera' },
+        h('h2', { id: 'titulo-dialogo', class: 'dialogo-titulo' }, titulo),
+        h('button', { type: 'button', class: 'dialogo-cerrar', on: { click: () => cerrar(undefined) } },
+          icono('cerrar', 2.4), 'Cerrar')),
+      contenido(cerrar));
+    // Tocar fuera de la ventana (en el fondo oscurecido) la cierra.
+    d.addEventListener('click', (e) => {
+      const r = d.getBoundingClientRect();
+      const fuera = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+      if (e.target === d && fuera) cerrar(undefined);
+    });
     d.addEventListener('close', () => { d.remove(); resolver(valor); });
     document.body.append(d);
     d.showModal();

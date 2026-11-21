@@ -1,6 +1,6 @@
 // Rummy — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.5).
 // Tú contra Lola (izquierda), Paco (arriba) y Carmen (derecha), que piensan en un Web Worker.
-import { h, icono, botonInicio } from '../../core/ui.js';
+import { h, icono, barraJuego } from '../../core/ui.js';
 import { numero } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { crearAzar } from '../../core/azar.js';
@@ -116,14 +116,12 @@ class PartidaRummy {
 
   construir() {
     this.info = h('span', { class: 'rummy-info' });
-    this.infoV = h('p', { class: 'rummy-info solo-vertical' });
     this.deshacerBtn = h('button', { type: 'button', class: 'boton-deshacer', on: { click: () => this.deshacer() } },
       icono('deshacer'), 'Deshacer jugada');
-    const cabecera = h('header', { class: 'rummy-cabecera barra-juego' },
-      botonInicio(() => this.ctx.navegar('')),
-      h('h1', {}, 'Rummy'),
-      h('span', { class: 'solo-horizontal' }, this.info),
-      this.deshacerBtn);
+    const cabecera = barraJuego({
+      alInicio: () => this.ctx.navegar(''), titulo: 'Rummy', subtitulo: this.info,
+      derecha: [this.deshacerBtn], clase: 'rummy-cabecera',
+    });
 
     this.rivalesEl = [1, 2, 3].map((j) => {
       const el = h('div', { class: `rival ${j === 2 ? 'rival-arriba' : 'rival-lado'}`, 'aria-live': 'polite' });
@@ -146,7 +144,6 @@ class PartidaRummy {
 
     this.raiz.replaceChildren(
       cabecera,
-      this.infoV,
       this.rivalesEl[1],
       h('div', { class: 'rummy-centro' }, this.rivalesEl[0], this.mesaEl, this.rivalesEl[2]),
       h('div', { class: 'rummy-abajo' }, this.zonaAtril, this.botones));
@@ -187,8 +184,8 @@ class PartidaRummy {
     const antes = new Set((this.mesaAntes || []).flat());
     const puedoMoverMesa = turnoMio && p.jugadores[0].bajado;
 
-    this.info.textContent = this.infoV.textContent =
-      `${NOMBRE_NIVEL[p.nivel]} · ${p.pozo.length === 1 ? 'Queda 1 ficha' : `Quedan ${numero(p.pozo.length)} fichas`} por robar`;
+    this.info.textContent =
+      `${NOMBRE_NIVEL[p.nivel]} · ${p.pozo.length === 1 ? '1 ficha' : `${numero(p.pozo.length)} fichas`} por robar`;
 
     // Rivales
     [1, 2, 3].forEach((j, k) => {

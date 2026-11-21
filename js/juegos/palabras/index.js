@@ -1,5 +1,5 @@
 // Palabras — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.2).
-import { h, icono, botonInicio } from '../../core/ui.js';
+import { h, icono, barraJuego } from '../../core/ui.js';
 import { numero } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { tarjetaFinal } from '../../core/final.js';
@@ -96,14 +96,10 @@ class PartidaPalabras {
     const { nivel } = this;
     this.cuenta = h('span', { class: 'palabras-cuenta' });
     const subtitulo = this.modo === 'lista' ? `Nivel ${numero(nivel.id)} · modo lista` : `Nivel ${numero(nivel.id)}`;
-    const cabecera = h('header', { class: 'palabras-cabecera barra-juego' },
-      botonInicio(() => this.ctx.navegar('')),
-      h('div', { class: 'palabras-titulo' },
-        h('h1', { class: 'solo-vertical' }, 'Palabras'),
-        h('h1', { class: 'solo-horizontal' }, `Palabras · Nivel ${numero(nivel.id)}`),
-        h('span', { class: 'subtitulo solo-vertical' }, subtitulo),
-        h('span', { class: 'subtitulo solo-horizontal' }, this.cuentaH = h('span'))),
-      h('span', { class: 'solo-vertical palabras-cuenta' }, this.cuenta));
+    const cabecera = barraJuego({
+      alInicio: () => this.ctx.navegar(''), titulo: 'Palabras', subtitulo,
+      derecha: [this.cuenta], clase: 'palabras-cabecera',
+    });
 
     this.tablero = h('div', { role: 'group', 'aria-label': this.modo === 'lista' ? 'Palabras por encontrar' : 'Crucigrama' });
     this.zona = h('div', { class: 'palabras-zona' }, this.tablero);
@@ -141,7 +137,8 @@ class PartidaPalabras {
       this.rueda);
 
     this.raiz.replaceChildren(
-      h('div', { class: 'palabras-izquierda' }, cabecera, this.zona, this.extraEl),
+      cabecera,
+      h('div', { class: 'palabras-izquierda' }, this.zona, this.extraEl),
       h('div', { class: 'palabras-derecha' }, this.enCurso, this.mandos));
     this.colocarLetras();
   }
@@ -226,7 +223,6 @@ class PartidaPalabras {
     const total = nivel.palabras.length, hechas = p.encontradas.length;
     const cuenta = `${hechas} de ${total} palabras`;
     this.cuenta.textContent = cuenta;
-    this.cuentaH.textContent = this.modo === 'lista' ? `${cuenta} · modo lista` : cuenta;
     this.extraEl.replaceChildren(...(p.extras.length
       ? ['Palabras extra encontradas: ', h('strong', {}, p.extras.join(', '))]
       : ['Palabras extra encontradas: ninguna todavía']));

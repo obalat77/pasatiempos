@@ -18,12 +18,7 @@
   -webkit-user-select: none;
 }
 
-/* ---------- Cabecera ---------- */
-.parejas-cabecera { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; }
-.parejas-titulo { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.parejas-titulo h1 { font-size: 1.75rem; line-height: 1.1; }
-.parejas-titulo .subtitulo { font-size: 1.25rem; }
-.parejas-tiempo { font-size: 1.75rem; font-weight: 800; font-variant-numeric: tabular-nums; min-width: 7.5rem; text-align: right; }
+/* ---------- Barra: común (.barra-juego) ---------- */
 .parejas-instruccion { font-size: 1.3125rem; text-align: center; min-height: 1.6em; }
 .parejas-instruccion.aviso { font-weight: 700; }
 
@@ -70,32 +65,29 @@
 .boton-añadir.pista { box-shadow: inset 0 0 0 4px var(--j-texto); }
 .parejas-preparando { margin: auto; font-size: 1.5rem; color: var(--texto-2); }
 
-/* ---------- Horizontal ---------- */
+/* ---------- Horizontal: barra arriba a todo el ancho; tablero a la izquierda, instrucción y botones a la derecha ---------- */
 @media (orientation: landscape) {
   .parejas {
     --casilla: min(76px, calc((100vw - 490px) / 9));
-    flex-direction: row;
-    align-items: center;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
     justify-content: center;
-    gap: 40px;
+    gap: 20px 40px;
     padding: max(40px, env(safe-area-inset-top)) max(40px, env(safe-area-inset-right))
              max(40px, env(safe-area-inset-bottom)) max(40px, env(safe-area-inset-left));
   }
-  .parejas-tablero { flex: none; max-height: 100%; }
+  .parejas-cabecera { grid-column: 1 / -1; }
+  .parejas-tablero { align-self: start; max-height: 100%; }
   .parejas-lateral {
-    flex: 1;
-    min-width: 0;
     max-width: 480px;
-    align-self: stretch;
+    min-width: 0;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 16px;
   }
-  .parejas-cabecera { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
-  .parejas-titulo { align-items: flex-start; text-align: left; gap: 4px; }
-  .parejas-titulo h1 { font-size: 1.75rem; }
-  .parejas-titulo .subtitulo { font-size: 1.1875rem; }
   .parejas-instruccion { text-align: left; }
   .parejas-controles { grid-template-columns: 1fr; }
   .parejas .herramienta { min-height: 76px; }
