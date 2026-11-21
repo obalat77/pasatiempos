@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pasatiempos, propuestas de estilo</title>
+<style>
+@font-face{font-family:'Atkinson Hyperlegible';src:url('../fonts/AtkinsonHyperlegible-Regular.woff2') format('woff2');font-weight:400}
+@font-face{font-family:'Atkinson Hyperlegible';src:url('../fonts/AtkinsonHyperlegible-Bold.woff2') format('woff2');font-weight:700 800}
+/* Página de revisión: estilo A («Cada juego, su color») en Inicio y Sudoku, claro y oscuro, a mitad de tamaño. */
+:root{
+  --fondo:#EEF0F3; --tinta:#1B1F24; --tinta-2:#4F5761; --marco:#1B1F24; --tarjeta:#FFFFFF;
+  --f:"Atkinson Hyperlegible Next","Atkinson Hyperlegible",system-ui,sans-serif;
+  --z:.5; --zh:.5;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--fondo:#12171D;--tinta:#EEF2F6;--tinta-2:#A7B2BE;--marco:#000;--tarjeta:#1B232C;color-scheme:dark}}
+:root[data-theme="dark"]{--fondo:#12171D;--tinta:#EEF2F6;--tinta-2:#A7B2BE;--marco:#000;--tarjeta:#1B232C;color-scheme:dark}
+body{background:var(--fondo);color:var(--tinta);font-family:var(--f);font-size:17px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.pag{max-width:1340px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:34px;font-weight:800;margin:0;text-wrap:balance}
+.intro{color:var(--tinta-2);max-width:70ch;margin:0}
+section{display:flex;flex-direction:column;gap:22px;margin-top:20px}
+section>h2{font-size:26px;margin:0}
+.fila{display:flex;flex-wrap:wrap;gap:36px 32px;align-items:flex-start}
+figure{margin:0;display:flex;flex-direction:column;gap:12px;max-width:100%;width:min-content}
+.ipad{background:var(--marco);border-radius:30px;padding:10px;width:max-content;max-width:100%}
+.esc{width:calc(820px * var(--z));height:calc(1180px * var(--z));overflow:hidden;border-radius:20px}
+.esc.h{width:calc(1180px * var(--zh));height:calc(820px * var(--zh))}
+.pant{width:820px;height:1180px;transform:scale(var(--z));transform-origin:0 0;overflow:hidden;font-family:var(--f);position:relative;box-sizing:border-box}
+.pant.h{width:1180px;height:820px;transform:scale(var(--zh))}
+figcaption{font-size:18px;font-weight:700}
+figcaption span{display:block;font-weight:400;color:var(--tinta-2);font-size:16px;max-width:52ch}
+@media (max-width:700px){:root{--zh:.3}}
+@media (max-width:460px){:root{--z:.44}}
+
+/* ---------- paleta de las maquetas (tema de la app, no de esta página) ---------- */
+.pant{--m-fondo:#F2F2F7;--m-sup:#FFFFFF;--m-texto:#1C1C1E;--m-texto2:#545458;--m-borde:#858C94;--chip:rgba(255,255,255,.74);
+  --su-bg:#FFE08A;--su-tx:#3B2C00;--pa-bg:#FFC9B5;--pa-tx:#4A190A;--pr-bg:#D9D0FF;--pr-tx:#22154F;--ca-bg:#BFE4FF;--ca-tx:#0A2F4C;--ru-bg:#CDEBDD;--ru-tx:#0F3A2E;
+  --sd-linea:#D6D9DE;--sd-fuerte:#2B3036;--sd-sel:#FFD45C;--sd-rel:#EDEFF2;--sd-mismo:#FFEFBF;--sd-jug:#0B6E62;--sd-nota:#50565E;
+  background:var(--m-fondo);color:var(--m-texto)}
+.pant.oscuro{--m-fondo:#0E151D;--m-sup:#16202B;--m-texto:#F0F4F8;--m-texto2:#A9B6C3;--m-borde:#66727E;--chip:rgba(255,255,255,.12);
+  --su-bg:#3A3118;--su-tx:#FFE08A;--pa-bg:#43261C;--pa-tx:#FFC9B5;--pr-bg:#2A2550;--pr-tx:#D9D0FF;--ca-bg:#14324A;--ca-tx:#BFE4FF;--ru-bg:#183A30;--ru-tx:#CDEBDD;
+  --sd-linea:#2C3640;--sd-fuerte:#8A97A5;--sd-sel:#6A5414;--sd-rel:#1F2730;--sd-mismo:#3E3517;--sd-jug:#6FE0CC;--sd-nota:#A9B6C3}
+.pant *{box-sizing:border-box}
+.su{--bg:var(--su-bg);--tx:var(--su-tx)}.pa{--bg:var(--pa-bg);--tx:var(--pa-tx)}.pr{--bg:var(--pr-bg);--tx:var(--pr-tx)}.ca{--bg:var(--ca-bg);--tx:var(--ca-tx)}.ru{--bg:var(--ru-bg);--tx:var(--ru-tx)}
+
+/* fichas del Rummy: colores fijos en los dos temas */
+.ft{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:46px;height:62px;border-radius:9px;
+  background:#FBF6E9;border:1.5px solid #D9CDB8;box-shadow:0 4px 0 #CBBEA6;font-weight:800;font-size:27px;line-height:1;flex:none}
+.ft i{font-style:normal;font-size:13px;margin-top:3px}
+.rj{color:#C62828}.az{color:#1565C0}.ng{color:#222}.na{color:#AD5700}
+
+/* ================= Inicio ================= */
+.ini{padding:52px 48px;display:flex;flex-direction:column;gap:26px}
+.ini .cab h3{font-size:50px;font-weight:800;letter-spacing:-.5px;margin:0;line-height:1.05}
+.ini .cab p{font-size:23px;color:var(--m-texto2);margin:6px 0 0}
+.sigue{background:#2F6F5E;color:#fff;border-radius:32px;padding:30px 32px;display:grid;grid-template-columns:1fr auto;gap:18px 20px;align-items:center;box-shadow:inset 0 0 0 6px #275D4F}
+.sigue h4{margin:0;font-size:32px;font-weight:800}
+.sigue p{margin:4px 0 0;font-size:21px;color:#E3F1EC}
+.sigue .fichas{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px 8px}
+.btn-b{background:#fff;color:#1F5A4B;font-weight:800;font-size:24px;border-radius:999px;padding:18px 34px;text-align:center}
+.rej{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.t{background:var(--bg);color:var(--tx);border-radius:30px;padding:24px 26px 22px;display:flex;flex-direction:column;gap:6px;min-height:214px}
+.t .ic{height:84px;display:flex;align-items:center;margin-bottom:8px}
+.t h4{font-size:31px;font-weight:800;margin:0;line-height:1.1}
+.t p{font-size:20px;margin:0}
+.jg{margin-top:auto;align-self:flex-start;font-weight:800;font-size:21px;border-radius:999px;padding:9px 22px;background:var(--chip)}
+.t.ru{grid-column:1/-1;min-height:0;flex-direction:row;align-items:center;gap:22px}
+.t.ru .ic{margin:0;gap:8px}
+.t.ru .jg{margin:0 0 0 auto;align-self:center}
+.pie{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:auto}
+.pie div{background:var(--m-sup);border-radius:22px;padding:22px;font-size:23px;font-weight:700;text-align:center;border:2px solid var(--m-borde)}
+/* iconos */
+.ic-su{display:grid;grid-template-columns:repeat(3,26px);gap:4px}
+.ic-su span{height:26px;border-radius:6px;background:var(--chip);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px}
+.ic-su span.l{background:var(--tx);color:var(--bg)}
+.ic-pa{position:relative;width:84px;height:84px;border-radius:50%;background:var(--chip);font-weight:800;font-size:24px}
+.ic-pa b{position:absolute;transform:translate(-50%,-50%)}
+.ic-pr{display:flex;gap:8px}
+.ic-pr b{width:50px;height:62px;border-radius:12px;background:var(--tx);color:var(--bg);display:flex;align-items:center;justify-content:center;font-size:32px}
+.ic-pr b+b{background:var(--chip);color:var(--tx)}
+.ic-ca{font-size:40px;font-weight:800;letter-spacing:1px;background:var(--chip);border-radius:16px;padding:6px 16px}
+
+/* Inicio horizontal */
+.ini.h{display:grid;grid-template-columns:420px 1fr;gap:28px;padding:48px}
+.ini.h .izq{display:flex;flex-direction:column;gap:24px}
+.ini.h .sigue{grid-template-columns:1fr}
+.ini.h .pie{grid-template-columns:1fr 1fr}
+.ini.h .rej{grid-template-rows:1fr 1fr auto}
+.ini.h .t{min-height:0}
+
+/* ================= Sudoku ================= */
+.sd{padding:44px 48px 48px;display:flex;flex-direction:column;gap:26px}
+.barra{background:var(--bg);color:var(--tx);border-radius:30px;padding:16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.pill{background:var(--chip);border-radius:999px;font-weight:800;font-size:22px;padding:14px 24px;justify-self:start;display:flex;align-items:center;gap:8px}
+.barra .tit{text-align:center}
+.barra .tit b{display:block;font-size:30px;line-height:1.1}
+.barra .tit span{font-size:20px}
+.barra .der{justify-self:end;display:flex;align-items:center;gap:14px}
+.barra .crono{font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.tab{align-self:center;display:grid;grid-template-columns:repeat(9,76px);grid-template-rows:repeat(9,76px);background:var(--m-sup);border:3px solid var(--sd-fuerte);border-radius:22px;overflow:hidden}
+.c{display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;border-right:1px solid var(--sd-linea);border-bottom:1px solid var(--sd-linea);color:var(--m-texto)}
+.c.bd{border-right:3px solid var(--sd-fuerte)}.c.bb{border-bottom:3px solid var(--sd-fuerte)}
+.c.rel{background:var(--sd-rel)}.c.mismo{background:var(--sd-mismo)}.c.sel{background:var(--sd-sel)}
+.c.jug{color:var(--sd-jug)}
+.notas{display:grid;grid-template-columns:repeat(3,1fr);width:100%;height:100%;padding:2px 4px;font-size:18px;font-weight:700;color:var(--sd-nota);text-align:center;line-height:24px}
+.herr{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.herr div{background:var(--m-sup);border:2px solid var(--m-borde);border-radius:22px;height:72px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:21px;font-weight:800}
+.herr svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.teclas{display:grid;grid-template-columns:repeat(9,1fr);gap:10px}
+.teclas div{background:var(--m-sup);color:var(--m-texto);border:2px solid var(--m-borde);border-radius:18px;height:96px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800}
+
+/* ================= Otros juegos ================= */
+.jgo{padding:44px 48px 48px;display:flex;flex-direction:column;gap:24px}
+.pant{--hueco:#7D848D;--pr-sel:#BFB0FF;--ca-hueco:#3D7FB0;--resul:#EDEFF2;--eliminado:#C7C7CC}
+.btns{display:grid;gap:14px}
+.btns>div{background:var(--m-sup);border:2px solid var(--m-borde);border-radius:22px;min-height:76px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:22px;font-weight:800;text-align:center;line-height:1.15;padding:8px}
+.btns svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.btns small{display:block;font-size:18px;font-weight:700}
+.ayuda{text-align:center;font-size:21px;margin:0;color:var(--m-texto2)}
+.ayuda b{color:var(--m-texto)}
+
+/* Palabras */
+.pl-zona{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:24px 40px;align-content:center;justify-items:center}
+.pl-pal{display:flex;gap:8px}
+.pl-pal span{width:76px;height:76px;border-radius:16px;background:var(--m-sup);border:3px solid var(--hueco);display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800}
+.pl-pal.hecha span{background:var(--pa-bg);color:var(--pa-tx);border-color:transparent}
+.pl-pal span.pista{color:var(--sd-jug)}
+.pl-actual{align-self:center;background:var(--pa-bg);color:var(--pa-tx);border-radius:999px;font-size:40px;font-weight:800;letter-spacing:6px;padding:8px 36px;min-height:68px}
+.pl-mando{display:flex;align-items:center;justify-content:center;gap:28px}
+.pl-red{width:116px;height:116px;border-radius:50%;background:var(--m-sup);border:2px solid var(--m-borde);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:20px;font-weight:800}
+.pl-red svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.rueda{position:relative;width:380px;height:380px;border-radius:50%;background:var(--m-sup);border:2px solid var(--m-borde)}
+.rueda svg{position:absolute;inset:0;width:100%;height:100%}
+.rueda b{position:absolute;width:104px;height:104px;margin:-52px 0 0 -52px;border-radius:50%;background:var(--pa-bg);color:var(--pa-tx);display:flex;align-items:center;justify-content:center;font-size:50px}
+.rueda b.on{background:var(--pa-tx);color:var(--pa-bg)}
+.pl-extra{text-align:center;font-size:20px;color:var(--m-texto2);margin:0}
+
+/* Parejas */
+.pj-tab{align-self:center;display:grid;grid-template-columns:repeat(9,76px);grid-auto-rows:76px;background:var(--m-sup);border:3px solid var(--sd-fuerte);border-radius:22px;overflow:hidden}
+.pj-tab div{display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800;border-right:1px solid var(--sd-linea);border-bottom:1px solid var(--sd-linea)}
+.pj-tab div:nth-child(9n){border-right:0}
+.pj-tab .fuera{color:var(--eliminado)}
+.pj-tab .sel{background:var(--pr-sel);color:var(--pr-tx)}
+.pj-mas{background:var(--pr-bg)!important;color:var(--pr-tx);border-color:transparent!important;flex-direction:column;gap:0!important}
+
+/* Cálculos */
+.cc-tab{align-self:center;display:grid;grid-template-columns:repeat(7,88px);grid-template-rows:repeat(7,88px);gap:10px}
+.cc-tab div{display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800;border-radius:18px}
+.cc-tab .n{background:var(--m-sup);border:2px solid var(--m-borde)}
+.cc-tab .h{border:3px dashed var(--ca-hueco)}
+.cc-tab .h.sel{background:var(--ca-bg);border:3px solid var(--ca-tx)}
+.cc-tab .j{background:var(--m-sup);border:2px solid var(--m-borde);color:var(--sd-jug)}
+.cc-tab .r{background:var(--resul)}
+.cc-tab .o{color:var(--m-texto2);font-size:38px}
+.bandeja{display:flex;justify-content:center;gap:14px}
+.bandeja div{width:96px;height:96px;background:var(--m-sup);border:2px solid var(--m-borde);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800}
+
+/* Rummy */
+.rm{padding:32px 24px;gap:14px}
+.rm .barra{padding:12px}
+.rm .barra .tit span{font-size:19px}
+.rv{display:flex;align-items:center;gap:10px;font-size:20px}
+.rv b{font-size:22px}
+.dors{display:flex;flex-wrap:wrap;gap:3px}
+.dor{width:20px;height:28px;border-radius:4px;background:#E9DFCB;border:1px solid #D9CDB8}
+.chip{background:var(--ru-bg);color:var(--ru-tx);border-radius:999px;padding:4px 12px;font-size:18px;font-weight:700}
+.rm-medio{display:grid;grid-template-columns:96px 1fr 96px;gap:12px;flex:1;min-height:0}
+.rv.lado{flex-direction:column;justify-content:center;text-align:center;gap:6px}
+.rv.lado .dors{width:46px}
+.tapete{background:#2F6F5E;border-radius:26px;box-shadow:inset 0 0 0 6px #275D4F;padding:22px;display:flex;flex-wrap:wrap;align-content:flex-start;gap:18px 26px}
+.combi{display:flex;gap:6px}
+.ft.m{width:58px;height:78px;font-size:34px}.ft.m i{font-size:17px}
+.nueva{border:3px dashed #CFE5DD;color:#fff;border-radius:16px;padding:22px 26px;font-weight:800;font-size:21px}
+.turno{align-self:center;background:var(--ru-bg);color:var(--ru-tx);border-radius:999px;padding:10px 24px;font-size:20px;font-weight:800}
+.atril{background:#A86B3C;border-radius:16px;padding:10px 12px;box-shadow:0 8px 0 #7A4A26;display:flex;flex-direction:column;gap:12px}
+.atril .fil{display:flex;gap:8px;justify-content:center;padding-bottom:8px;border-bottom:8px solid #8A5428;border-radius:0 0 6px 6px}
+.ft.g{width:84px;height:104px;font-size:46px;border-radius:12px}.ft.g i{font-size:22px;margin-top:6px}
+.rm .btns>div.fin{background:#2F6F5E;color:#fff;border-color:transparent}
+
+/* muestras de color */
+.muestras{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.mu{border-radius:18px;padding:14px 16px;font-weight:700;font-size:18px;display:flex;flex-direction:column;gap:4px}
+.mu small{font-weight:400;font-size:14px;font-variant-numeric:tabular-nums}
+.nota{max-width:72ch;background:var(--tarjeta);border-radius:16px;padding:20px 24px}
+.nota h2{font-size:20px;margin:0 0 8px}
+.nota ul{margin:0;padding-left:20px;color:var(--tinta-2)}
+</style>
+</head>
+<body>
+
+
+<div class="pag">
+  <h1>Estilo A en toda la app</h1>
+  <p class="intro">Cada juego tiene su color y lo lleva también dentro de su pantalla: el Sudoku es amarillo en Inicio, en su barra de arriba y en la casilla elegida. Todas las pantallas aparecen a mitad de tamaño; los números y fichas son de ejemplo.</p>
+
+  <section>
+    <h2>Inicio</h2>
+    <div class="fila">
+      <figure><div class="ipad"><div class="esc"><div class="pant ini" data-inicio></div></div></div><figcaption>Vertical, tema claro</figcaption></figure>
+      <figure><div class="ipad"><div class="esc"><div class="pant ini oscuro" data-inicio></div></div></div><figcaption>Vertical, tema oscuro<span>Los colores de cada juego se oscurecen para no deslumbrar de noche; el tapete del Rummy no cambia.</span></figcaption></figure>
+      <figure><div class="ipad"><div class="esc h"><div class="pant ini h" data-inicio-h></div></div></div><figcaption>Horizontal, tema claro<span>La partida empezada y los botones a la izquierda; los juegos a la derecha, como pide la especificación.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Sudoku</h2>
+    <div class="fila">
+      <figure><div class="ipad"><div class="esc"><div class="pant sd" data-sudoku></div></div></div><figcaption>Tema claro<span>Amarillo solo en la barra, la casilla elegida (fuerte) y los otros 2 (suave). Fila, columna y bloque en gris claro. Tus números en verde azulado; los dados, en negro.</span></figcaption></figure>
+      <figure><div class="ipad"><div class="esc"><div class="pant sd oscuro" data-sudoku></div></div></div><figcaption>Tema oscuro<span>Tus números en verde agua, los dados en blanco.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Los otros cuatro juegos</h2>
+    <div class="fila">
+      <figure><div class="ipad"><div class="esc"><div class="pant jgo" id="m-palabras"></div></div></div><figcaption>Palabras<span>Letras de la rueda en coral; las que vas tocando se oscurecen y se unen con una línea. Las casillas vacías llevan un borde gris oscuro para verse bien. Las palabras encontradas se rellenan de coral; la letra dada por una pista va en verde azulado.</span></figcaption></figure>
+      <figure><div class="ipad"><div class="esc"><div class="pant jgo" id="m-parejas"></div></div></div><figcaption>Parejas de números<span>El número elegido se marca en lila. Los ya emparejados quedan en gris claro. «Añadir números» es el botón lila.</span></figcaption></figure>
+      <figure><div class="ipad"><div class="esc"><div class="pant jgo" id="m-calculos"></div></div></div><figcaption>Cálculos cruzados<span>Huecos con borde azul discontinuo; el elegido, relleno de azul. Resultados sobre gris suave. Tus números en verde azulado.</span></figcaption></figure>
+      <figure><div class="ipad"><div class="esc"><div class="pant jgo rm" id="m-rummy"></div></div></div><figcaption>Rummy<span>Tapete, atril y fichas sin cambios. El verde claro del Rummy aparece en la barra, en el aviso de turno y en «aún no ha bajado»; «Terminar turno» va en el verde del tapete.</span></figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Colores de cada juego</h2>
+    <div class="muestras" id="muestras"></div>
+  </section>
+
+  <div class="nota">
+    <h2>Qué falta por decidir</h2>
+    <ul>
+      <li>Si te gusta, haría lo mismo con Palabras (coral), Parejas (lila), Cálculos (azul) y Rummy (verde), y después Estadísticas y Ajustes.</li>
+      <li>Los colores de la app actual (verde azulado) seguirían en los avisos y en Ajustes; cada juego usaría el suyo dentro de su pantalla.</li>
+      <li>Todos los botones y teclas blancos llevan un borde gris medio (contraste 3:1 con el fondo, en los dos temas) para que se vea bien dónde empieza y acaba cada uno.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+const fichas = [['rj',7,'●'],['rj',8,'●'],['rj',9,'●'],['az',4,'▲'],['ng',4,'■'],['na',4,'◆'],['az',11,'▲'],['na',2,'◆']]
+  .map(([c,n,s]) => `<span class="ft ${c}">${n}<i>${s}</i></span>`).join('');
+const sigue = `<div class="sigue"><div><h4>Sigue con el Rummy</h4><p>Intermedio, te quedan 16 fichas</p></div><span class="btn-b">Reanudar</span><div class="fichas">${fichas}</div></div>`;
+const juegos = `<div class="rej">
+  <div class="t su"><div class="ic"><div class="ic-su"><span class="l">5</span><span></span><span>3</span><span></span><span class="l">8</span><span></span><span>1</span><span></span><span class="l">9</span></div></div><h4>Sudoku</h4><p>Cuatro niveles</p><span class="jg">Jugar</span></div>
+  <div class="t pa"><div class="ic"><div class="ic-pa"><b style="left:50%;top:22%">A</b><b style="left:80%;top:55%">M</b><b style="left:50%;top:82%">O</b><b style="left:20%;top:55%">R</b></div></div><h4>Palabras</h4><p>Nivel 1 de 1.000</p><span class="jg">Jugar</span></div>
+  <div class="t pr"><div class="ic"><div class="ic-pr"><b>3</b><b>7</b></div></div><h4>Parejas</h4><p>Iguales o que sumen 10</p><span class="jg">Jugar</span></div>
+  <div class="t ca"><div class="ic"><span class="ic-ca">2+3</span></div><h4>Cálculos cruzados</h4><p>Cuentas en cruz</p><span class="jg">Jugar</span></div>
+  <div class="t ru"><div class="ic"><span class="ft rj">7<i>●</i></span><span class="ft rj">8<i>●</i></span><span class="ft rj">9<i>●</i></span></div><div><h4>Rummy</h4><p>Contra 3 rivales</p></div><span class="jg">Jugar</span></div>
+</div>`;
+const cab = `<div class="cab"><h3>Pasatiempos</h3><p>sábado, 21 de noviembre</p></div>`;
+const pie = `<div class="pie"><div>Estadísticas</div><div>Ajustes</div></div>`;
+document.querySelectorAll('[data-inicio]').forEach(el => el.innerHTML = cab + sigue + juegos + pie);
+document.querySelectorAll('[data-inicio-h]').forEach(el => el.innerHTML = `<div class="izq">${cab}${sigue}${pie}</div>${juegos}`);
+
+// Sudoku de ejemplo
+const dados = ['.5.61.489','69.258.13','18....5.6','43..768..','..84....1','....8194 7'.replace(' ',''),'....476..','.15.6.2.4','..6..2...'];
+const jug = {'0,2':7,'2,3':9,'3,7':2};
+const sel = [3,7];
+const notas = {'4,1':[2,5,7]};
+const valor = (f,c) => jug[`${f},${c}`] ?? (dados[f][c] === '.' ? null : +dados[f][c]);
+const vSel = valor(...sel);
+const ic = {
+  deshacer:'<svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>',
+  borrar:'<svg viewBox="0 0 24 24"><path d="M20 20H8l-5-5 10-10 8 8-6 7"/><path d="m7 9 8 8"/></svg>',
+  notas:'<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
+  pista:'<svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3 11v2h6v-2a6 6 0 0 0-3-11z"/></svg>'};
+let celdas = '';
+for (let f = 0; f < 9; f++) for (let c = 0; c < 9; c++) {
+  const v = valor(f,c), cl = ['c'];
+  if (c === 2 || c === 5) cl.push('bd');
+  if (f === 2 || f === 5) cl.push('bb');
+  const mismoBloque = Math.floor(f/3) === Math.floor(sel[0]/3) && Math.floor(c/3) === Math.floor(sel[1]/3);
+  if (f === sel[0] && c === sel[1]) cl.push('sel');
+  else if (v && v === vSel) cl.push('mismo');
+  else if (f === sel[0] || c === sel[1] || mismoBloque) cl.push('rel');
+  if (jug[`${f},${c}`]) cl.push('jug');
+  const n = notas[`${f},${c}`];
+  const dentro = n ? `<div class="notas">${[1,2,3,4,5,6,7,8,9].map(x => `<span>${n.includes(x) ? x : ''}</span>`).join('')}</div>` : (v ?? '');
+  celdas += `<div class="${cl.join(' ')}">${dentro}</div>`;
+}
+const sudoku = `<div class="barra su"><span class="pill">‹ Inicio</span><div class="tit"><b>Sudoku</b><span>Fácil</span></div><div class="der"><span class="crono">00:14</span><span class="pill">Pausa</span></div></div>
+<div class="tab">${celdas}</div>
+<div class="herr"><div>${ic.deshacer}Deshacer</div><div>${ic.borrar}Borrar</div><div>${ic.notas}Notas: no</div><div>${ic.pista}Pista</div></div>
+<div class="teclas">${[1,2,3,4,5,6,7,8,9].map(n => `<div>${n}</div>`).join('')}</div>`;
+document.querySelectorAll('[data-sudoku]').forEach(el => el.innerHTML = sudoku);
+
+// ---------- Palabras ----------
+const casillas = (pal, cls = '', pista = -1) => `<div class="pl-pal ${cls}">${[...pal].map((l, i) => `<span class="${i === pista ? 'pista' : ''}">${cls === 'hecha' || i === pista ? l : ''}</span>`).join('')}</div>`;
+document.getElementById('m-palabras').innerHTML = `
+<div class="barra pa"><span class="pill">‹ Inicio</span><div class="tit"><b>Palabras</b><span>Nivel 1</span></div><div class="der"><span class="pill">1 de 3 palabras</span></div></div>
+<div class="pl-zona">${casillas('DAN')}${casillas('NADA', 'hecha')}${casillas('ANDA', '', 0)}</div>
+<div class="pl-actual">NA</div>
+<div class="pl-mando">
+  <div class="pl-red"><svg viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Mezclar</div>
+  <div class="rueda"><svg viewBox="0 0 380 380"><line x1="190" y1="70" x2="310" y2="190" stroke="var(--pa-tx)" stroke-width="10" stroke-linecap="round"/></svg>
+    <b class="on" style="left:190px;top:70px">N</b><b class="on" style="left:310px;top:190px">A</b><b style="left:190px;top:310px">A</b><b style="left:70px;top:190px">D</b></div>
+  <div class="pl-red">${ic.pista}Pista</div>
+</div>
+<p class="pl-extra">Palabras extra encontradas: ninguna todavía</p>`;
+
+// ---------- Parejas ----------
+const pj = ['678198147','516857977','967269124'];
+const fuera = new Set(['0,3','0,4','1,6','2,6']);
+let pjCel = '';
+for (let f = 0; f < 8; f++) for (let c = 0; c < 9; c++) {
+  const v = pj[f]?.[c] ?? '';
+  const cl = fuera.has(`${f},${c}`) ? 'fuera' : (f === 1 && c === 0 ? 'sel' : '');
+  pjCel += `<div class="${cl}">${v}</div>`;
+}
+document.getElementById('m-parejas').innerHTML = `
+<div class="barra pr"><span class="pill">‹ Inicio</span><div class="tit"><b>Parejas de números</b><span>Quedan 23 números</span></div><div class="der"><span class="crono">01:42</span></div></div>
+<p class="ayuda">Toca dos números <b>iguales</b> o que <b>sumen 10</b>.</p>
+<div class="pj-tab">${pjCel}</div>
+<div class="btns" style="grid-template-columns:1fr 1fr 1.2fr;margin-top:auto"><div>${ic.deshacer}Deshacer</div><div>${ic.pista}Pista</div><div class="pj-mas">Añadir números<small>quedan 4</small></div></div>`;
+
+// ---------- Cálculos ----------
+const cc = [
+  ['n10','o−','j2','o−','h','o=','r5'],
+  ['o+','','o+','','o−','',''],
+  ['n8','o−','hs','o+','n2','o=','r3'],
+  ['o+','','o+','','o+','',''],
+  ['h','o+','h','o−','n8','o=','r7'],
+  ['o=','','o=','','o=','',''],
+  ['r23','','r19','','r9','','']];
+const ccCel = cc.flat().map(x => {
+  if (!x) return '<div></div>';
+  const t = x[0], v = x.slice(1);
+  if (t === 'h') return `<div class="h${v === 's' ? ' sel' : ''}"></div>`;
+  return `<div class="${t}">${v}</div>`;
+}).join('');
+document.getElementById('m-calculos').innerHTML = `
+<div class="barra ca"><span class="pill">‹ Inicio</span><div class="tit"><b>Cálculos cruzados</b><span>Fácil</span></div><div class="der"><span class="crono">00:48</span></div></div>
+<div class="cc-tab">${ccCel}</div>
+<p class="ayuda">Toca una casilla vacía y después un número:</p>
+<div class="bandeja">${[3,5,7,10].map(n => `<div>${n}</div>`).join('')}</div>
+<div class="btns" style="grid-template-columns:1fr 1fr 1fr"><div>${ic.deshacer}Deshacer</div><div>${ic.borrar}Borrar</div><div>${ic.pista}Pista</div></div>`;
+
+// ---------- Rummy ----------
+const sim = {rj:'●', az:'▲', ng:'■', na:'◆'};
+const fi = (c, n, t) => `<span class="ft ${t} ${c}">${n}<i>${sim[c]}</i></span>`;
+const dors = n => `<div class="dors">${'<i class="dor"></i>'.repeat(n)}</div>`;
+const fila1 = [['az',1],['ng',1],['ng',1],['na',1],['az',3],['ng',3],['rj',4],['az',4]];
+const fila2 = [['rj',5],['na',6],['ng',9],['na',9],['az',10],['rj',11],['rj',12],['rj',12]];
+document.getElementById('m-rummy').innerHTML = `
+<div class="barra ru"><span class="pill">‹ Inicio</span><div class="tit"><b>Rummy</b><span>Quedan 43 por robar</span></div><div class="der"><span class="pill">Deshacer jugada</span></div></div>
+<div class="rv" style="justify-content:center"><b>Paco</b>${dors(16)}<span>16 fichas</span><span class="chip">aún no ha bajado</span></div>
+<div class="rm-medio">
+  <div class="rv lado"><b>Lola</b><span>9 fichas</span>${dors(9)}</div>
+  <div class="tapete"><div class="combi">${fi('rj',9,'m')}${fi('az',9,'m')}${fi('ng',9,'m')}</div><div class="combi">${fi('az',11,'m')}${fi('az',12,'m')}${fi('az',13,'m')}</div><div class="nueva">Nueva combinación</div></div>
+  <div class="rv lado"><b>Carmen</b><span>16 fichas</span>${dors(16)}<span class="chip">aún no ha bajado</span></div>
+</div>
+<div class="turno">Tu turno: la primera bajada debe sumar 30 (llevas 0)</div>
+<div class="atril"><div class="fil">${fila1.map(([c,n]) => fi(c,n,'g')).join('')}</div><div class="fil">${fila2.map(([c,n]) => fi(c,n,'g')).join('')}</div></div>
+<div class="btns" style="grid-template-columns:repeat(4,1fr);margin-top:6px"><div>Ordenar 1 2 3</div><div>Ordenar por color</div><div>Robar ficha</div><div class="fin">Terminar turno</div></div>`;
+
+// muestras
+const nombres = [['su','Sudoku'],['pa','Palabras'],['pr','Parejas de números'],['ca','Cálculos cruzados'],['ru','Rummy']];
+const claro = getComputedStyle(document.querySelector('.pant:not(.oscuro)'));
+const osc = getComputedStyle(document.querySelector('.pant.oscuro'));
+document.getElementById('muestras').innerHTML = nombres.map(([k,n]) =>
+  `<div class="mu" style="background:${claro.getPropertyValue('--'+k+'-bg')};color:${claro.getPropertyValue('--'+k+'-tx')}">${n}<small>claro ${claro.getPropertyValue('--'+k+'-bg').trim()} / ${claro.getPropertyValue('--'+k+'-tx').trim()}</small></div>
+   <div class="mu" style="background:${osc.getPropertyValue('--'+k+'-bg')};color:${osc.getPropertyValue('--'+k+'-tx')}">${n}<small>oscuro ${osc.getPropertyValue('--'+k+'-bg').trim()} / ${osc.getPropertyValue('--'+k+'-tx').trim()}</small></div>`).join('');
+</script>
+</body>
+</html>

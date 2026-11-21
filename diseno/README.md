@@ -2,6 +2,8 @@
 
 Referencia visual de todas las pantallas, exportada del lienzo de diseño.
 
+**Estilo desde la v1.6:** `estilo-a.html` («Cada juego, su color») define el aspecto: colores de cada juego, barra de juego, baldosas de Inicio y bordes. Es una página normal: se abre en el navegador (`http://localhost:8000/diseno/estilo-a.html`). Los `.dc.html` de abajo siguen valiendo para la **disposición y los textos** de cada pantalla, no para los colores. Si no coinciden, manda `ESPECIFICACION.md` §3.
+
 ## Cómo leer estos archivos
 - Cada `.dc.html` es **una pantalla**. Usan un formato propio del lienzo (etiquetas `<x-dc>`, `<sc-for>`, `<sc-if>` y un bloque `<script type="text/x-dc">`), así que **no se abren como página normal** en el navegador. Sirven como referencia exacta: los estilos están escritos en línea (`style="…"`) con los colores, tamaños, márgenes y radios definitivos, y el texto es el texto real en español.
 - Las partes repetitivas (casillas, fichas, números) se generan en el bloque `<script>` final (`renderVals()`), donde también están los colores de las casillas y los datos de ejemplo.

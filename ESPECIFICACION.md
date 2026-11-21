@@ -1,10 +1,12 @@
 # Pasatiempos — Especificación
 
-Versión 1.5 · 10 de noviembre de 2026
+Versión 1.6 · 21 de noviembre de 2026 (rediseño visual «Cada juego, su color»)
 
 Aplicación web instalable (PWA) para iPad con cinco juegos de mesa y lógica, pensada para **una persona mayor**. Uso personal: sin anuncios, sin servidores, sin cuentas, sin internet después de instalarla.
 
 Referencia visual: carpeta `diseno/` del repositorio (ver `diseno/README.md`). Si este documento y los diseños no coinciden, **manda este documento**; si este documento no dice nada, mandan los diseños.
+
+Desde la v1.6 el **estilo** (colores, bordes, barra de juego, baldosas de Inicio) es el de `diseno/estilo-a.html` y §3 de este documento. Los `.dc.html` siguen valiendo para la **disposición y los textos** de cada pantalla, no para su aspecto.
 
 ---
 
@@ -90,7 +92,7 @@ Las estadísticas se **calculan** a partir de `resultados` (no se guardan duplic
 ## 3. Sistema visual
 
 ### 3.1 Tipografía
-- **Atkinson Hyperlegible** (400 y 700), incluida localmente (licencia SIL OFL). Alternativa: `system-ui`. Los archivos `woff2` y la licencia se descargan **una sola vez** durante el desarrollo, de la fuente oficial, y se guardan en `/fonts/`; la app nunca los pide a internet.
+- **Atkinson Hyperlegible Next** (400, 700 y 800), incluida localmente (licencia SIL OFL). Es la versión nueva de la misma familia (Braille Institute): igual de legible, con más grosores. El 800 se usa solo en títulos («Pasatiempos», nombres de juego en Inicio, título de la barra de juego) y en los números de tablero. Alternativa: la Atkinson Hyperlegible actual y después `system-ui`. Los archivos `woff2` y la licencia se descargan **una sola vez** durante el desarrollo, de la fuente oficial, y se guardan en `/fonts/`; la app nunca los pide a internet.
 - Tamaño mínimo de texto: **18 px**. Texto normal 19–21 px. Títulos de pantalla 26–40 px. El mínimo vale también para notas del Sudoku, etiquetas bajo iconos y textos auxiliares («14 fichas», «aún no ha bajado», «Quedan 4»). Solo quedan fuera los dibujos de los iconos.
 - Números de tablero: 40–48 px, negrita.
 - Ajuste **«Tamaño del texto: Grande»** multiplica todos los tamaños por 1,2 (usar `rem` y una variable raíz). Los tableros pueden reducir el espacio entre casillas para que quepan.
@@ -108,18 +110,38 @@ Las estadísticas se **calculan** a partir de `resultados` (no se guardan duplic
 | `--acento-texto` | `#0B6E62` | `#6FE0CC` | texto en color acento, números del jugador |
 | `--acento-suave` | `#DDF1EE` | `#173A3A` | fondos de iconos, botón activo |
 | `--pista` | `#E5E5EA` | `#243140` | fondos de selectores, barras de progreso |
-| `--borde` | `#C7C7CC` | `#3A4A5A` | bordes suaves, discontinuos |
+| `--borde` | `#858C94` | `#66727E` | borde de botones, teclas y casillas vacías (v1.6: contraste ≥ 3:1 con `--fondo`) |
 | `--linea` | `#D1D1D6` | `#2A3644` | líneas finas de cuadrícula |
 | `--linea-fuerte` | `#3A3A3C` | `#7D8D9E` | bordes de bloque/tablero |
 | `--seleccion` | `#B9E3DC` | `#1F5552` | casilla seleccionada |
-| `--resaltado` | `#EDF5F4` | `#1C2A38` | fila/columna/bloque relacionados |
+| `--resaltado` | `#EDEFF2` | `#1F2730` | fila/columna/bloque relacionados; fondo de los resultados en Cálculos (v1.6: gris neutro) |
+| `--chip` | `rgb(255 255 255 / 0.74)` | `rgb(255 255 255 / 0.12)` | píldoras dentro de una baldosa o barra de color de juego («‹ Inicio», «Jugar», «Pausa») |
 | `--mismo-numero` | `#D2ECE7` | `#1D4240` | casillas con el mismo número |
 | `--error` | `#C62828` | `#EF5350` | número incorrecto |
 | `--eliminado` | `#C7C7CC` | `#5B6B7C` | números ya emparejados (Parejas) |
 
+**Color de cada juego (v1.6).** Cada juego tiene su color: en Inicio rellena su baldosa y, dentro del juego, se usa **solo** en la barra de juego y en lo que se elige o se destaca. Tableros, teclas y botones siguen en `--superficie` con `--borde`. Los números que pone el jugador van siempre en `--acento-texto`. En la pantalla de cada juego, la raíz lleva su clase (`juego-sudoku`, …) que define `--j-fondo`, `--j-texto`, `--j-fuerte` y `--j-suave`:
+
+| Juego | `--j-fondo` (claro / oscuro) | `--j-texto` | `--j-fuerte` | `--j-suave` |
+|---|---|---|---|---|
+| Sudoku | `#FFE08A` / `#3A3118` | `#3B2C00` / `#FFE08A` | `#FFD45C` / `#6A5414` | `#FFEFBF` / `#3E3517` |
+| Palabras | `#FFC9B5` / `#43261C` | `#4A190A` / `#FFC9B5` | `#4A190A` / `#FFC9B5` | — |
+| Parejas | `#D9D0FF` / `#2A2550` | `#22154F` / `#D9D0FF` | `#BFB0FF` / `#463C8A` | — |
+| Cálculos | `#BFE4FF` / `#14324A` | `#0A2F4C` / `#BFE4FF` | `#3D7FB0` / `#5FA3D6` | — |
+| Rummy | `#CDEBDD` / `#183A30` | `#0F3A2E` / `#CDEBDD` | — | — |
+
+Uso por juego:
+- **Sudoku:** barra en `--j-fondo`; casilla seleccionada `--j-fuerte` (sustituye a `--seleccion`); casillas con el mismo número `--j-suave` (sustituye a `--mismo-numero`); fila, columna y bloque en `--resaltado`.
+- **Palabras:** barra, letras de la rueda y casillas de palabras encontradas en `--j-fondo` con letra `--j-texto`; letras ya tocadas y la línea que las une, invertidas (`--j-fuerte` de fondo, `--j-fondo` de letra); palabra en curso en una píldora `--j-fondo`. Letra descubierta con Pista en `--acento-texto`.
+- **Parejas:** barra y botón «Añadir números» en `--j-fondo`; número seleccionado `--j-fuerte` (sustituye a `--seleccion`).
+- **Cálculos:** barra en `--j-fondo`; huecos con borde discontinuo de 3 px `--j-fuerte`; hueco seleccionado con fondo `--j-fondo` y borde continuo `--j-texto`.
+- **Rummy:** barra, aviso de turno y «aún no ha bajado» en `--j-fondo` con `--j-texto`; «Terminar turno» en el verde del tapete (`#2F6F5E`) con texto `#FFFFFF`. Tapete, atril y fichas no cambian.
+
+Contrastes comprobados: `--j-texto` sobre `--j-fondo` ≥ 7:1 en los dos temas; `--acento-texto` sobre `--j-fuerte` del Sudoku ≥ 3:1 (números de 44 px en negrita).
+
 Rummy (iguales en ambos temas): tapete `#2F6F5E` con borde interior `#275D4F`; ficha `#FBF6E9`, borde `#D9CDB8`, sombra `#CBBEA6`; dorso `#E9DFCB`; atril madera `#A86B3C`, balda `#8A5428`, sombra `#7A4A26`. Colores de ficha: rojo `#C62828` ●, azul `#1565C0` ▲, negro `#222222` ■, naranja `#AD5700` ◆. Comodín: carita dibujada en rojo. Zona «Nueva combinación»: borde discontinuo `#CFE5DD` y texto `#FFFFFF` sobre el tapete.
 
-Iconos de los juegos en Inicio: sus colores internos son fijos y forman parte del dibujo (p. ej. el fondo `#FFF8EC` de las casillas del icono de Sudoku); no son texto y no siguen los tokens.
+Iconos de los juegos en Inicio (v1.6): se dibujan con `--j-texto` y `--chip` sobre la baldosa del juego, así que siguen el tema; las fichas del icono del Rummy usan los colores fijos del Rummy. El `#FFF8EC` del icono antiguo del Sudoku deja de usarse.
 
 El color `#095F54` (`a:hover`) de los diseños no se usa: en el iPad no hay estado «hover».
 
@@ -127,8 +149,10 @@ Todo texto debe cumplir contraste 4,5:1 (3:1 a partir de 24 px). **Excepción de
 
 ### 3.3 Componentes
 - **Botón principal:** fondo `--acento`, texto `--sobre-acento`, 64–76 px de alto, forma de píldora o radio 20 px, texto 20–24 px negrita.
-- **Botón secundario:** fondo `--superficie` (o borde 2 px `--acento`), mismo alto.
-- **Botón «Inicio»:** píldora de 56 px con flecha «‹» + texto «Inicio», arriba a la izquierda en todas las pantallas de juego.
+- **Botón secundario:** fondo `--superficie` con borde 2 px `--borde` (o 2 px `--acento`), mismo alto. Las teclas de números y las herramientas (Deshacer, Borrar, Notas, Pista) son botones secundarios con radio 18–22 px.
+- **Barra de juego (v1.6):** arriba en todas las pantallas de juego; bloque de radio 30 px y fondo `--j-fondo`, texto `--j-texto`, relleno 16 px. Tres zonas: a la izquierda el botón «Inicio»; en el centro el nombre del juego (30 px, 800) y debajo el subtítulo (dificultad o nivel, 20 px); a la derecha el cronómetro, el contador o la acción del juego («Pausa», «1 de 3 palabras», «Deshacer jugada») como píldora `--chip`.
+- **Botón «Inicio»:** píldora `--chip` de 56 px con flecha «‹» + texto «Inicio», dentro de la barra de juego, a la izquierda.
+- **Baldosa de juego (Inicio, v1.6):** radio 30 px, fondo `--j-fondo`, texto `--j-texto`; icono arriba (84 px), nombre (31 px, 800), subtítulo (20 px) y píldora «Jugar» `--chip` abajo. Toda la baldosa es el botón.
 - **Selector segmentado** (Ajustes, pestañas): fondo `--pista`, opción activa con fondo `--acento`; alto 56–64 px.
 - **Interruptor** 76 × 44 px.
 - Áreas táctiles de **56 px como mínimo** (nunca menos de 44 px).
@@ -143,16 +167,17 @@ Ajuste **Tema: Claro / Oscuro / Automático** (Automático = `prefers-color-sche
 ## 4. Pantallas de la plataforma
 
 ### 4.1 Inicio
-- Cabecera: icono «P», título «Pasatiempos», fecha de hoy.
-- Tarjeta **«Continuar partida»** (solo si hay una en curso; la más reciente): juego · dificultad, progreso (p. ej. «37 de 81 casillas · 04:12»), barra de progreso, botón «Reanudar».
-- **Juegos**, en este orden: Sudoku, Palabras, Parejas de números, Cálculos cruzados, Rummy. Cada tarjeta: icono, nombre, subtítulo y botón «Jugar».
-- Botones grandes **Estadísticas** y **Ajustes**.
-- Horizontal: «Continuar» + Estadísticas/Ajustes a la izquierda, juegos a la derecha.
+- Cabecera: título «Pasatiempos» (50 px, 800) y fecha de hoy debajo. (v1.6: sin el icono «P».)
+- Tarjeta **«Continuar partida»** (solo si hay una en curso; la más reciente): título «Sigue con el <juego>», detalle (p. ej. «Intermedio, te quedan 16 fichas» o «Fácil, 37 de 81 casillas»), botón «Reanudar» (píldora blanca). Fondo: el tapete del Rummy si es una partida de Rummy, con las primeras fichas del atril; en los demás juegos, `--j-fondo` de ese juego con su barra de progreso.
+- **Juegos**, en este orden: Sudoku, Palabras, Parejas de números, Cálculos cruzados, Rummy, como **baldosas de juego** (§3.3) en dos columnas: Sudoku y Palabras; Parejas y Cálculos; Rummy ocupa la fila entera (icono, nombre y «Jugar» en una sola línea).
+- Botones grandes **Estadísticas** y **Ajustes** (botones secundarios), abajo.
+- Horizontal: columna izquierda de 420 px con cabecera, «Continuar» y Estadísticas/Ajustes; a la derecha las baldosas, con la misma disposición.
 - Al elegir un juego con dificultades, preguntar la dificultad con botones grandes (Fácil / Medio / Difícil / Experto), recordando la última elegida (se resalta).
 - Si ese juego tiene una partida a medias, la ventana ofrece primero «Seguir con la partida empezada»; elegir una dificultad empieza una nueva y la anterior queda registrada como **abandonada**.
 - Mientras un juego no esté terminado (fases futuras), su tarjeta muestra «Próximamente» en lugar de «Jugar».
 
 ### 4.2 Estadísticas
+- Estilo (v1.6): pantalla sobria, con `--acento` y sin colores de juego salvo una muestra pequeña del color del juego elegido junto a su nombre en el selector.
 - Selector de juego: **Sudoku · Palabras · Parejas · Cálculos · Rummy** (también en vertical). Solo aparecen los juegos ya disponibles; con uno solo no hay selector y el título es «Estadísticas · Sudoku».
 - Cuatro cifras: Partidas jugadas, Partidas terminadas (o ganadas), Racha actual (días seguidos con alguna partida terminada), Tiempo total.
 - **Mejor tiempo** por dificultad («Sin partidas» si no hay).
@@ -160,6 +185,8 @@ Ajuste **Tema: Claro / Oscuro / Automático** (Automático = `prefers-color-sche
 - Específicas: Palabras → nivel alcanzado y palabras extra; Rummy → partidas ganadas por jugador y puntos.
 
 ### 4.3 Ajustes
+Estilo (v1.6): pantalla sobria, con `--acento`, sin colores de juego.
+
 Secciones (en vertical la pantalla se desplaza). Las de cada juego solo aparecen cuando ese juego está disponible:
 - **Tema:** Claro / Oscuro / Automático.
 - **Tamaño del texto:** Normal / Grande.
@@ -302,6 +329,7 @@ Cada fase termina con la app publicada en GitHub Pages y probada en el iPad.
 | 3 | **Parejas de números** | Reglas de conexión cubiertas por pruebas; partida completa jugable. |
 | 4 | **Cálculos cruzados** | El generador produce tableros con solución única en las 4 dificultades (pruebas); partida jugable. |
 | 5 | **Rummy** | Reglas cubiertas por pruebas; partidas completas contra 3 rivales en los 3 niveles; el iPad no se bloquea mientras piensan. |
+| 6 | **Rediseño visual** «Cada juego, su color» (v1.6, §3) | Letra nueva en `/fonts/`; tokens nuevos en `css/base.css`; Inicio, los cinco juegos (Palabras en sus dos modos), Estadísticas, Ajustes y las ventanas (elegir dificultad, pausa, enhorabuena) con el estilo nuevo, en vertical y horizontal, tema claro y oscuro, texto normal y grande; sin cambios en reglas ni datos guardados. |
 
 ---
 
@@ -317,3 +345,4 @@ Para confirmar con el usuario cuando llegue cada fase:
 2. ~~Palabras: comprobar la palabra al soltar el dedo o con un botón «Comprobar» en modo toque.~~ **Decidido:** al soltar el dedo (y, en modo toque, al tocar la palabra en curso), sin botón «Comprobar».
 3. ~~Rummy: ¿jugar a una sola partida o a varias rondas con puntuación acumulada?~~ **Decidido:** una sola partida (por ahora).
 4. ~~¿Sonidos opcionales (desactivados por defecto)?~~ **Decidido:** sin sonidos.
+5. Rediseño (fase 6), sin maqueta todavía: Palabras en modo crucigrama, las ventanas (elegir dificultad, pausa, enhorabuena), Estadísticas, Ajustes, y los cuatro juegos distintos del Sudoku en horizontal y en tema oscuro. Se aplicarán las reglas de §3 y se enseñarán antes de darlas por buenas.
