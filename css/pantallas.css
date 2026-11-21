@@ -32,126 +32,174 @@
   .cabecera-pantalla { flex-direction: row; align-items: center; }
 }
 
-/* ---------- Inicio ---------- */
-.inicio { gap: 24px; }
+/* ---------- Inicio (v1.6: baldosas por juego; diseno/estilo-a.html) ---------- */
+.inicio { gap: 20px; }
 
-.inicio-cabecera { display: flex; align-items: center; gap: 18px; }
-.logo {
+.inicio-cabecera { display: flex; flex-direction: column; gap: 4px; }
+.inicio-cabecera h1 { font-size: 3.125rem; font-weight: 800; line-height: 1.05; letter-spacing: -0.01em; }  /* 50 px */
+.inicio-cabecera p { font-size: 1.4375rem; color: var(--texto-2); }                                     /* 23 px */
+
+/* «Continuar partida»: color del juego con barra de progreso, o tapete con fichas (Rummy) */
+.continuar {
+  background: var(--j-fondo);
+  color: var(--j-texto);
+  border-radius: 2rem;
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px 20px;
+}
+.continuar-texto { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.continuar .etiqueta { font-size: 1.25rem; font-weight: 700; }
+.continuar h2 { font-size: 2rem; font-weight: 800; line-height: 1.15; }
+.continuar-texto p:last-child:not(.etiqueta) { font-size: 1.3125rem; }
+.continuar-reanudar {
+  min-height: 4rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: var(--superficie);
+  color: var(--texto);
+  border-color: transparent;
+}
+.continuar .progreso { grid-column: 1 / -1; background: var(--chip); height: 14px; border-radius: 7px; }
+.continuar .progreso > span { background: var(--j-texto); border-radius: 7px; }
+.continuar-tapete {
+  background: var(--tapete);
+  color: var(--sobre-tapete);
+  box-shadow: inset 0 0 0 6px var(--tapete-borde);
+}
+.continuar-fichas { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px 8px; }
+
+/* Ficha pequeña del Rummy (Inicio): colores fijos del Rummy */
+.mini-ficha {
   flex: none;
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
-  background: var(--acento);
-  color: var(--sobre-acento);
-  font-size: 34px;
-  font-weight: 700;
-  display: flex;
+  width: 46px;
+  height: 62px;
+  border-radius: 9px;
+  background: var(--ficha-cara);
+  border: 1.5px solid var(--ficha-borde);
+  box-shadow: 0 4px 0 var(--ficha-sombra);
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-.inicio-cabecera h1 { font-size: 2.5rem; font-weight: 700; }
-.inicio-cabecera p { font-size: 1.25rem; color: var(--texto-2); }
+.mini-ficha i { font-style: normal; font-size: 13px; margin-top: 3px; }
+.mini-ficha.rojo { color: var(--rojo); }
+.mini-ficha.azul { color: var(--azul); }
+.mini-ficha.negro { color: var(--negro); }
+.mini-ficha.naranja { color: var(--naranja); }
 
-.continuar {
-  background: var(--superficie);
-  border-radius: 28px;
-  padding: 22px 32px;
+/* Baldosas de juego: dos columnas; el Rummy ocupa la fila entera */
+.juegos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.baldosa {
+  min-height: 11.5rem;
+  padding: 20px 24px 18px;
+  border: 0;
+  border-radius: 1.875rem;     /* 30 px */
+  background: var(--j-fondo);
+  color: var(--j-texto);
+  text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 10px;
 }
-.continuar-texto { display: flex; flex-direction: column; gap: 6px; }
-.continuar .boton { min-height: 4rem; font-size: 1.5rem; }
-.continuar .etiqueta { font-size: 1.25rem; font-weight: 700; color: var(--acento-texto); }
-.continuar h2 { font-size: 2rem; font-weight: 700; }
-.continuar p { font-size: 1.25rem; color: var(--texto-2); }
-
-.juegos { display: flex; flex-direction: column; gap: 10px; }
-.juego {
-  background: var(--superficie);
-  border-radius: 24px;
-  padding: 12px 24px;
-  min-height: 96px;
-  display: flex;
+.baldosa-texto { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.baldosa-nombre { font-size: 1.875rem; font-weight: 800; line-height: 1.1; }   /* 30 px */
+.baldosa-sub { font-size: 1.25rem; line-height: 1.25; }                          /* 20 px */
+.baldosa-jugar {
+  margin-top: auto;
+  min-height: 2.75rem;
+  padding: 0 1.375rem;
+  border-radius: 1.375rem;
+  background: var(--chip);
+  font-size: 1.3125rem;
+  font-weight: 800;
+  display: inline-flex;
   align-items: center;
-  gap: 20px;
 }
-.juego-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.juego-nombre { font-size: 1.75rem; font-weight: 700; }
-.juego-sub { font-size: 1.125rem; color: var(--texto-2); }
-.juego .boton { min-height: 3.75rem; padding: 0 1.75rem; border-radius: 1.875rem; flex: none; }
-
-.icono-juego {
-  flex: none;
-  width: 72px;
-  height: 72px;
-  border-radius: 18px;
-  background: var(--acento-suave);
-  color: var(--acento-texto);
-  font-weight: 700;
-  display: flex;
+.baldosa.juego-rummy {
+  grid-column: 1 / -1;
+  min-height: 0;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  gap: 22px;
 }
+.baldosa.juego-rummy .baldosa-jugar { margin: 0 0 0 auto; }
+
+/* Dibujos de las baldosas (84 px de alto), con el color del juego */
+.icono-juego { --icono: 72px; flex: none; height: var(--icono); display: flex; align-items: center; gap: 8px; font-weight: 800; }
 .icono-sudoku {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(0, 1fr));
-  align-items: stretch;
-  justify-items: stretch;
-  gap: 4px;
-  padding: 13px;
+  --c: calc((var(--icono) - 8px) / 3.2);
+  display: grid; grid-template-columns: repeat(3, var(--c)); grid-template-rows: repeat(3, var(--c));
+  align-items: stretch; align-content: center; gap: 4px;
 }
-.icono-sudoku > span { border-radius: 3px; background: var(--superficie); }
-.icono-sudoku > span.lleno { background: var(--acento); }
-.icono-palabras { border-radius: 36px; position: relative; font-size: 18px; }
-.icono-palabras > span { position: absolute; }
-.icono-parejas { gap: 5px; }
+.icono-sudoku > span {
+  border-radius: 6px; background: var(--chip);
+  display: flex; align-items: center; justify-content: center; font-size: calc(var(--c) * 0.65);
+}
+.icono-sudoku > span.lleno { background: var(--j-texto); color: var(--j-fondo); }
+.icono-palabras { position: relative; width: var(--icono); border-radius: 50%; background: var(--chip); font-size: calc(var(--icono) * 0.28); }
+.icono-palabras > span { position: absolute; transform: translate(-50%, -50%); }
 .icono-parejas > span {
-  width: 26px; height: 32px; border-radius: 6px;
-  background: var(--acento); color: var(--sobre-acento);
-  font-size: 20px;
+  width: 50px; height: 62px; border-radius: 12px; font-size: 32px;
   display: flex; align-items: center; justify-content: center;
+  background: var(--j-texto); color: var(--j-fondo);
 }
-.icono-calculos { font-size: 19px; }
-.icono-rummy { gap: 3px; }
-.icono-rummy > span {
-  width: 18px; height: 26px; border-radius: 4px;
-  background: var(--icono-casilla); color: var(--icono-rojo);
-  font-size: 15px;
-  display: flex; align-items: center; justify-content: center;
-}
+.icono-parejas > span + span { background: var(--chip); color: var(--j-texto); }
+.icono-calculos > span { font-size: 40px; letter-spacing: 1px; background: var(--chip); border-radius: 16px; padding: 4px 16px; }
 
 .inicio-nav {
   margin-top: auto;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 18px;
 }
 .inicio-nav .boton {
   min-height: 5rem;            /* 80 px */
-  border-radius: 24px;
-  font-size: 1.375rem;         /* 22 px */
+  border-radius: 22px;
+  font-size: 1.4375rem;        /* 23 px */
 }
 .inicio-nav svg { flex: none; width: 28px; height: 28px; }
 
-/* Horizontal: «Continuar» + Estadísticas/Ajustes a la izquierda, juegos a la derecha */
+/* Horizontal: «Continuar» + Estadísticas/Ajustes a la izquierda (420 px), baldosas a la derecha */
 @media (orientation: landscape) {
   .inicio {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 40px;
-    align-items: start;
+    grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+    column-gap: 28px;
+    align-items: stretch;
     padding: max(48px, env(safe-area-inset-top)) max(48px, env(safe-area-inset-right)) max(48px, env(safe-area-inset-bottom)) max(48px, env(safe-area-inset-left));
   }
-  .inicio-izquierda { display: flex; flex-direction: column; gap: 32px; min-height: 100%; align-self: stretch; }
-  .inicio .juegos { grid-column: 2; grid-row: 1; }
+  .inicio-izquierda { display: flex; flex-direction: column; gap: 24px; min-height: 100%; }
+  .inicio .juegos { grid-column: 2; grid-row: 1; grid-template-rows: 1fr 1fr auto; }
+  .inicio .baldosa { min-height: 0; }
+  .continuar { grid-template-columns: minmax(0, 1fr); }
+  .continuar-reanudar { width: 100%; }
+  .inicio .icono-juego { --icono: 64px; }
+  .inicio .baldosa { padding: 18px 22px 16px; gap: 6px; }
+  .inicio .baldosa.juego-rummy { gap: 18px; }
+  .inicio-nav { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  html[data-texto="grande"] .inicio .icono-juego { --icono: 52px; }
+  html[data-texto="grande"] .inicio-nav .boton { min-height: 4.25rem; }
+  html[data-texto="grande"] .inicio-izquierda { gap: 16px; }
 }
-/* Texto grande: menos aire entre bloques para que Inicio quepa sin desplazarse */
-html[data-texto="grande"] .inicio { gap: 16px; }
-html[data-texto="grande"] .continuar { padding: 16px 32px; gap: 10px; }
-html[data-texto="grande"] .juegos { gap: 8px; }
-html[data-texto="grande"] .juego { padding-top: 8px; padding-bottom: 8px; }
+/* Texto grande: menos aire para que Inicio quepa sin desplazarse */
+html[data-texto="grande"] .inicio { gap: 12px; }
+html[data-texto="grande"] .continuar { padding: 16px 24px; gap: 10px 16px; }
+html[data-texto="grande"] .juegos { gap: 12px; }
+html[data-texto="grande"] .baldosa { min-height: 0; padding: 14px 20px; gap: 6px; }
+html[data-texto="grande"] .icono-juego { --icono: 64px; }
+html[data-texto="grande"] .baldosa.juego-rummy { gap: 18px; }
 @media (orientation: landscape) {
   html[data-texto="grande"] .inicio { padding-top: max(36px, env(safe-area-inset-top)); padding-bottom: max(36px, env(safe-area-inset-bottom)); }
 }

@@ -5,7 +5,7 @@
 // comprueba que coinciden). Así el iPad detecta que hay versión nueva.
 // AL AÑADIR O QUITAR ARCHIVOS: actualizar ARCHIVOS (una prueba lo comprueba).
 
-const VERSION = 7;
+const VERSION = 8;
 const CACHE = `pasatiempos-v${VERSION}`;
 
 const ARCHIVOS = [
@@ -16,8 +16,9 @@ const ARCHIVOS = [
   'css/base.css',
   'css/componentes.css',
   'css/pantallas.css',
-  'fonts/AtkinsonHyperlegible-Bold.woff2',
-  'fonts/AtkinsonHyperlegible-Regular.woff2',
+  'fonts/AtkinsonHyperlegibleNext-Bold.woff2',
+  'fonts/AtkinsonHyperlegibleNext-ExtraBold.woff2',
+  'fonts/AtkinsonHyperlegibleNext-Regular.woff2',
   'icons/apple-touch-icon.png',
   'icons/favicon-32.png',
   'icons/icono-192.png',

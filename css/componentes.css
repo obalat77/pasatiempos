@@ -20,7 +20,7 @@
 
 .boton-principal { background: var(--acento); color: var(--sobre-acento); }
 .boton-secundario { background: transparent; color: var(--acento-texto); border-color: var(--acento); }
-.boton-claro { background: var(--superficie); color: var(--texto); border: 0; }
+.boton-claro { background: var(--superficie); color: var(--texto); border-color: var(--borde); }
 .boton-grande { min-height: 4.75rem; font-size: 1.5rem; }   /* 76 px · 24 px */
 .boton-ancho { width: 100%; }
 
@@ -32,7 +32,7 @@
   min-height: 3.5rem;          /* 56 px */
   padding: 0 1.25rem 0 0.75rem;
   border-radius: 1.75rem;
-  border: 0;
+  border: 2px solid var(--borde);
   background: var(--superficie);
   color: var(--acento-texto);
   font-size: 1.25rem;
@@ -40,6 +40,24 @@
   text-decoration: none;
 }
 .boton-inicio svg { flex: none; width: 1.5rem; height: 1.5rem; }
+
+/* ---------- Barra de juego (v1.6) ----------
+   La cabecera de cada juego lleva la clase .barra-juego y la raíz del juego su color
+   (.juego-sudoku…, en base.css). La disposición interna la decide cada juego. */
+.barra-juego {
+  background: var(--j-fondo);
+  color: var(--j-texto);
+  border-radius: 1.875rem;     /* 30 px */
+  padding: 12px;
+}
+.barra-juego h1 { font-weight: 800; }
+.barra-juego .boton-inicio,
+.barra-juego button {
+  background: var(--chip);
+  color: var(--j-texto);
+  border-color: transparent;
+}
+.barra-juego button:disabled { opacity: 0.5; }
 
 /* ---------- Tarjetas ---------- */
 .tarjeta {
@@ -182,7 +200,7 @@ body.con-aviso { padding-bottom: calc(3.5rem + 32px + env(safe-area-inset-bottom
 .herramienta {
   min-height: 4.5rem;                         /* 72 px */
   padding: 0 6px;
-  border: 3px solid transparent;
+  border: 2px solid var(--borde);
   border-radius: 20px;
   background: var(--superficie);
   color: var(--texto);

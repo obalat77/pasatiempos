@@ -46,7 +46,7 @@ class PartidaPalabras {
 
   async iniciar() {
     const { ctx } = this;
-    this.raiz = h('div', { class: 'palabras' }, h('p', { class: 'palabras-preparando' }, 'Preparando el nivel…'));
+    this.raiz = h('div', { class: 'palabras juego-palabras' }, h('p', { class: 'palabras-preparando' }, 'Preparando el nivel…'));
     this.contenedor.append(this.raiz);
     const todos = await cargarNiveles();
     let guardada = ctx.nueva ? null : await ctx.partidas.obtener(ID);
@@ -96,7 +96,7 @@ class PartidaPalabras {
     const { nivel } = this;
     this.cuenta = h('span', { class: 'palabras-cuenta' });
     const subtitulo = this.modo === 'lista' ? `Nivel ${numero(nivel.id)} · modo lista` : `Nivel ${numero(nivel.id)}`;
-    const cabecera = h('header', { class: 'palabras-cabecera' },
+    const cabecera = h('header', { class: 'palabras-cabecera barra-juego' },
       botonInicio(() => this.ctx.navegar('')),
       h('div', { class: 'palabras-titulo' },
         h('h1', { class: 'solo-vertical' }, 'Palabras'),

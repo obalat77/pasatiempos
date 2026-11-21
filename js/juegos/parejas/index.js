@@ -39,7 +39,7 @@ class PartidaParejas {
 
   async iniciar() {
     const { ctx } = this;
-    this.raiz = h('div', { class: 'parejas' }, h('p', { class: 'parejas-preparando' }, 'Preparando el tablero…'));
+    this.raiz = h('div', { class: 'parejas juego-parejas' }, h('p', { class: 'parejas-preparando' }, 'Preparando el tablero…'));
     this.contenedor.append(this.raiz);
 
     const guardada = ctx.nueva ? null : await ctx.partidas.obtener(ID);
@@ -71,7 +71,7 @@ class PartidaParejas {
     this.quedanEl = h('span', {});
     this.tiempoVertical = h('span', { class: 'parejas-tiempo solo-vertical', role: 'timer', 'aria-label': 'Tiempo de juego' });
     this.tiempoHorizontal = h('span', { class: 'solo-horizontal' });
-    const cabecera = h('header', { class: 'parejas-cabecera' },
+    const cabecera = h('header', { class: 'parejas-cabecera barra-juego' },
       botonInicio(() => this.ctx.navegar('')),
       h('div', { class: 'parejas-titulo' },
         h('h1', {}, 'Parejas de números'),

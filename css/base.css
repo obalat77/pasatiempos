@@ -2,16 +2,23 @@
    Colores: ESPECIFICACION.md §3.2. No usar colores sueltos fuera de este archivo. */
 
 @font-face {
-  font-family: 'Atkinson Hyperlegible';
-  src: url('../fonts/AtkinsonHyperlegible-Regular.woff2') format('woff2');
+  font-family: 'Atkinson Hyperlegible Next';
+  src: url('../fonts/AtkinsonHyperlegibleNext-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Atkinson Hyperlegible';
-  src: url('../fonts/AtkinsonHyperlegible-Bold.woff2') format('woff2');
+  font-family: 'Atkinson Hyperlegible Next';
+  src: url('../fonts/AtkinsonHyperlegibleNext-Bold.woff2') format('woff2');
   font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  src: url('../fonts/AtkinsonHyperlegibleNext-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
   font-style: normal;
   font-display: swap;
 }
@@ -28,21 +35,31 @@
   --acento-texto: #0B6E62;
   --acento-suave: #DDF1EE;
   --pista: #E5E5EA;
-  --borde: #C7C7CC;
+  --borde: #858C94;
   --linea: #D1D1D6;
   --linea-fuerte: #3A3A3C;
   --seleccion: #B9E3DC;
-  --resaltado: #EDF5F4;
+  --resaltado: #EDEFF2;
+  --chip: rgb(255 255 255 / 0.74);
   --mismo-numero: #D2ECE7;
   --error: #C62828;
   --eliminado: #C7C7CC;
 
   /* Colores fijos (iguales en ambos temas) */
-  --icono-casilla: #FFF8EC;
-  --icono-rojo: #C62828;
+  /* Rummy: tapete y fichas (los usan el juego y la tarjeta «Continuar» de Inicio) */
+  --tapete: #2F6F5E;
+  --tapete-borde: #275D4F;
+  --ficha-cara: #FBF6E9;
+  --ficha-borde: #D9CDB8;
+  --ficha-sombra: #CBBEA6;
+  --rojo: #C62828;
+  --azul: #1565C0;
+  --negro: #222222;
+  --naranja: #AD5700;
+  --sobre-tapete: #FFFFFF;
   --velo: rgb(0 0 0 / 0.45);   /* fondo detrás de las ventanas modales */
 
-  --fuente: 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
+  --fuente: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
 }
 
 /* ---------- Tema oscuro ---------- */
@@ -58,11 +75,12 @@
     --acento-texto: #6FE0CC;
     --acento-suave: #173A3A;
     --pista: #243140;
-    --borde: #3A4A5A;
+    --borde: #66727E;
     --linea: #2A3644;
     --linea-fuerte: #7D8D9E;
     --seleccion: #1F5552;
-    --resaltado: #1C2A38;
+    --resaltado: #1F2730;
+  --chip: rgb(255 255 255 / 0.12);
     --mismo-numero: #1D4240;
     --error: #EF5350;
     --eliminado: #5B6B7C;
@@ -79,15 +97,37 @@
   --acento-texto: #6FE0CC;
   --acento-suave: #173A3A;
   --pista: #243140;
-  --borde: #3A4A5A;
+  --borde: #66727E;
   --linea: #2A3644;
   --linea-fuerte: #7D8D9E;
   --seleccion: #1F5552;
-  --resaltado: #1C2A38;
+  --resaltado: #1F2730;
+  --chip: rgb(255 255 255 / 0.12);
   --mismo-numero: #1D4240;
   --error: #EF5350;
   --eliminado: #5B6B7C;
 }
+
+
+/* ---------- Color de cada juego (ESPECIFICACION.md §3.2, v1.6) ----------
+   La raíz de cada pantalla de juego y cada baldosa de Inicio llevan su clase. */
+.juego-sudoku   { --j-fondo: #FFE08A; --j-texto: #3B2C00; --j-fuerte: #FFD45C; --j-suave: #FFEFBF; }
+.juego-palabras { --j-fondo: #FFC9B5; --j-texto: #4A190A; --j-fuerte: #4A190A; }
+.juego-parejas  { --j-fondo: #D9D0FF; --j-texto: #22154F; --j-fuerte: #BFB0FF; }
+.juego-calculos { --j-fondo: #BFE4FF; --j-texto: #0A2F4C; --j-fuerte: #3D7FB0; }
+.juego-rummy    { --j-fondo: #CDEBDD; --j-texto: #0F3A2E; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) .juego-sudoku   { --j-fondo: #3A3118; --j-texto: #FFE08A; --j-fuerte: #6A5414; --j-suave: #3E3517; }
+  :root:not([data-tema="claro"]) .juego-palabras { --j-fondo: #43261C; --j-texto: #FFC9B5; --j-fuerte: #FFC9B5; }
+  :root:not([data-tema="claro"]) .juego-parejas  { --j-fondo: #2A2550; --j-texto: #D9D0FF; --j-fuerte: #463C8A; }
+  :root:not([data-tema="claro"]) .juego-calculos { --j-fondo: #14324A; --j-texto: #BFE4FF; --j-fuerte: #5FA3D6; }
+  :root:not([data-tema="claro"]) .juego-rummy    { --j-fondo: #183A30; --j-texto: #CDEBDD; }
+}
+:root[data-tema="oscuro"] .juego-sudoku   { --j-fondo: #3A3118; --j-texto: #FFE08A; --j-fuerte: #6A5414; --j-suave: #3E3517; }
+:root[data-tema="oscuro"] .juego-palabras { --j-fondo: #43261C; --j-texto: #FFC9B5; --j-fuerte: #FFC9B5; }
+:root[data-tema="oscuro"] .juego-parejas  { --j-fondo: #2A2550; --j-texto: #D9D0FF; --j-fuerte: #463C8A; }
+:root[data-tema="oscuro"] .juego-calculos { --j-fondo: #14324A; --j-texto: #BFE4FF; --j-fuerte: #5FA3D6; }
+:root[data-tema="oscuro"] .juego-rummy    { --j-fondo: #183A30; --j-texto: #CDEBDD; }
 
 /* ---------- Tamaño del texto ----------
    Todos los tamaños de letra y de controles van en rem (1rem = 16 px en «Normal»).

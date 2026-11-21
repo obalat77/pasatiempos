@@ -34,7 +34,7 @@ class PartidaCalculos {
 
   async iniciar() {
     const { ctx } = this;
-    this.raiz = h('div', { class: 'calculos' }, h('p', { class: 'calculos-preparando' }, 'Preparando el tablero…'));
+    this.raiz = h('div', { class: 'calculos juego-calculos' }, h('p', { class: 'calculos-preparando' }, 'Preparando el tablero…'));
     this.contenedor.append(this.raiz);
 
     const guardada = ctx.nueva ? null : await ctx.partidas.obtener(ID);
@@ -67,7 +67,7 @@ class PartidaCalculos {
 
     this.tiempoVertical = h('span', { class: 'calculos-tiempo solo-vertical', role: 'timer', 'aria-label': 'Tiempo de juego' });
     this.tiempoHorizontal = h('span', { class: 'solo-horizontal' });
-    const cabecera = h('header', { class: 'calculos-cabecera' },
+    const cabecera = h('header', { class: 'calculos-cabecera barra-juego' },
       botonInicio(() => this.ctx.navegar('')),
       h('div', { class: 'calculos-titulo' },
         h('h1', {}, 'Cálculos cruzados'),

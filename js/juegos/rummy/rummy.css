@@ -1,20 +1,12 @@
 /* Rummy — diseños Rummy-Light (vertical) y Rummy-H-Light (horizontal).
-   Colores propios del Rummy: fijos en ambos temas (ESPECIFICACION.md §3.2). */
+   Colores propios del Rummy: fijos en ambos temas (ESPECIFICACION.md §3.2).
+   Tapete, cara de la ficha y colores de ficha están en css/base.css (también los usa Inicio). */
 
 .rummy {
-  --tapete: #2F6F5E;
-  --tapete-borde: #275D4F;
-  --ficha-cara: #FBF6E9;
-  --ficha-borde: #D9CDB8;
-  --ficha-sombra: #CBBEA6;
   --dorso: #E9DFCB;
   --madera: #A86B3C;
   --balda: #8A5428;
   --madera-sombra: #7A4A26;
-  --rojo: #C62828;
-  --azul: #1565C0;
-  --negro: #222222;
-  --naranja: #AD5700;
   --nueva-zona: #CFE5DD;
   --resalte-nueva: #FFFFFF;          /* contorno de las fichas que acaba de poner un rival */
   --fm-ancho: 48px;                  /* ficha en la mesa (lo ajusta index.js) */

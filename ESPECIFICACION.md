@@ -92,7 +92,7 @@ Las estadísticas se **calculan** a partir de `resultados` (no se guardan duplic
 ## 3. Sistema visual
 
 ### 3.1 Tipografía
-- **Atkinson Hyperlegible Next** (400, 700 y 800), incluida localmente (licencia SIL OFL). Es la versión nueva de la misma familia (Braille Institute): igual de legible, con más grosores. El 800 se usa solo en títulos («Pasatiempos», nombres de juego en Inicio, título de la barra de juego) y en los números de tablero. Alternativa: la Atkinson Hyperlegible actual y después `system-ui`. Los archivos `woff2` y la licencia se descargan **una sola vez** durante el desarrollo, de la fuente oficial, y se guardan en `/fonts/`; la app nunca los pide a internet.
+- **Atkinson Hyperlegible Next** (400, 700 y 800), incluida localmente (licencia SIL OFL). Es la versión nueva de la misma familia (Braille Institute): igual de legible, con más grosores. El 800 se usa solo en títulos («Pasatiempos», nombres de juego en Inicio, título de la barra de juego) y en los números de tablero. Alternativa: `system-ui`. Los archivos `woff2` y la licencia se descargan **una sola vez** durante el desarrollo, de la fuente oficial, y se guardan en `/fonts/`; la app nunca los pide a internet.
 - Tamaño mínimo de texto: **18 px**. Texto normal 19–21 px. Títulos de pantalla 26–40 px. El mínimo vale también para notas del Sudoku, etiquetas bajo iconos y textos auxiliares («14 fichas», «aún no ha bajado», «Quedan 4»). Solo quedan fuera los dibujos de los iconos.
 - Números de tablero: 40–48 px, negrita.
 - Ajuste **«Tamaño del texto: Grande»** multiplica todos los tamaños por 1,2 (usar `rem` y una variable raíz). Los tableros pueden reducir el espacio entre casillas para que quepan.

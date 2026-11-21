@@ -47,7 +47,7 @@ class PartidaRummy {
 
   async iniciar() {
     const { ctx } = this;
-    this.raiz = h('div', { class: 'rummy' }, h('p', { class: 'rummy-preparando' }, 'Repartiendo fichas…'));
+    this.raiz = h('div', { class: 'rummy juego-rummy' }, h('p', { class: 'rummy-preparando' }, 'Repartiendo fichas…'));
     this.contenedor.append(this.raiz);
     const guardada = ctx.nueva ? null : await ctx.partidas.obtener(ID);
     if (!ctx.nueva && !guardada?.estado?.jugadores) { ctx.navegar(''); return; }
@@ -119,7 +119,7 @@ class PartidaRummy {
     this.infoV = h('p', { class: 'rummy-info solo-vertical' });
     this.deshacerBtn = h('button', { type: 'button', class: 'boton-deshacer', on: { click: () => this.deshacer() } },
       icono('deshacer'), 'Deshacer jugada');
-    const cabecera = h('header', { class: 'rummy-cabecera' },
+    const cabecera = h('header', { class: 'rummy-cabecera barra-juego' },
       botonInicio(() => this.ctx.navegar('')),
       h('h1', {}, 'Rummy'),
       h('span', { class: 'solo-horizontal' }, this.info),
@@ -529,6 +529,9 @@ class PartidaRummy {
         titulo: `Rummy · ${NOMBRE_NIVEL[this.p.nivel]}`,
         detalle: `Te quedan ${yo.atril.length === 1 ? '1 ficha' : `${yo.atril.length} fichas`}`,
         progreso: Math.max(0, Math.min(1, 1 - yo.atril.length / 20)),
+        // Para la tarjeta «Continuar» de Inicio: las primeras fichas del atril, en su orden.
+        muestra: (this.ordenAtril || yo.atril).filter((id) => yo.atril.includes(id) && !R.esComodin(id)).slice(0, 8)
+          .map((id) => ({ n: R.fichaDe(id).n, c: R.fichaDe(id).c, simbolo: R.SIMBOLO[R.fichaDe(id).c] })),
       },
       estado: this.p,   // el turno en curso empieza de nuevo al reanudar
     }).catch((e) => console.error('No se pudo guardar la partida', e));

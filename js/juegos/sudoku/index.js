@@ -39,7 +39,7 @@ class PartidaSudoku {
 
   async iniciar() {
     const { ctx } = this;
-    const raiz = h('div', { class: 'sudoku' }, h('p', { class: 'sudoku-preparando' }, 'Preparando el tablero…'));
+    const raiz = h('div', { class: 'sudoku juego-sudoku' }, h('p', { class: 'sudoku-preparando' }, 'Preparando el tablero…'));
     this.raiz = raiz;
     this.contenedor.append(raiz);
 
@@ -82,7 +82,7 @@ class PartidaSudoku {
       hidden: !this.mostrarReloj });
     this.pausaBtn = h('button', { type: 'button', class: 'boton-pausa', on: { click: () => this.alternarPausa() } });
 
-    const cabecera = h('header', { class: 'sudoku-cabecera' },
+    const cabecera = h('header', { class: 'sudoku-cabecera barra-juego' },
       h('div', { class: 'fila-botones' }, botonInicio(() => ctx.navegar('')), this.pausaBtn),
       h('div', { class: 'fila-titulo' },
         h('div', { class: 'sudoku-titulo' }, h('h1', {}, 'Sudoku'), h('span', {}, dificultad)),
