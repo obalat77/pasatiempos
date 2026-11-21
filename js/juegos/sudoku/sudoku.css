@@ -1,4 +1,5 @@
-/* Sudoku — diseños Sudoku-A (vertical) y Sudoku-Light-H (horizontal). Solo tokens de color. */
+/* Sudoku — disposición de Sudoku-A (vertical) y Sudoku-Light-H (horizontal); estilo v1.6
+   (diseno/estilo-a.html): barra y selección en el color del juego. Solo tokens de color. */
 
 .sudoku {
   /* Tamaño de casilla: 76 px en la pantalla de referencia; menor si no cabe (nunca se recorta). */
@@ -26,9 +27,9 @@
 }
 .sudoku-cabecera .boton-inicio { justify-self: start; }
 .sudoku-titulo { justify-self: center; display: flex; flex-direction: column; align-items: center; }
-.sudoku-titulo h1 { font-size: 1.75rem; font-weight: 700; }
-.sudoku-titulo span { font-size: 1.125rem; color: var(--texto-2); }
-.sudoku-tiempo { font-size: 1.625rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sudoku-titulo h1 { font-size: 1.875rem; line-height: 1.1; }
+.sudoku-titulo span { font-size: 1.25rem; }
+.sudoku-tiempo { font-size: 1.75rem; font-weight: 800; font-variant-numeric: tabular-nums; }
 .boton-pausa {
   min-height: 3.5rem;
   padding: 0 1.125rem 0 0.75rem;
@@ -53,7 +54,7 @@
   display: grid;
   grid-template-columns: repeat(9, var(--casilla));
   border: 3px solid var(--linea-fuerte);
-  border-radius: 12px;
+  border-radius: 18px;
   overflow: hidden;
   background: var(--superficie);
   touch-action: manipulation;
@@ -69,7 +70,7 @@
   background: var(--superficie);
   color: var(--acento-texto);                 /* números de la jugadora */
   font-size: calc(var(--casilla) * 0.58);     /* 44 px con casillas de 76 */
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
   display: flex;
   align-items: center;
@@ -81,8 +82,8 @@
 .casilla.ultima-fila { border-bottom: 0; }
 .casilla.dada { color: var(--texto); }
 .casilla.relacionada { background: var(--resaltado); }
-.casilla.mismo-numero { background: var(--mismo-numero); }
-.casilla.seleccionada { background: var(--seleccion); }
+.casilla.mismo-numero { background: var(--j-suave); }
+.casilla.seleccionada { background: var(--j-fuerte); }
 .casilla.error { color: var(--error); }
 .casilla:focus-visible { outline-offset: -4px; }
 
@@ -111,12 +112,12 @@
 .tecla {
   min-height: 5.75rem;                        /* 92 px */
   padding: 0;
-  border: 0;
+  border: 2px solid var(--borde);
   border-radius: 18px;
   background: var(--superficie);
-  color: var(--acento-texto);
+  color: var(--texto);
   font-size: 2.75rem;                         /* 44 px */
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
