@@ -64,6 +64,14 @@ export function montar(contenedor, { ajustes, navegar }) {
         { valor: '30s', texto: '30 s' },
       ]),
       h('p', { class: 'nota' }, 'Si se acaba, robas una ficha. Se aplica desde tu próximo turno.')),
+    h('div', { class: 'grupo-ajuste' },
+      h('h2', {}, 'Rummy: velocidad de los rivales'),
+      opcion('rummy.velocidad', 'Rummy: velocidad de los rivales', [
+        { valor: 'normal', texto: 'Normal' },
+        { valor: 'despacio', texto: 'Despacio' },
+        { valor: 'muyDespacio', texto: 'Muy despacio' },
+      ]),
+      h('p', { class: 'nota' }, 'Lo despacio que se ven las jugadas de Lola, Paco y Carmen.')),
     interruptor('rummy.cronometro', 'Rummy: mostrar cronómetro'));
 
   contenedor.append(h('div', { class: 'pantalla ajustes' },

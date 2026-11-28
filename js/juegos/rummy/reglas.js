@@ -17,6 +17,10 @@ export const FICHAS_INICIALES = 14;
 export const TIEMPO_POR_TURNO = Object.freeze({ no: 0, '2min': 120, '1min': 60, '30s': 30 });
 export const segundosPorTurno = (valor) => TIEMPO_POR_TURNO[valor] ?? 0;
 
+/** Ajuste «Velocidad de los rivales» (v1.7) → milisegundos por paso. Valores desconocidos: despacio. */
+export const PASO_RIVALES = Object.freeze({ normal: 600, despacio: 1200, muyDespacio: 2000 });
+export const pasoRivales = (valor) => PASO_RIVALES[valor] ?? PASO_RIVALES.despacio;
+
 const FICHAS = (() => {
   const lista = [];
   for (let copia = 0; copia < 2; copia++) {
@@ -321,4 +325,21 @@ export function repartirBaldas(orden) {
   if (mejorHueco && coste(mejorHueco) <= costeLibre + 1) mejor = mejorHueco;
   const baldas = [limpiarHuecos(mejor.a), limpiarHuecos(mejor.b)];
   return { baldas, anchos: baldas.map(unidades), piezas: baldas.map((b) => b.length) };
+}
+
+// ---------- Jugadas de los rivales (v1.7) ----------
+
+const clave = (combo) => [...combo].sort((x, y) => x - y).join(',');
+
+/**
+ * Qué combinaciones ha cambiado una jugada: las de antes que ya no están igual (`quitadas`)
+ * y las de después que son nuevas o distintas (`puestas`). Devuelve las fichas de cada lado.
+ */
+export function combinacionesCambiadas(antes, despues) {
+  const claveAntes = new Set(antes.map(clave));
+  const claveDespues = new Set(despues.map(clave));
+  return {
+    quitadas: antes.filter((c) => !claveDespues.has(clave(c))).flat(),
+    puestas: despues.filter((c) => !claveAntes.has(clave(c))).flat(),
+  };
 }

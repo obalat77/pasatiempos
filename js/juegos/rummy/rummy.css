@@ -8,7 +8,8 @@
   --balda: #8A5428;
   --madera-sombra: #7A4A26;
   --nueva-zona: #CFE5DD;
-  --resalte-nueva: #FFFFFF;          /* contorno de las fichas que acaba de poner un rival */
+  --resalte-rival: #FFE066;          /* v1.7: fichas y combinaciones que han cambiado los rivales (4,5:1 sobre el tapete) */
+  --ficha-resaltada: #FFF4C2;        /* cara de la ficha que acaba de poner un rival (números ≥ 4,5:1) */
   --fm-ancho: 48px;                  /* ficha en la mesa (lo ajusta index.js) */
   --fa-ancho: 76px;                  /* ficha en el atril (ídem) */
 
@@ -111,6 +112,7 @@
 }
 .combinacion { display: flex; flex-wrap: wrap; max-width: 100%; gap: 4px; padding: 4px; margin: -4px; border-radius: 10px; }
 .combinacion.no-valida { box-shadow: 0 0 0 3px var(--error); }
+.combinacion.cambiada { outline: 3px dashed var(--resalte-rival); outline-offset: 4px; }   /* la ha cambiado un rival */
 .combinacion.destino { cursor: pointer; }
 .zona-nueva {
   min-width: calc(var(--fm-ancho) * 4);
@@ -124,20 +126,31 @@
   font-weight: 700;
 }
 
-/* Cartel de turno, arriba del tapete: «Tu turno» / «Juega Paco…» (v1.6) */
-.cartel-turno { flex: 0 0 100%; display: flex; justify-content: center; }
-.cartel-turno[hidden] { display: none; }
-.cartel-turno > span {
-  padding: 6px 24px;
-  border-radius: 999px;
-  background: var(--sobre-tapete);
-  color: var(--tapete);
-  font-size: 1.5rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
+/* Avisos sobre la parte de abajo del tapete, sin empujar nada (v1.7) */
+.marco-mesa { position: relative; flex: 1; min-width: 0; min-height: 0; display: flex; }
+.aviso-mesa {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 10px 20px;
+  border-radius: 18px;
+  background: var(--superficie);
+  color: var(--texto);
+  box-shadow: 0 0 0 3px var(--j-texto);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  text-align: center;
+  pointer-events: none;
 }
-.cartel-turno.rival > span { background: transparent; color: var(--sobre-tapete); box-shadow: inset 0 0 0 3px var(--sobre-tapete); }
-.cartel-turno.apurado > span { box-shadow: inset 0 0 0 4px var(--rojo); }
+.aviso-mesa[hidden] { display: none; }
+.aviso-mesa.error { color: var(--error); box-shadow: 0 0 0 3px var(--error); }
+
+/* De quién es el turno, en la barra (v1.7) */
+.rummy-info.mio { font-weight: 800; }
+.rummy-info.apurado { padding: 0 10px; border-radius: 999px; box-shadow: inset 0 0 0 3px var(--error); }
 
 /* ---------- Fichas ---------- */
 .ficha-r {
@@ -169,8 +182,8 @@
 .ficha-r.comodin { color: var(--rojo); }
 .ficha-r.comodin svg { width: 70%; height: auto; }
 .ficha-r.elegida { border: 4px solid var(--acento); }
-.ficha-r.nueva { box-shadow: 0 0 0 4px var(--resalte-nueva); }
-.atril .ficha-r.nueva { box-shadow: 0 0 0 4px var(--acento); }   /* la ficha que acabas de robar */
+.ficha-r.nueva { background: var(--ficha-resaltada); box-shadow: 0 0 0 4px var(--resalte-rival); }   /* la ha puesto un rival */
+.atril .ficha-r.nueva { background: var(--ficha-cara); box-shadow: 0 0 0 4px var(--acento); }   /* la ficha que acabas de robar */
 .ficha-r.puesta { border: 3px solid var(--acento); }      /* puesta en este turno */
 .atril .ficha-r { --ancho: var(--fa-ancho); }
 .atril .ficha-r.elegida { transform: translateY(-10px); }
@@ -178,22 +191,9 @@
 
 /* ---------- Atril ---------- */
 .rummy-abajo { display: flex; flex-direction: column; gap: 10px; }
-.zona-atril { align-self: center; display: flex; flex-direction: column; gap: 6px; max-width: 100%; }
-.estado-turno {
-  align-self: flex-start;
-  min-height: 1.4em;
-  padding: 2px 16px;
-  border-radius: 1rem;
-  background: var(--j-fondo);
-  color: var(--j-texto);
-  font-size: 1.1875rem;
-  font-weight: 700;
-}
-.estado-turno:empty { background: transparent; }
-/* Aviso («no se puede terminar el turno»): rojo sobre --superficie, que sí llega a 4,5:1 en los dos
-   temas (sobre --j-fondo se quedaba en 4,4 y 3,6) */
-.estado-turno.aviso { background: var(--superficie); color: var(--error); box-shadow: inset 0 0 0 2px var(--error); }
+.zona-atril { align-self: center; display: flex; flex-direction: column; max-width: 100%; }
 .atril {
+  max-width: 100%;             /* el ancho lo pone index.js (sitio para 20 fichas como mínimo) */
   background: var(--madera);
   border-radius: 16px;
   padding: 10px 14px 0;
@@ -221,6 +221,9 @@
   font-size: 1.125rem;
   font-weight: 700;
 }
+.rummy-botones button { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.rummy-botones .detalle { font-size: 1.125rem; font-weight: 400; }   /* «quedan 23», «llevas 12 de 30» */
+.rummy-botones .detalle[hidden] { display: none; }
 .rummy-botones .terminar { background: var(--tapete); color: var(--sobre-tapete); border-color: transparent; font-weight: 800; }
 .rummy-botones button:disabled { opacity: 0.45; }
 
@@ -237,9 +240,9 @@
                    max(24px, env(safe-area-inset-bottom)) max(40px, env(safe-area-inset-left)); }
   .rummy-centro { flex-direction: row-reverse; }
   .rivales { width: 14rem; flex: none; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; }
-  .rummy-abajo { flex-direction: row; align-items: flex-end; gap: 16px; }
-  .zona-atril { align-self: auto; }
-  .rummy-botones { flex: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rummy-abajo { flex-direction: row; align-items: stretch; gap: 16px; }
+  .zona-atril { align-self: auto; flex: none; }
+  .rummy-botones { flex: 1; min-width: 300px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; }
   .rummy-botones .robar, .rummy-botones .terminar { grid-column: span 2; }
   .rummy-botones button { min-height: 3.5rem; font-size: 1.1875rem; }
 }

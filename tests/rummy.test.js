@@ -296,3 +296,24 @@ test('limpiar huecos y repartir el atril en dos baldas sin partir combinaciones'
   // Sin huecos: mitad y mitad
   assert.deepEqual(repartirBaldas([1, 2, 3, 4, 5]).baldas, [[1, 2, 3], [4, 5]]);
 });
+
+test('velocidad de los rivales: por defecto despacio (1,2 s por paso)', async () => {
+  const { AJUSTES_POR_DEFECTO } = await import('../js/core/ajustes.js');
+  const R = await import('../js/juegos/rummy/reglas.js');
+  assert.equal(AJUSTES_POR_DEFECTO['rummy.velocidad'], 'despacio');
+  assert.equal(R.pasoRivales('normal'), 600);
+  assert.equal(R.pasoRivales('despacio'), 1200);
+  assert.equal(R.pasoRivales('muyDespacio'), 2000);
+  assert.equal(R.pasoRivales('otra cosa'), 1200);
+});
+
+test('combinaciones que cambia una jugada (para resaltarlas)', async () => {
+  const { combinacionesCambiadas } = await import('../js/juegos/rummy/reglas.js');
+  // Se queda igual [1,2,3] (aunque en otro orden); [10,11,12] se parte y aparece una nueva
+  const antes = [[1, 2, 3], [10, 11, 12]];
+  const despues = [[3, 1, 2], [10, 11, 12, 13], [20, 21, 22]];
+  const r = combinacionesCambiadas(antes, despues);
+  assert.deepEqual(r.quitadas, [10, 11, 12]);
+  assert.deepEqual(r.puestas, [10, 11, 12, 13, 20, 21, 22]);
+  assert.deepEqual(combinacionesCambiadas(antes, antes), { quitadas: [], puestas: [] });
+});

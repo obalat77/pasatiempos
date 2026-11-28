@@ -11,8 +11,9 @@ import * as R from './reglas.js';
 const ID = 'rummy';
 // En el ordenador de desarrollo, ?rapido acelera los turnos de los rivales para probar partidas enteras.
 const RAPIDO = ['localhost', '127.0.0.1'].includes(location.hostname) && new URLSearchParams(location.search).has('rapido');
-const PASO_MS = RAPIDO ? 30 : 600;          // cada movimiento de un rival, despacio para poder seguirlo
+// Cada paso de la jugada de un rival dura lo que diga el ajuste «Velocidad de los rivales» (v1.7)
 const PIENSA_MIN_MS = RAPIDO ? 30 : 900;    // «Paco está pensando…» se ve al menos este tiempo
+const MIN_FICHAS_ATRIL = 20;                // el atril siempre tiene sitio para 20 fichas (10 por balda)
 const PLAZO_MAXIMO_MS = 10000;              // si el Worker no contesta en este tiempo, el rival roba
 const NOMBRE_NIVEL = { principiante: 'Principiante', intermedio: 'Intermedio', experto: 'Experto' };
 const MOTIVOS = {
@@ -39,7 +40,9 @@ class PartidaRummy {
     this.relojTurno = null;       // cuenta atrás de tu turno, si hay «Tiempo por turno»
     this.vivo = true;
     this.sel = null;              // id de la ficha elegida
-    this.nuevas = new Set();      // fichas que acaba de poner un rival (resaltadas)
+    this.nuevas = new Set();      // fichas que han puesto los rivales en esta ronda (resaltadas)
+    this.tocadas = new Set();
+    this.ultimaAccion = {};       // lo último que ha hecho cada rival, en su tarjeta (v1.7)     // fichas de las combinaciones que han cambiado en esta ronda (enmarcadas)
     this.mensaje = null;          // { texto, aviso }
     this.alCambiarVisibilidad = () => this.visibilidad();
   }
@@ -121,9 +124,7 @@ class PartidaRummy {
     this.limiteTurno = R.segundosPorTurno(ajustes.obtener('rummy.tiempoTurno'));
     this.tiempoEl = h('span', { class: 'barra-tiempo', role: 'timer', 'aria-label': 'Tiempo de juego',
       hidden: !this.mostrarReloj });
-    // Cartel sobre el tapete: de quién es el turno (y cuánto te queda si hay límite).
-    // Lo mismo se anuncia en el estado de abajo (aria-live), así que aquí no se lee dos veces.
-    this.cartelEl = h('div', { class: 'cartel-turno', 'aria-hidden': 'true' }, this.cartelTexto = h('span'));
+    // v1.7: de quién es el turno (y cuánto te queda) va en la barra, debajo de «Rummy»
     this.info = h('span', { class: 'rummy-info' });
     this.deshacerBtn = h('button', { type: 'button', class: 'boton-deshacer', on: { click: () => this.deshacer() } },
       icono('deshacer'), 'Deshacer jugada');
@@ -135,15 +136,21 @@ class PartidaRummy {
     // Lola, Paco y Carmen juntos: en fila sobre el tapete (vertical) o en columna a su derecha (horizontal)
     this.rivalesEl = [1, 2, 3].map(() => h('div', { class: 'rival', 'aria-live': 'polite' }));
     this.mesaEl = h('section', { class: 'mesa', 'aria-label': 'Mesa' });
+    // Avisos («Hay una combinación no válida…», lo que ha hecho un rival): flotan sobre la parte
+    // de abajo del tapete, sin empujar nada, y se van al tocar cualquier cosa (v1.7)
+    this.avisoEl = h('p', { class: 'aviso-mesa', 'aria-live': 'polite' });
+    this.marcoMesa = h('div', { class: 'marco-mesa' }, this.mesaEl, this.avisoEl);
     this.observador = new ResizeObserver(() => this.ajustarTamaños());
     this.observador.observe(this.mesaEl);
 
-    this.estadoEl = h('p', { class: 'estado-turno', 'aria-live': 'polite' });
     this.atrilEl = h('div', { class: 'atril', role: 'group', 'aria-label': 'Tu atril', dataset: { destino: 'atril' } });
-    this.zonaAtril = h('section', { class: 'zona-atril', 'aria-label': 'Tu atril' }, this.estadoEl, this.atrilEl);
+    this.zonaAtril = h('section', { class: 'zona-atril', 'aria-label': 'Tu atril' }, this.atrilEl);
     const boton = (texto, clase, accion) => h('button', { type: 'button', class: clase, on: { click: accion } }, texto);
-    this.robarBtn = boton('Robar ficha', 'robar', () => this.robar());
-    this.terminarBtn = boton('Terminar turno', 'terminar', () => this.terminarTurno());
+    // «Robar ficha» lleva debajo las que quedan; «Terminar turno», los puntos de tu primera bajada
+    this.robarBtn = h('button', { type: 'button', class: 'robar', on: { click: () => this.robar() } },
+      this.robarTexto = h('span', {}, 'Robar ficha'), this.robarDetalle = h('span', { class: 'detalle' }));
+    this.terminarBtn = h('button', { type: 'button', class: 'terminar', on: { click: () => this.terminarTurno() } },
+      h('span', {}, 'Terminar turno'), this.terminarDetalle = h('span', { class: 'detalle' }));
     this.botones = h('div', { class: 'rummy-botones' },
       boton('Ordenar 1 2 3', 'ordenar', () => this.ordenar(R.agruparPorNumero)),
       boton('Ordenar por color', 'ordenar', () => this.ordenar(R.agruparPorColor)),
@@ -151,9 +158,14 @@ class PartidaRummy {
 
     this.raiz.replaceChildren(
       cabecera,
-      h('div', { class: 'rummy-centro' }, h('div', { class: 'rivales' }, ...this.rivalesEl), this.mesaEl),
+      h('div', { class: 'rummy-centro' }, h('div', { class: 'rivales' }, ...this.rivalesEl), this.marcoMesa),
       h('div', { class: 'rummy-abajo' }, this.zonaAtril, this.botones));
 
+    // Tocar cualquier cosa quita el aviso (sin repintar: el toque debe llegar a su sitio).
+    // El de «Se acabó tu tiempo» se queda durante la ronda de los rivales.
+    this.raiz.addEventListener('pointerdown', () => {
+      if (this.mensaje && !this.mensaje.fijo) { this.mensaje = null; this.avisoEl.hidden = true; }
+    }, { capture: true });
     // Arrastrar fichas (además de tocar ficha → tocar destino)
     this.raiz.addEventListener('pointerdown', (e) => this.alPulsar(e));
     this.raiz.addEventListener('pointermove', (e) => this.alMover(e));
@@ -190,8 +202,6 @@ class PartidaRummy {
     const antes = new Set((this.mesaAntes || []).flat());
     const puedoMoverMesa = turnoMio && p.jugadores[0].bajado;
 
-    // El nivel ya se ve en Inicio; aquí, solo lo que cambia durante la partida.
-    this.info.textContent = `${p.pozo.length === 1 ? '1 ficha' : `${numero(p.pozo.length)} fichas`} por robar`;
 
     // Rivales
     [1, 2, 3].forEach((j, k) => {
@@ -202,14 +212,16 @@ class PartidaRummy {
       el.classList.toggle('activo', activo);
       // Tres líneas de alto fijo, para que el tapete no cambie de tamaño: nombre (y «Le toca»),
       // fichas, y lo que está haciendo o «aún no ha bajado».
-      const estado = activo && this.animando ? (this.textoRival || 'pensando…') : (!x.bajado ? 'aún no ha bajado' : '');
+      const accion = this.ultimaAccion[j];
+      const estado = activo && this.animando ? (this.textoRival || 'pensando…')
+        : (accion || (!x.bajado ? 'aún no ha bajado' : ''));
       el.replaceChildren(
         h('span', { class: 'rival-cab' }, h('span', { class: 'rival-nombre' }, x.nombre),
           activo ? h('span', { class: 'rival-turno' }, 'Le toca') : null),
         h('span', { class: 'rival-mano' },
           h('span', { class: 'dorsos', 'aria-hidden': 'true' }, Array.from({ length: Math.min(n, 14) }, () => h('span', { class: 'dorso' }))),
           h('span', { class: 'rival-fichas' }, n === 1 ? '1 ficha' : `${n} fichas`)),
-        h('span', { class: `rival-estado${estado && !activo ? ' marca' : ''}` }, estado));
+        h('span', { class: `rival-estado${estado && !activo && !accion ? ' marca' : ''}` }, estado));
     });
 
     // Mesa
@@ -217,8 +229,9 @@ class PartidaRummy {
       const valida = R.esValida(combo);
       const orden = valida ? R.analizar(combo).orden : R.ordenarPorNumero(combo);
       const marcar = !valida && turnoMio;   // durante la jugada de un rival no se marca nada
+      const cambiada = !marcar && combo.some((id) => this.tocadas.has(id));
       return h('div', {
-        class: `combinacion destino${marcar ? ' no-valida' : ''}`,
+        class: `combinacion destino${marcar ? ' no-valida' : ''}${cambiada ? ' cambiada' : ''}`,
         role: 'group',
         'aria-label': `Combinación ${k + 1}${marcar ? ', no válida' : ''}: ${orden.map(R.nombreFicha).join(', ')}`,
         dataset: { destino: `combo:${k}` },
@@ -236,7 +249,7 @@ class PartidaRummy {
     const nueva = turnoMio
       ? h('button', { type: 'button', class: 'zona-nueva', dataset: { destino: 'nueva' }, on: { click: () => this.soltarEn('nueva') } }, 'Nueva combinación')
       : null;
-    this.mesaEl.replaceChildren(this.cartelEl, ...combos, ...(nueva ? [nueva] : []));
+    this.mesaEl.replaceChildren(...combos, ...(nueva ? [nueva] : []));
     this.pintarCartel();
 
     // Atril (dos baldas)
@@ -244,30 +257,30 @@ class PartidaRummy {
     // Con huecos entre las combinaciones que ya tienes (al ordenar); dos baldas lo más igualadas posible
     const visibles = R.limpiarHuecos(this.ordenAtril.filter((id) => id === R.HUECO || mio.includes(id)));
     const { baldas, anchos, piezas } = R.repartirBaldas(visibles);
-    this.medidaBaldas = anchos.map((ancho, k) => ({ ancho: Math.max(7, ancho), piezas: Math.max(7, piezas[k]) }));
+    const minimo = MIN_FICHAS_ATRIL / 2;
+    this.medidaBaldas = anchos.map((ancho, k) => ({ ancho: Math.max(minimo, ancho), piezas: Math.max(minimo, piezas[k]) }));
     const balda = (ids) => h('div', { class: 'balda' }, ids.map((id) => (id === R.HUECO
       ? h('span', { class: 'hueco', 'aria-hidden': 'true' })
       : this.ficha(id, { movible: true, elegida: this.sel === id, nueva: this.ultimaRobada === id }))));
     this.atrilEl.replaceChildren(...baldas.map(balda));
     this.atrilEl.onclick = (e) => { if (!e.target.closest('[data-ficha]')) this.soltarEn('atril'); };
 
-    // Estado y botones
-    if (this.mensaje) {
-      this.estadoEl.textContent = this.mensaje.texto;
-      this.estadoEl.classList.toggle('aviso', !!this.mensaje.aviso);
-    } else {
-      this.estadoEl.classList.remove('aviso');
-      this.estadoEl.textContent = p.terminada ? 'Partida terminada'
-        : turnoMio ? (this.sel !== null ? 'Ahora toca dónde ponerla: una combinación, «Nueva combinación» o tu atril'
-          : (p.jugadores[0].bajado ? 'Tu turno · toca una ficha y después dónde ponerla'
-            : `Tu turno · tu primera bajada debe sumar 30 puntos (llevas ${R.puntosBajada(this.mesaAntes, this.mesaT)})`))
-          : `${p.jugadores[p.turno].nombre} está pensando…`;
-    }
+    // Aviso flotante (v1.7: sin instrucciones; solo avisos y lo que ha hecho un rival)
+    this.avisoEl.hidden = !this.mensaje;
+    this.avisoEl.textContent = this.mensaje?.texto || '';
+    this.avisoEl.classList.toggle('error', !!this.mensaje?.aviso);
+
+    // Botones
     const cambios = turnoMio && this.hayCambios();
     this.deshacerBtn.disabled = !cambios;
     this.robarBtn.disabled = !turnoMio;
-    this.robarBtn.textContent = p.pozo.length ? 'Robar ficha' : 'Pasar turno';
+    this.robarTexto.textContent = p.pozo.length ? 'Robar ficha' : 'Pasar turno';
+    this.robarDetalle.textContent = p.pozo.length ? `quedan ${numero(p.pozo.length)}` : 'no quedan fichas';
     this.terminarBtn.disabled = !turnoMio;
+    // Primera bajada: cuántos puntos llevas (antes iba en la línea de encima del atril)
+    this.terminarDetalle.textContent = turnoMio && !p.jugadores[0].bajado
+      ? `llevas ${R.puntosBajada(this.mesaAntes, this.mesaT)} de ${R.PRIMERA_BAJADA}` : '';
+    this.terminarDetalle.hidden = !this.terminarDetalle.textContent;
     this.ajustarTamaños();
   }
 
@@ -282,19 +295,26 @@ class PartidaRummy {
     this.pintar();
   }
 
-  /** Fichas tan grandes como quepan: en el atril (máx. 64 px de ancho) y en la mesa (máx. 68). */
+  /**
+   * Tamaños (v1.7). Atril: siempre con sitio para 20 fichas (10 por balda) y su ancho no depende
+   * de nada más; con más fichas se ensancha (en horizontal, quitando sitio a los botones) y, si
+   * no cabe, las fichas se hacen más pequeñas. Fichas del atril: máx. 64 px (60 en horizontal).
+   * Mesa: fichas tan grandes como quepan (máx. 56 / 68).
+   */
   ajustarTamaños() {
     if (!this.atrilEl) return;
     const horizontal = matchMedia('(orientation: landscape)').matches;
     const estilo = getComputedStyle(this.raiz);
     const interior = this.raiz.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight);
-    const anchoDisponible = horizontal ? interior * 0.66 : interior;
-    // v1.7: atril algo más pequeño (antes 76 / 68) para que el tapete sea más grande
+    // En horizontal, los botones conservan al menos 300 px (+16 de separación)
+    const anchoMaximo = horizontal ? interior - 316 : interior;
     const maxAtril = horizontal ? 60 : 64;
     // Cada balda: relleno 28 px, separación 6 px entre piezas (fichas y huecos)
+    const anchoBalda = (fa, { ancho, piezas }) => ancho * fa + (piezas - 1) * 6 + 28;
     const fa = Math.floor(Math.min(maxAtril,
-      ...this.medidaBaldas.map(({ ancho, piezas }) => (anchoDisponible - 28 - (piezas - 1) * 6) / ancho)));
+      ...this.medidaBaldas.map(({ ancho, piezas }) => (anchoMaximo - 28 - (piezas - 1) * 6) / ancho)));
     this.raiz.style.setProperty('--fa-ancho', `${fa}px`);
+    this.atrilEl.style.width = `${Math.ceil(Math.max(...this.medidaBaldas.map((m) => anchoBalda(fa, m))))}px`;
     // Mesa: empezar grande e ir reduciendo hasta que quepa (o llegar a 34 px y desplazar;
     // si aun así una combinación no cabe a lo ancho, se parte en dos líneas)
     const mesa = this.mesaEl;
@@ -337,18 +357,18 @@ class PartidaRummy {
     return Math.max(0, Math.ceil(this.limiteTurno - this.relojTurno.segundos()));
   }
 
+  /** De quién es el turno, en la barra debajo de «Rummy» (v1.7; antes, un cartel sobre el tapete). */
   pintarCartel() {
-    if (!this.cartelEl) return;
+    if (!this.info) return;
     const { p } = this;
-    this.cartelEl.hidden = !!p.terminada;
     const restante = this.restanteTurno();
     // Tras la jugada del último rival hay un momento en que el turno ya es tuyo pero aún no puedes tocar.
     const mio = p.turno === 0 && this.miTurno;
-    this.cartelTexto.textContent = mio
-      ? (restante === null ? 'Tu turno' : `Tu turno · te quedan ${Math.floor(restante / 60)}:${String(restante % 60).padStart(2, '0')}`)
-      : (p.turno === 0 ? 'Ahora te toca…' : `Juega ${p.jugadores[p.turno].nombre}…`);
-    this.cartelEl.classList.toggle('rival', !mio);
-    this.cartelEl.classList.toggle('apurado', mio && restante !== null && restante <= 10);
+    this.info.textContent = p.terminada ? 'Partida terminada'
+      : mio ? (restante === null ? 'Tu turno' : `Tu turno · quedan ${Math.floor(restante / 60)}:${String(restante % 60).padStart(2, '0')}`)
+        : (p.turno === 0 ? 'Ahora te toca…' : `Juega ${p.jugadores[p.turno].nombre}…`);
+    this.info.classList.toggle('mio', mio && !p.terminada);
+    this.info.classList.toggle('apurado', mio && restante !== null && restante <= 10);
   }
 
   iniciarTiempoTurno() {
@@ -407,9 +427,16 @@ class PartidaRummy {
       return;
     }
     ({ mesa: this.mesaT, atril: this.atrilT } = R.moverFicha({ mesa: this.mesaT, atril: this.atrilT }, id, destino));
+    this.quitarResaltes();
     this.sel = null;
     this.mensaje = null;
     this.pintar();
+  }
+
+  /** Lo que han hecho los rivales sigue marcado hasta que mueves algo. */
+  quitarResaltes() {
+    this.nuevas.clear();
+    this.tocadas.clear();
   }
 
   deshacer() {
@@ -441,7 +468,7 @@ class PartidaRummy {
     R.aplicarJugada(this.p, 0, this.mesaT, this.atrilT);
     this.ordenAtril = R.limpiarHuecos(this.ordenAtril.filter((id) => id === R.HUECO || this.p.jugadores[0].atril.includes(id)));
     this.atrilT = null;
-    this.nuevas.clear();
+    this.quitarResaltes();
     await this.despuesDeTurno();
   }
 
@@ -457,7 +484,7 @@ class PartidaRummy {
     this.pararTiempoTurno();
     const ficha = R.robar(this.p, 0);
     this.atrilT = null;
-    this.nuevas.clear();
+    this.quitarResaltes();
     if (ficha !== undefined) {
       this.ordenAtril.push(ficha);
       this.ultimaRobada = ficha;
@@ -545,8 +572,9 @@ class PartidaRummy {
     this.animando = true;
     this.textoRival = 'pensando…';
     if (!this.mensaje?.fijo) this.mensaje = null;
-    this.nuevas.clear();
+    // Lo que han hecho los rivales anteriores de esta ronda sigue marcado
     this.pintar();
+    const paso = RAPIDO ? 30 : R.pasoRivales(this.ctx.ajustes.obtener('rummy.velocidad'));
     const inicio = Date.now();
     const decision = await this.pensar({
       mesa: p.mesa, atril: yo.atril, bajado: yo.bajado, nivel: p.nivel,
@@ -561,10 +589,21 @@ class PartidaRummy {
       const puestas = decision.puestas;
       const sinNuevas = decision.mesa.map((c) => c.filter((id) => !puestas.includes(id))).filter((c) => c.length);
       const reorganiza = JSON.stringify(sinNuevas.map((c) => [...c].sort()).sort()) !== JSON.stringify(p.mesa.map((c) => [...c].sort()).sort());
+      const { quitadas, puestas: cambiadas } = R.combinacionesCambiadas(p.mesa, decision.mesa);
+      // 1) Se enmarcan las combinaciones de la mesa que va a cambiar, aún sin tocarlas
+      if (quitadas.length) {
+        for (const id of quitadas) this.tocadas.add(id);
+        this.textoRival = reorganiza ? 'va a reorganizar la mesa' : 'va a añadir fichas';
+        this.pintar();
+        await espera(paso);
+        if (!this.vivo) return;
+      }
+      // 2) La mesa ya reorganizada (sin sus fichas nuevas), con lo cambiado enmarcado
+      for (const id of cambiadas) this.tocadas.add(id);
       this.vistaMesa = sinNuevas;
       this.textoRival = reorganiza ? 'reorganiza la mesa…' : 'coloca fichas…';
       this.pintar();
-      await espera(PASO_MS);
+      await espera(paso);
       const visibles = new Set(sinNuevas.flat());
       for (const id of puestas) {
         if (!this.vivo) return;
@@ -573,26 +612,22 @@ class PartidaRummy {
         this.vistaMesa = decision.mesa.map((c) => c.filter((x) => visibles.has(x))).filter((c) => c.length);
         this.textoRival = `pone ${R.nombreFicha(id)}`;
         this.pintar();
-        await espera(PASO_MS);
+        await espera(paso);
       }
       this.vistaMesa = null;
       R.aplicarJugada(p, j, decision.mesa, decision.atril);
-      this.avisarRival(`${yo.nombre} ha puesto ${puestas.length === 1 ? '1 ficha' : `${puestas.length} fichas`}.`);
+      this.ultimaAccion[j] = `ha puesto ${puestas.length === 1 ? '1 ficha' : `${puestas.length} fichas`}`;
     } else {
       const ficha = R.robar(p, j);
-      this.avisarRival(ficha === undefined ? `${yo.nombre} pasa.` : `${yo.nombre} roba una ficha.`);
+      this.ultimaAccion[j] = ficha === undefined ? 'ha pasado' : 'ha robado una ficha';
       this.textoRival = null;
     }
     this.animando = false;
     this.pintar();
     await this.guardar();
-    await espera(PASO_MS);
+    await espera(paso);
   }
 
-  /** Lo que ha hecho un rival, salvo que haya que seguir enseñando que se te acabó el tiempo. */
-  avisarRival(texto) {
-    if (!this.mensaje?.fijo) this.mensaje = { texto };
-  }
 
   async despuesDeTurno() {
     this.pintar();
