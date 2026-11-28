@@ -139,7 +139,7 @@ Uso por juego:
 
 Contrastes comprobados: `--j-texto` sobre `--j-fondo` ≥ 7:1 en los dos temas; `--acento-texto` sobre `--j-fuerte` del Sudoku ≥ 3:1 (números de 44 px en negrita).
 
-Rummy (iguales en ambos temas): tapete `#2F6F5E` con borde interior `#275D4F`; ficha `#FBF6E9`, borde `#D9CDB8`, sombra `#CBBEA6`; dorso `#E9DFCB`; atril madera `#A86B3C`, balda `#8A5428`, sombra `#7A4A26`. Colores de ficha: rojo `#C62828` ●, azul `#1565C0` ▲, negro `#222222` ■, naranja `#AD5700` ◆. Comodín: carita dibujada en rojo. Zona «Nueva combinación»: borde discontinuo `#CFE5DD` y texto `#FFFFFF` sobre el tapete.
+Rummy (iguales en ambos temas): tapete `#2F6F5E` con borde interior `#275D4F`; ficha `#FBF6E9`, borde `#D9CDB8`, sombra `#CBBEA6`; dorso `#E9DFCB`; atril madera `#A86B3C`, balda `#8A5428`, sombra `#7A4A26`. Colores de ficha: rojo `#C62828` ●, azul `#1565C0` ▲, negro `#222222` ■, verde `#2E7D32` ◆ (v1.7; antes naranja `#AD5700`, que se confundía con el rojo). Comodín: carita dibujada en rojo. Zona «Nueva combinación»: borde discontinuo `#CFE5DD` y texto `#FFFFFF` sobre el tapete.
 
 Iconos de los juegos en Inicio (v1.6): se dibujan con `--j-texto` y `--chip` sobre la baldosa del juego, así que siguen el tema; las fichas del icono del Rummy usan los colores fijos del Rummy. El `#FFF8EC` del icono antiguo del Sudoku deja de usarse.
 
@@ -280,7 +280,7 @@ Crucigrama de cuentas.
 ### 5.5 Rummy (fichas)
 Juego de fichas numeradas al estilo del Rummikub clásico (no usar ese nombre ni su logotipo). **El jugador contra 3 rivales del iPad:** Lola (izquierda), Paco (arriba), Carmen (derecha).
 
-**Material:** 106 fichas: números del 1 al 13 en 4 colores (rojo, azul, negro, naranja), dos de cada, más 2 comodines.
+**Material:** 106 fichas: números del 1 al 13 en 4 colores (rojo, azul, negro, verde), dos de cada, más 2 comodines.
 
 **Reglas:**
 - Cada jugador empieza con 14 fichas. Empieza un jugador al azar.
@@ -299,7 +299,7 @@ Juego de fichas numeradas al estilo del Rummikub clásico (no usar ese nombre ni
 - **Tocar ficha → tocar destino** (combinación de la mesa, zona «Nueva combinación» o atril). También arrastrar.
 - Al tocar una ficha, se levanta y se marca con borde `--acento`.
 - Las combinaciones no válidas se marcan con borde rojo y el botón «Terminar turno» explica por qué no se puede («Hay una combinación no válida en la mesa» / «La primera bajada debe sumar 30 puntos»).
-- Ordenar el atril: **«Ordenar 1 2 3»** (por número) y **«Ordenar por color»**.
+- Ordenar el atril: **«Ordenar 1 2 3»** (por número) y **«Ordenar por color»**. (v1.7) Al ordenar, las combinaciones que ya tienes en el atril van primero, cada una separada por un hueco de media ficha: series de 3 o 4 (una ficha de cada color) con «Ordenar 1 2 3» y escaleras de 3 o más con «Ordenar por color»; detrás, el resto. Al repartir en las dos baldas se corta, si se puede, por un hueco para no partir una combinación.
 - Los turnos de los rivales se muestran despacio: «Paco está pensando…», y cada movimiento con una animación breve (~600 ms por paso) para que se pueda seguir.
 
 **Inteligencia de los rivales** (un nivel común, ajuste en Ajustes). Todos **pueden reorganizar la mesa**. Se calcula en un **Web Worker** para no bloquear la pantalla.
@@ -309,13 +309,14 @@ Juego de fichas numeradas al estilo del Rummikub clásico (no usar ese nombre ni
 - **Experto:** límite ~2–3 s; además estrategia: se guarda fichas para bajar muchas de golpe cuando le conviene, usa el comodín solo cuando aporta mucho, vigila cuántas fichas les quedan a los demás y, si alguien va a cerrar, baja todo lo que pueda.
 - Si el límite de tiempo se agota, usar la mejor solución encontrada hasta entonces.
 
-**Pantalla** (ver diseños `Rummy-Light`, `Rummy-H-Light` y oscuros): tapete verde en el centro con las combinaciones; rivales alrededor mostrando dorsos y número de fichas («aún no ha bajado» si procede); atril de madera de dos pisos abajo (7 + 7 huecos); botones Ordenar 1 2 3, Ordenar por color, Robar ficha, Terminar turno; «Deshacer jugada» arriba a la derecha; fichas que quedan por robar.
+**Pantalla** (ver diseños `Rummy-Light`, `Rummy-H-Light` y oscuros): tapete verde en el centro con las combinaciones; rivales mostrando dorsos y número de fichas («aún no ha bajado» si procede) — desde la v1.7, juntos para agrandar el tapete: en vertical, Lola, Paco y Carmen en una fila encima del tapete; en horizontal, en una columna a su derecha; cada tarjeta con tres líneas de alto fijo (nombre y «Le toca», dorsos y fichas, lo que hace o «aún no ha bajado»); atril de madera de dos pisos abajo (7 + 7 huecos); botones Ordenar 1 2 3, Ordenar por color, Robar ficha, Terminar turno; «Deshacer jugada» arriba a la derecha; fichas que quedan por robar.
 
 **Turno y tiempo (v1.6):**
 - **De quién es el turno:** el rival que juega se destaca con una tarjeta en el color del Rummy (`--j-fondo`, contorno `--j-texto`), su nombre más grande y la cápsula «Le toca». Además, arriba del tapete, un cartel: «Tu turno» (píldora blanca) o «Juega Paco…» (contorno blanco); en el instante entre la última jugada de un rival y tu turno, «Ahora te toca…».
 - **Cronómetro** de la partida en la barra, a la derecha (ajuste «Rummy: mostrar cronómetro»). Se para cuando la app pasa a segundo plano.
 - **Tiempo por turno** (ajuste; por defecto sin límite): solo para tu turno. El cartel muestra «Tu turno · te quedan 0:45»; con 10 s o menos, el cartel lleva un contorno rojo (sin parpadeos ni sonidos). Al acabarse, ocurre lo mismo que con «Robar ficha» (lo puesto vuelve al atril; con el pozo vacío se pasa el turno) y se avisa «Se acabó tu tiempo: has robado una ficha.» (el aviso se queda durante toda la ronda de los rivales y se quita al empezar tu turno). La cuenta se para con la app en segundo plano; al reanudar una partida guardada, el turno empieza de nuevo con todo su tiempo.
 - La barra muestra «N fichas por robar» (el nivel se ve en Inicio).
+- **Tamaños (v1.7, para agrandar el tapete):** margen inferior de 24 px (la barra no cambia: misma altura y sitio que en los demás juegos); botones de abajo de 56 px de alto; fichas del atril de 64 px de ancho como máximo (60 en horizontal).
 - Cada ficha: número grande en su color + **símbolo del color debajo** (● ▲ ■ ◆) para distinguirlas aunque cueste ver los colores. Comodín: carita.
 
 **Concreción (v1.5):**

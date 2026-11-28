@@ -55,7 +55,7 @@
   --rojo: #C62828;
   --azul: #1565C0;
   --negro: #222222;
-  --naranja: #AD5700;
+  --verde: #2E7D32;               /* era naranja #AD5700: se confundía con el rojo */
   --sobre-tapete: #FFFFFF;
   --velo: rgb(0 0 0 / 0.45);   /* fondo detrás de las ventanas modales */
 

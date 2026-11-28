@@ -63,7 +63,7 @@ function tarjetaContinuar(partida, jugar) {
   const conFichas = juego.id === 'rummy' && Array.isArray(muestra) && muestra.length > 0;
   const indicador = conFichas
     ? h('div', { class: 'continuar-fichas', 'aria-hidden': 'true' },
-        muestra.map((f) => h('span', { class: `mini-ficha ${{ r: 'rojo', b: 'azul', k: 'negro', o: 'naranja' }[f.c] || ''}` },
+        muestra.map((f) => h('span', { class: `mini-ficha ${{ r: 'rojo', b: 'azul', k: 'negro', o: 'verde' }[f.c] || ''}` },
           String(f.n), h('i', {}, f.simbolo || ''))))
     : h('div', { class: 'progreso', role: 'progressbar', 'aria-label': 'Progreso de la partida',
         'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(porcentaje) },

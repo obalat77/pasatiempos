@@ -2,11 +2,11 @@
 //
 // Fichas: 106 = números del 1 al 13 en 4 colores, dos de cada, más 2 comodines.
 // Una ficha es un número (su id, 0–105). Con fichaDe(id) se obtiene { id, n, c }:
-//   n = 1–13 (0 en el comodín), c = 'r' (rojo) | 'b' (azul) | 'k' (negro) | 'o' (naranja) | null.
+//   n = 1–13 (0 en el comodín), c = 'r' (rojo) | 'b' (azul) | 'k' (negro) | 'o' (verde; era naranja hasta la v11) | null.
 // Una combinación es una lista de ids. La mesa es una lista de combinaciones.
 
 export const COLORES = ['r', 'b', 'k', 'o'];
-export const NOMBRE_COLOR = { r: 'roja', b: 'azul', k: 'negra', o: 'naranja' };
+export const NOMBRE_COLOR = { r: 'roja', b: 'azul', k: 'negra', o: 'verde' };
 export const SIMBOLO = { r: '●', b: '▲', k: '■', o: '◆' };
 export const COMODINES = [104, 105];
 export const VALOR_COMODIN_ATRIL = 30;
@@ -229,3 +229,96 @@ const ordenColor = (a, b) => {
 };
 export const ordenarPorNumero = (atril) => [...atril].sort(ordenNumero);
 export const ordenarPorColor = (atril) => [...atril].sort(ordenColor);
+
+// ---------- Atril con huecos (v1.7) ----------
+// Al ordenar, las combinaciones que ya tienes en el atril se ponen primero, cada una
+// separada por un hueco: series (mismo número, colores distintos) con «Ordenar 1 2 3» y
+// escaleras (números seguidos del mismo color) con «Ordenar por color». Detrás, el resto.
+
+/** Marca de hueco en el orden del atril (no es ninguna ficha). */
+export const HUECO = -1;
+
+const conHuecos = (grupos, resto) => {
+  const salida = [];
+  for (const g of grupos) salida.push(...g, HUECO);
+  salida.push(...resto);
+  return limpiarHuecos(salida);
+};
+
+/** «Ordenar 1 2 3»: series de 3 o 4 primero (una ficha de cada color), después el resto por número. */
+export function agruparPorNumero(atril) {
+  const ordenadas = ordenarPorNumero(atril);
+  const grupos = [];
+  const resto = [];
+  for (let n = 1; n <= 13; n++) {
+    const deEse = ordenadas.filter((id) => !esComodin(id) && fichaDe(id).n === n);
+    const serie = COLORES.map((c) => deEse.find((id) => fichaDe(id).c === c)).filter((id) => id !== undefined);
+    if (serie.length >= 3) grupos.push(serie);
+  }
+  const usadas = new Set(grupos.flat());
+  for (const id of ordenadas) if (!usadas.has(id)) resto.push(id);
+  return conHuecos(grupos, resto);
+}
+
+/** «Ordenar por color»: escaleras de 3 o más primero, después el resto por color. */
+export function agruparPorColor(atril) {
+  const ordenadas = ordenarPorColor(atril);
+  const grupos = [];
+  for (const c of COLORES) {
+    let tramo = [];
+    const cerrar = () => { if (tramo.length >= 3) grupos.push(tramo); tramo = []; };
+    for (let n = 1; n <= 13; n++) {
+      const id = ordenadas.find((x) => !esComodin(x) && fichaDe(x).c === c && fichaDe(x).n === n);
+      if (id === undefined) cerrar();
+      else tramo.push(id);
+    }
+    cerrar();
+  }
+  const usadas = new Set(grupos.flat());
+  return conHuecos(grupos, ordenadas.filter((id) => !usadas.has(id)));
+}
+
+/** Quita los huecos del principio, del final y los repetidos (p. ej. al irse fichas del atril). */
+export function limpiarHuecos(orden) {
+  const salida = [];
+  for (const x of orden) {
+    if (x === HUECO && (!salida.length || salida.at(-1) === HUECO)) continue;
+    salida.push(x);
+  }
+  while (salida.at(-1) === HUECO) salida.pop();
+  return salida;
+}
+
+/** Ancho de un hueco, en fichas. */
+export const ANCHO_HUECO = 0.5;
+const unidades = (orden) => orden.reduce((s, x) => s + (x === HUECO ? ANCHO_HUECO : 1), 0);
+
+/**
+ * Reparte el atril (con huecos) en dos baldas lo más igualadas posible; si se puede, corta
+ * por un hueco para no partir una combinación. Devuelve [balda1, balda2] y, de cada una,
+ * cuántas fichas de ancho ocupa (`anchos`) y cuántas piezas tiene (`piezas`).
+ */
+export function repartirBaldas(orden) {
+  const total = unidades(orden);
+  // Corte sin mirar huecos: tantas fichas como quepan en la mitad
+  let corte = 0;
+  let u = 0;
+  const mitad = Math.ceil(total / 2);
+  while (corte < orden.length && u + (orden[corte] === HUECO ? ANCHO_HUECO : 1) <= mitad) {
+    u += orden[corte] === HUECO ? ANCHO_HUECO : 1;
+    corte++;
+  }
+  let mejor = { a: orden.slice(0, corte), b: orden.slice(corte) };
+  const coste = ({ a, b }) => Math.max(unidades(a), unidades(b));
+  const costeLibre = coste(mejor);
+  // Cortar por un hueco si no ensancha el atril más de una ficha
+  let mejorHueco = null;
+  orden.forEach((x, i) => {
+    if (x !== HUECO) return;
+    const opcion = { a: orden.slice(0, i), b: orden.slice(i + 1) };
+    if (!mejorHueco || coste(opcion) < coste(mejorHueco)) mejorHueco = opcion;
+  });
+  if (mejorHueco && coste(mejorHueco) <= costeLibre + 1) mejor = mejorHueco;
+  const baldas = [limpiarHuecos(mejor.a), limpiarHuecos(mejor.b)];
+  return { baldas, anchos: baldas.map(unidades), piezas: baldas.map((b) => b.length) };
+}

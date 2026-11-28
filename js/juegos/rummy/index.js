@@ -60,7 +60,7 @@ class PartidaRummy {
       this.p = R.crearPartida({ azar: crearAzar(), nivel: ctx.ajustes.obtener('rummy.nivel') });
       this.inicio = Date.now();
     }
-    this.ordenAtril = R.ordenarPorNumero(this.p.jugadores[0].atril);
+    this.ordenAtril = R.agruparPorNumero(this.p.jugadores[0].atril);
     // Se guarda antes de construir la pantalla: así no se puede tocar «Inicio» a mitad del arranque.
     if (actual !== this) return;
     await this.guardar();
@@ -132,10 +132,8 @@ class PartidaRummy {
       derecha: [this.tiempoEl, this.deshacerBtn], clase: 'rummy-cabecera',
     });
 
-    this.rivalesEl = [1, 2, 3].map((j) => {
-      const el = h('div', { class: `rival ${j === 2 ? 'rival-arriba' : 'rival-lado'}`, 'aria-live': 'polite' });
-      return el;
-    });
+    // Lola, Paco y Carmen juntos: en fila sobre el tapete (vertical) o en columna a su derecha (horizontal)
+    this.rivalesEl = [1, 2, 3].map(() => h('div', { class: 'rival', 'aria-live': 'polite' }));
     this.mesaEl = h('section', { class: 'mesa', 'aria-label': 'Mesa' });
     this.observador = new ResizeObserver(() => this.ajustarTamaños());
     this.observador.observe(this.mesaEl);
@@ -147,14 +145,13 @@ class PartidaRummy {
     this.robarBtn = boton('Robar ficha', 'robar', () => this.robar());
     this.terminarBtn = boton('Terminar turno', 'terminar', () => this.terminarTurno());
     this.botones = h('div', { class: 'rummy-botones' },
-      boton('Ordenar 1 2 3', 'ordenar', () => { this.ordenAtril = R.ordenarPorNumero(this.ordenAtril); this.pintar(); }),
-      boton('Ordenar por color', 'ordenar', () => { this.ordenAtril = R.ordenarPorColor(this.ordenAtril); this.pintar(); }),
+      boton('Ordenar 1 2 3', 'ordenar', () => this.ordenar(R.agruparPorNumero)),
+      boton('Ordenar por color', 'ordenar', () => this.ordenar(R.agruparPorColor)),
       this.robarBtn, this.terminarBtn);
 
     this.raiz.replaceChildren(
       cabecera,
-      this.rivalesEl[1],
-      h('div', { class: 'rummy-centro' }, this.rivalesEl[0], this.mesaEl, this.rivalesEl[2]),
+      h('div', { class: 'rummy-centro' }, h('div', { class: 'rivales' }, ...this.rivalesEl), this.mesaEl),
       h('div', { class: 'rummy-abajo' }, this.zonaAtril, this.botones));
 
     // Arrastrar fichas (además de tocar ficha → tocar destino)
@@ -203,15 +200,16 @@ class PartidaRummy {
       const activo = !p.terminada && p.turno === j;
       const el = this.rivalesEl[k];
       el.classList.toggle('activo', activo);
-      el.replaceChildren(...[
-        h('span', { class: 'rival-nombre' }, x.nombre),
-        activo ? h('span', { class: 'rival-turno' }, 'Le toca') : null,
-        j === 2 ? null : h('span', { class: 'rival-fichas' }, n === 1 ? '1 ficha' : `${n} fichas`),
-        h('div', { class: 'dorsos', 'aria-hidden': 'true' }, Array.from({ length: Math.min(n, 14) }, () => h('span', { class: 'dorso' }))),
-        j === 2 ? h('span', { class: 'rival-fichas' }, n === 1 ? '1 ficha' : `${n} fichas`) : null,
-        !x.bajado ? h('span', { class: 'rival-estado' }, 'aún no ha bajado') : null,
-        activo && this.animando ? h('span', { class: 'rival-estado' }, this.textoRival || 'pensando…') : null,
-      ].filter(Boolean));
+      // Tres líneas de alto fijo, para que el tapete no cambie de tamaño: nombre (y «Le toca»),
+      // fichas, y lo que está haciendo o «aún no ha bajado».
+      const estado = activo && this.animando ? (this.textoRival || 'pensando…') : (!x.bajado ? 'aún no ha bajado' : '');
+      el.replaceChildren(
+        h('span', { class: 'rival-cab' }, h('span', { class: 'rival-nombre' }, x.nombre),
+          activo ? h('span', { class: 'rival-turno' }, 'Le toca') : null),
+        h('span', { class: 'rival-mano' },
+          h('span', { class: 'dorsos', 'aria-hidden': 'true' }, Array.from({ length: Math.min(n, 14) }, () => h('span', { class: 'dorso' }))),
+          h('span', { class: 'rival-fichas' }, n === 1 ? '1 ficha' : `${n} fichas`)),
+        h('span', { class: `rival-estado${estado && !activo ? ' marca' : ''}` }, estado));
     });
 
     // Mesa
@@ -243,12 +241,14 @@ class PartidaRummy {
 
     // Atril (dos baldas)
     const mio = turnoMio ? this.atrilT : p.jugadores[0].atril;
-    const visibles = this.ordenAtril.filter((id) => mio.includes(id));
-    const porBalda = Math.max(7, Math.ceil(visibles.length / 2));
-    this.porBalda = porBalda;
-    const balda = (ids) => h('div', { class: 'balda' }, ids.map((id) => this.ficha(id, {
-      movible: true, elegida: this.sel === id, nueva: this.ultimaRobada === id })));
-    this.atrilEl.replaceChildren(balda(visibles.slice(0, porBalda)), balda(visibles.slice(porBalda)));
+    // Con huecos entre las combinaciones que ya tienes (al ordenar); dos baldas lo más igualadas posible
+    const visibles = R.limpiarHuecos(this.ordenAtril.filter((id) => id === R.HUECO || mio.includes(id)));
+    const { baldas, anchos, piezas } = R.repartirBaldas(visibles);
+    this.medidaBaldas = anchos.map((ancho, k) => ({ ancho: Math.max(7, ancho), piezas: Math.max(7, piezas[k]) }));
+    const balda = (ids) => h('div', { class: 'balda' }, ids.map((id) => (id === R.HUECO
+      ? h('span', { class: 'hueco', 'aria-hidden': 'true' })
+      : this.ficha(id, { movible: true, elegida: this.sel === id, nueva: this.ultimaRobada === id }))));
+    this.atrilEl.replaceChildren(...baldas.map(balda));
     this.atrilEl.onclick = (e) => { if (!e.target.closest('[data-ficha]')) this.soltarEn('atril'); };
 
     // Estado y botones
@@ -271,15 +271,29 @@ class PartidaRummy {
     this.ajustarTamaños();
   }
 
-  /** Fichas tan grandes como quepan: en el atril (máx. 76 px de ancho) y en la mesa (máx. 68). */
+  /**
+   * Ordena el atril con huecos entre combinaciones. Solo se agrupan las fichas que están en el
+   * atril; las que has puesto en la mesa este turno quedan al final (sin verse) por si vuelven.
+   */
+  ordenar(agrupar) {
+    const mio = this.esMiTurno() ? this.atrilT : this.p.jugadores[0].atril;
+    const fichas = this.ordenAtril.filter((id) => id !== R.HUECO);
+    this.ordenAtril = [...agrupar(fichas.filter((id) => mio.includes(id))), R.HUECO, ...fichas.filter((id) => !mio.includes(id))];
+    this.pintar();
+  }
+
+  /** Fichas tan grandes como quepan: en el atril (máx. 64 px de ancho) y en la mesa (máx. 68). */
   ajustarTamaños() {
     if (!this.atrilEl) return;
     const horizontal = matchMedia('(orientation: landscape)').matches;
     const estilo = getComputedStyle(this.raiz);
     const interior = this.raiz.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight);
     const anchoDisponible = horizontal ? interior * 0.66 : interior;
-    const maxAtril = horizontal ? 68 : 76;
-    const fa = Math.floor(Math.min(maxAtril, (anchoDisponible - 28 - (this.porBalda - 1) * 6) / this.porBalda));
+    // v1.7: atril algo más pequeño (antes 76 / 68) para que el tapete sea más grande
+    const maxAtril = horizontal ? 60 : 64;
+    // Cada balda: relleno 28 px, separación 6 px entre piezas (fichas y huecos)
+    const fa = Math.floor(Math.min(maxAtril,
+      ...this.medidaBaldas.map(({ ancho, piezas }) => (anchoDisponible - 28 - (piezas - 1) * 6) / ancho)));
     this.raiz.style.setProperty('--fa-ancho', `${fa}px`);
     // Mesa: empezar grande e ir reduciendo hasta que quepa (o llegar a 34 px y desplazar;
     // si aun así una combinación no cabe a lo ancho, se parte en dos líneas)
@@ -425,7 +439,7 @@ class PartidaRummy {
     this.pararTiempoTurno();
     this.ultimaRobada = null;
     R.aplicarJugada(this.p, 0, this.mesaT, this.atrilT);
-    this.ordenAtril = this.ordenAtril.filter((id) => this.p.jugadores[0].atril.includes(id));
+    this.ordenAtril = R.limpiarHuecos(this.ordenAtril.filter((id) => id === R.HUECO || this.p.jugadores[0].atril.includes(id)));
     this.atrilT = null;
     this.nuevas.clear();
     await this.despuesDeTurno();

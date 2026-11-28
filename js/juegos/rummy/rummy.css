@@ -17,7 +17,7 @@
   padding:
     max(44px, env(safe-area-inset-top))
     max(48px, env(safe-area-inset-right))
-    max(48px, env(safe-area-inset-bottom))
+    max(24px, env(safe-area-inset-bottom))   /* v1.7: abajo, menos margen para agrandar el tapete */
     max(48px, env(safe-area-inset-left));
   display: flex;
   flex-direction: column;
@@ -46,19 +46,42 @@
 .boton-deshacer:disabled { opacity: 0.45; }
 
 /* ---------- Rivales ---------- */
-.rival { display: flex; align-items: center; justify-content: center; gap: 12px; border-radius: 18px; }
+/* v1.7: Lola, Paco y Carmen juntos, para dejar el tapete lo más grande posible: en vertical, en
+   una fila encima del tapete; en horizontal, en una columna a su derecha. Cada tarjeta tiene
+   tres líneas de alto fijo (nombre, fichas, estado) para que el tapete no cambie de tamaño. */
+.rivales { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.rival {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 4px 8px;
+  border-radius: 18px;
+  text-align: center;
+}
+.rival-cab { display: flex; align-items: center; gap: 8px; min-height: 1.75rem; }
 .rival-nombre { font-size: 1.25rem; font-weight: 700; }
+.rival-mano { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0 8px; }
+.rival-fichas { font-size: 1.125rem; color: var(--texto-2); white-space: nowrap; }
+.rival-estado { font-size: 1.125rem; min-height: 1.5em; line-height: 1.5; }
+.rival-estado.marca {               /* «aún no ha bajado» */
+  padding: 0 12px;
+  border-radius: 1rem;
+  background: var(--j-fondo);
+  color: var(--j-texto);
+  font-weight: 700;
+}
 /* El rival al que le toca: tarjeta con el color del Rummy, contorno y «Le toca» (v1.6) */
 .rival.activo {
   background: var(--j-fondo);
   color: var(--j-texto);
   box-shadow: 0 0 0 3px var(--j-texto);
-  padding: 6px 14px;
 }
-.rival.activo .rival-nombre { font-size: 1.5rem; font-weight: 800; }
-.rival.activo .rival-fichas { color: inherit; }
+.rival.activo .rival-nombre { font-size: 1.375rem; font-weight: 800; }
+.rival.activo .rival-fichas, .rival.activo .rival-estado { color: inherit; font-weight: 700; }
 .rival-turno {
-  padding: 2px 12px;
+  padding: 0 10px;
   border-radius: 999px;
   background: var(--j-texto);
   color: var(--j-fondo);
@@ -66,26 +89,10 @@
   font-weight: 800;
   white-space: nowrap;
 }
-.rival-fichas, .rival-estado { font-size: 1.125rem; color: var(--texto-2); text-align: center; }
-.rival-estado:not(:empty) {          /* «aún no ha bajado» */
-  padding: 2px 12px;
-  border-radius: 1rem;
-  background: var(--j-fondo);
-  color: var(--j-texto);
-  font-weight: 700;
-}
-.dorsos { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; }
-.dorso { width: 20px; height: 28px; border-radius: 4px; background: var(--dorso); border: 1px solid var(--ficha-sombra); }
-.rival-arriba { min-height: 44px; flex-wrap: wrap; row-gap: 4px; }
-.rival-arriba > span { white-space: nowrap; }
-.rival-arriba .dorsos { flex-wrap: nowrap; }
-.rival-lado { width: 104px; flex: none; align-self: center; flex-direction: column; gap: 8px; padding: 6px 0; }
-.rival-lado.activo { padding: 12px 4px; }
-.rival.activo .rival-estado { background: transparent; padding: 0; white-space: normal; }
-.rival-lado .dorsos { display: grid; grid-template-columns: repeat(2, 28px); }
-.rival-lado .dorso { width: 28px; height: 20px; }
+.dorsos { display: flex; gap: 2px; }
+.dorso { width: 7px; height: 16px; border-radius: 2px; background: var(--dorso); border: 1px solid var(--ficha-sombra); }
 
-.rummy-centro { flex: 1; min-height: 0; display: flex; gap: 12px; }
+.rummy-centro { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; }
 
 /* ---------- Mesa ---------- */
 .mesa {
@@ -158,7 +165,7 @@
 .ficha-r.c-r { color: var(--rojo); }
 .ficha-r.c-b { color: var(--azul); }
 .ficha-r.c-k { color: var(--negro); }
-.ficha-r.c-o { color: var(--naranja); }
+.ficha-r.c-o { color: var(--verde); }
 .ficha-r.comodin { color: var(--rojo); }
 .ficha-r.comodin svg { width: 70%; height: auto; }
 .ficha-r.elegida { border: 4px solid var(--acento); }
@@ -194,6 +201,7 @@
   display: flex;
   flex-direction: column;
 }
+.balda .hueco { flex: none; width: calc(var(--fa-ancho) * 0.5); }   /* separa combinaciones (R.ANCHO_HUECO) */
 .balda {
   display: flex;
   gap: 6px;
@@ -203,8 +211,9 @@
 }
 .rummy-botones { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .rummy-botones button {
-  min-height: 4.25rem;
-  padding: 0 6px;
+  min-height: 3.5rem;
+  padding: 4px 6px;
+  line-height: 1.15;
   border: 2px solid var(--borde);
   border-radius: 18px;
   background: var(--superficie);
@@ -225,10 +234,12 @@
 /* ---------- Horizontal ---------- */
 @media (orientation: landscape) {
   .rummy { padding: max(40px, env(safe-area-inset-top)) max(40px, env(safe-area-inset-right))
-                   max(40px, env(safe-area-inset-bottom)) max(40px, env(safe-area-inset-left)); }
+                   max(24px, env(safe-area-inset-bottom)) max(40px, env(safe-area-inset-left)); }
+  .rummy-centro { flex-direction: row-reverse; }
+  .rivales { width: 14rem; flex: none; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; }
   .rummy-abajo { flex-direction: row; align-items: flex-end; gap: 16px; }
   .zona-atril { align-self: auto; }
   .rummy-botones { flex: 1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .rummy-botones .robar, .rummy-botones .terminar { grid-column: span 2; }
-  .rummy-botones button { min-height: 3.875rem; font-size: 1.1875rem; }
+  .rummy-botones button { min-height: 3.5rem; font-size: 1.1875rem; }
 }

@@ -4,6 +4,7 @@ import { crearAzar } from '../js/core/azar.js';
 import {
   fichaDe, analizar, esValida, puntosDe, puntosAtril, crearPartida, motivoTurnoNoValido, aplicarJugada, robar,
   ordenarPorNumero, ordenarPorColor, todasLasFichas, COMODINES, nombreFicha, moverFicha,
+  agruparPorNumero, agruparPorColor, limpiarHuecos, repartirBaldas, HUECO,
 } from '../js/juegos/rummy/reglas.js';
 import { buscar } from '../js/juegos/rummy/buscador.js';
 
@@ -268,4 +269,30 @@ test('tiempo por turno: el ajuste se traduce a segundos y por defecto no hay lí
   assert.equal(R.segundosPorTurno('1min'), 60);
   assert.equal(R.segundosPorTurno('30s'), 30);
   assert.equal(R.segundosPorTurno('otra cosa'), 0);
+});
+
+test('agrupar el atril: series con «1 2 3» y escaleras «por color», separadas por un hueco', () => {
+  const H = HUECO;
+  // 5 rojo, azul y negro (serie) y un 5 rojo repetido; 7 y 8 sueltos; comodín al final
+  const atril = F('k7', 'r5', 'b5', 'J', "r5'", 'k5', 'b8');
+  const porNumero = agruparPorNumero(atril);
+  assert.deepEqual(porNumero.slice(0, 4), [...F('r5', 'b5', 'k5'), H]);
+  assert.deepEqual(porNumero.slice(4), F("r5'", 'k7', 'b8', 'J'));
+  // Escalera roja 3-4-5 y azul 9-10-11; sueltos detrás
+  const atril2 = F('r4', 'b10', 'r3', 'k1', 'b9', 'r5', 'b11', 'r9');
+  assert.deepEqual(agruparPorColor(atril2), [...F('r3', 'r4', 'r5'), H, ...F('b9', 'b10', 'b11'), H, ...F('r9', 'k1')]);
+  // Sin combinaciones: igual que ordenar sin huecos
+  assert.deepEqual(agruparPorNumero(F('r1', 'b2')), F('r1', 'b2'));
+});
+
+test('limpiar huecos y repartir el atril en dos baldas sin partir combinaciones', () => {
+  const H = HUECO;
+  assert.deepEqual(limpiarHuecos([H, 1, H, H, 2, H]), [1, H, 2]);
+  // 3 + hueco + 3 + hueco + 3 + hueco + 5: corta por el hueco que deja las baldas más igualadas
+  const orden = [1, 2, 3, H, 4, 5, 6, H, 7, 8, 9, H, 10, 11, 12, 13, 14];
+  const { baldas, anchos } = repartirBaldas(orden);
+  assert.deepEqual(baldas, [[1, 2, 3, H, 4, 5, 6], [7, 8, 9, H, 10, 11, 12, 13, 14]]);
+  assert.deepEqual(anchos, [6.5, 8.5]);
+  // Sin huecos: mitad y mitad
+  assert.deepEqual(repartirBaldas([1, 2, 3, 4, 5]).baldas, [[1, 2, 3], [4, 5]]);
 });

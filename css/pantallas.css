@@ -86,7 +86,7 @@
 .mini-ficha.rojo { color: var(--rojo); }
 .mini-ficha.azul { color: var(--azul); }
 .mini-ficha.negro { color: var(--negro); }
-.mini-ficha.naranja { color: var(--naranja); }
+.mini-ficha.verde { color: var(--verde); }
 
 /* Baldosas de juego: dos columnas; el Rummy ocupa la fila entera */
 .juegos {
