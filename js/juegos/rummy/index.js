@@ -146,13 +146,11 @@ class PartidaRummy {
     this.atrilEl = h('div', { class: 'atril', role: 'group', 'aria-label': 'Tu atril', dataset: { destino: 'atril' } });
     this.zonaAtril = h('section', { class: 'zona-atril', 'aria-label': 'Tu atril' }, this.atrilEl);
     const boton = (texto, clase, accion) => h('button', { type: 'button', class: clase, on: { click: accion } }, texto);
-    // «Robar ficha» lleva debajo las que quedan; «Terminar turno», los puntos de tu primera bajada
-    this.robarBtn = h('button', { type: 'button', class: 'robar', on: { click: () => this.robar() } },
-      this.robarTexto = h('span', {}, 'Robar ficha'), this.robarDetalle = h('span', { class: 'detalle' }));
-    this.terminarBtn = h('button', { type: 'button', class: 'terminar', on: { click: () => this.terminarTurno() } },
-      h('span', {}, 'Terminar turno'), this.terminarDetalle = h('span', { class: 'detalle' }));
+    // «Robar ficha · quedan 33» en una línea («Robar · quedan 33» en vertical: « ficha» se oculta)
+    this.robarBtn = h('button', { type: 'button', class: 'robar', on: { click: () => this.robar() } });
+    this.terminarBtn = boton('Terminar turno', 'terminar', () => this.terminarTurno());
     this.botones = h('div', { class: 'rummy-botones' },
-      boton('Ordenar 1 2 3', 'ordenar', () => this.ordenar(R.agruparPorNumero)),
+      boton('Ordenar 1\u00A02\u00A03', 'ordenar', () => this.ordenar(R.agruparPorNumero)),
       boton('Ordenar por color', 'ordenar', () => this.ordenar(R.agruparPorColor)),
       this.robarBtn, this.terminarBtn);
 
@@ -274,13 +272,11 @@ class PartidaRummy {
     const cambios = turnoMio && this.hayCambios();
     this.deshacerBtn.disabled = !cambios;
     this.robarBtn.disabled = !turnoMio;
-    this.robarTexto.textContent = p.pozo.length ? 'Robar ficha' : 'Pasar turno';
-    this.robarDetalle.textContent = p.pozo.length ? `quedan ${numero(p.pozo.length)}` : 'no quedan fichas';
+    this.robarBtn.replaceChildren(...(p.pozo.length
+      ? ['Robar', h('span', { class: 'solo-horizontal' }, '\u00A0ficha'), `\u00A0· quedan\u00A0${numero(p.pozo.length)}`]
+      : ['Pasar turno']));
+    this.robarBtn.setAttribute('aria-label', p.pozo.length ? `Robar ficha, quedan ${numero(p.pozo.length)}` : 'Pasar turno');
     this.terminarBtn.disabled = !turnoMio;
-    // Primera bajada: cuántos puntos llevas (antes iba en la línea de encima del atril)
-    this.terminarDetalle.textContent = turnoMio && !p.jugadores[0].bajado
-      ? `llevas ${R.puntosBajada(this.mesaAntes, this.mesaT)} de ${R.PRIMERA_BAJADA}` : '';
-    this.terminarDetalle.hidden = !this.terminarDetalle.textContent;
     this.ajustarTamaños();
   }
 
@@ -306,8 +302,9 @@ class PartidaRummy {
     const horizontal = matchMedia('(orientation: landscape)').matches;
     const estilo = getComputedStyle(this.raiz);
     const interior = this.raiz.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight);
-    // En horizontal, los botones conservan al menos 300 px (+16 de separación)
-    const anchoMaximo = horizontal ? interior - 316 : interior;
+    // En horizontal, atril y botones van bajo el tapete (mismo ancho que él); los botones
+    // conservan al menos 280 px (+16 de separación)
+    const anchoMaximo = horizontal ? this.marcoMesa.clientWidth - 296 : interior;
     const maxAtril = horizontal ? 60 : 64;
     // Cada balda: relleno 28 px, separación 6 px entre piezas (fichas y huecos)
     const anchoBalda = (fa, { ancho, piezas }) => ancho * fa + (piezas - 1) * 6 + 28;
@@ -365,7 +362,7 @@ class PartidaRummy {
     // Tras la jugada del último rival hay un momento en que el turno ya es tuyo pero aún no puedes tocar.
     const mio = p.turno === 0 && this.miTurno;
     this.info.textContent = p.terminada ? 'Partida terminada'
-      : mio ? (restante === null ? 'Tu turno' : `Tu turno · quedan ${Math.floor(restante / 60)}:${String(restante % 60).padStart(2, '0')}`)
+      : mio ? (restante === null ? 'Tu turno' : `Tu turno · ${Math.floor(restante / 60)}:${String(restante % 60).padStart(2, '0')}`)
         : (p.turno === 0 ? 'Ahora te toca…' : `Juega ${p.jugadores[p.turno].nombre}…`);
     this.info.classList.toggle('mio', mio && !p.terminada);
     this.info.classList.toggle('apurado', mio && restante !== null && restante <= 10);

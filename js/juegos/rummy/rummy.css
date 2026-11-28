@@ -148,9 +148,19 @@
 .aviso-mesa[hidden] { display: none; }
 .aviso-mesa.error { color: var(--error); box-shadow: 0 0 0 3px var(--error); }
 
-/* De quién es el turno, en la barra (v1.7) */
-.rummy-info.mio { font-weight: 800; }
-.rummy-info.apurado { padding: 0 10px; border-radius: 999px; box-shadow: inset 0 0 0 3px var(--error); }
+/* De quién es el turno: pastilla en la barra, debajo de «Rummy» (v1.7). Rellena si te toca;
+   solo con contorno si juega un rival. */
+.rummy-info {
+  align-self: center;
+  padding: 1px 14px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 2px var(--j-texto);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rummy-info.mio { background: var(--j-texto); color: var(--j-fondo); font-weight: 800; }
+.rummy-info.apurado { box-shadow: 0 0 0 3px var(--error); }   /* tiempo por turno: 10 s o menos */
 
 /* ---------- Fichas ---------- */
 .ficha-r {
@@ -221,9 +231,8 @@
   font-size: 1.125rem;
   font-weight: 700;
 }
-.rummy-botones button { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.rummy-botones .detalle { font-size: 1.125rem; font-weight: 400; }   /* «quedan 23», «llevas 12 de 30» */
-.rummy-botones .detalle[hidden] { display: none; }
+.rummy-botones button { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; white-space: pre-wrap; }
+.rummy-botones .solo-horizontal { display: none; }
 .rummy-botones .terminar { background: var(--tapete); color: var(--sobre-tapete); border-color: transparent; font-weight: 800; }
 .rummy-botones button:disabled { opacity: 0.45; }
 
@@ -235,14 +244,32 @@
 .rummy-preparando { margin: auto; font-size: 1.5rem; color: var(--texto-2); }
 
 /* ---------- Horizontal ---------- */
+/* v1.7: a la izquierda, tapete y debajo atril + botones (mismo ancho); a la derecha, los rivales
+   en una columna que llega hasta abajo. La barra sigue igual, a todo el ancho. */
 @media (orientation: landscape) {
-  .rummy { padding: max(40px, env(safe-area-inset-top)) max(40px, env(safe-area-inset-right))
-                   max(24px, env(safe-area-inset-bottom)) max(40px, env(safe-area-inset-left)); }
-  .rummy-centro { flex-direction: row-reverse; }
-  .rivales { width: 14rem; flex: none; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; }
-  .rummy-abajo { flex-direction: row; align-items: stretch; gap: 16px; }
+  .rummy {
+    padding: max(40px, env(safe-area-inset-top)) max(40px, env(safe-area-inset-right))
+             max(24px, env(safe-area-inset-bottom)) max(40px, env(safe-area-inset-left));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 160px;   /* rivales: ancho fijo, también con texto Grande */
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 10px 16px;
+  }
+  .rummy > .barra-juego { grid-column: 1 / -1; }
+  .rummy-centro { display: contents; }
+  .marco-mesa { grid-column: 1; grid-row: 2; }
+  .rivales { grid-column: 2; grid-row: 2 / 4; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; }
+  .rival { gap: 6px; }
+  .rival-cab { flex-direction: column; gap: 4px; }
+  .rival-mano { flex-direction: column; gap: 4px; }
+  .rival-mano .dorsos { display: grid; grid-template-columns: repeat(7, 7px); }
+  .rival-estado { line-height: 1.25; }
+  .rummy-abajo { grid-column: 1; grid-row: 3; flex-direction: row; align-items: stretch; gap: 16px; }
   .zona-atril { align-self: auto; flex: none; }
-  .rummy-botones { flex: 1; min-width: 300px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; }
+  .rummy-botones { flex: 1; min-width: 280px; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; }
   .rummy-botones .robar, .rummy-botones .terminar { grid-column: span 2; }
-  .rummy-botones button { min-height: 3.5rem; font-size: 1.1875rem; }
+  .rummy-botones button { min-height: 56px; font-size: 1.1875rem; }   /* 56 px: tres filas = alto del atril */
+  .rummy-botones .solo-horizontal { display: inline; }
+  .rummy > .tarjeta-final { grid-column: 1; grid-row: 3; }
+  .rummy > .rummy-preparando { grid-column: 1 / -1; grid-row: 1 / -1; }
 }
