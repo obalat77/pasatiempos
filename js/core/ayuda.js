@@ -1,4 +1,4 @@
-// Ayuda de cada juego (ESPECIFICACION.md §5.6): botón «? Ayuda» a la derecha de la barra y
+// Ayuda de cada juego (ESPECIFICACION.md §5.6): botón «?» a la derecha de la barra y
 // ventana con instrucciones sencillas. Los textos están en js/juegos/<juego>/ayuda.js.
 //
 // Formato de los textos: { titulo, secciones: [{ titulo, texto? , pasos?: [], puntos?: [] }] }
@@ -23,8 +23,10 @@ export function mostrarAyuda(ayuda, clase = '') {
  * `alAbrir` para el reloj y `alCerrar` lo vuelve a poner en marcha.
  */
 export function botonAyuda({ ayuda, clase = '', alAbrir = () => {}, alCerrar = () => {} }) {
+  // Solo el «?», grande (a petición del usuario: excepción a «botones con texto»); el lector de
+  // pantalla dice «Ayuda»
   return h('button', {
-    type: 'button', class: 'boton-ayuda',
+    type: 'button', class: 'boton-ayuda', 'aria-label': 'Ayuda', title: 'Ayuda',
     on: { click: async () => { alAbrir(); await mostrarAyuda(ayuda, clase); alCerrar(); } },
-  }, icono('ayuda', 2.2), h('span', {}, 'Ayuda'));
+  }, icono('ayuda', 2));
 }

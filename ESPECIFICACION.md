@@ -323,6 +323,7 @@ Juego de fichas numeradas al estilo del Rummikub clásico (no usar ese nombre ni
 
 **Concreción (v1.5):**
 - Una sola partida por vez (sin rondas). Orden de turno: Tú, Lola, Paco, Carmen.
+- **Zona para soltar (v1.7):** una ficha arrastrada cuenta como soltada en una combinación si queda encima de ella o en el tapete a menos de una ficha de distancia (la más cercana); se mira dónde queda la ficha que arrastras y, si no, la punta del dedo. Mientras arrastras, la combinación (o «Nueva combinación») que la recibirá lleva un contorno blanco. Con una ficha elegida, tocar el tapete junto a una combinación también la pone ahí. Dentro de la combinación las fichas se colocan solas en orden.
 - Con una ficha elegida, tocar una ficha de una combinación la lleva a esa combinación; tocar el atril la devuelve (solo si era tuya y la pusiste en este turno). «Robar ficha» devuelve antes al atril lo que hubieras puesto; con el pozo vacío se llama «Pasar turno».
 - La ficha que acabas de robar se resalta en el atril; lo que hacen los rivales (v1.7): las fichas que ponen llevan contorno `#FFE066` y cara `#FFF4C2`, y las combinaciones que cambian, un marco discontinuo `#FFE066` (colores fijos del Rummy; 4,5:1 sobre el tapete). Las marcas se acumulan durante la ronda y se quitan cuando mueves una ficha o al terminar tu turno. Mientras se anima la jugada de un rival no se marca ninguna combinación como no válida.
 - Al reanudar una partida guardada a mitad de tu turno, ese turno empieza de nuevo (como «Deshacer jugada»).
@@ -331,8 +332,8 @@ Juego de fichas numeradas al estilo del Rummikub clásico (no usar ese nombre ni
 
 
 ### 5.6 Ayuda de cada juego (v1.7)
-**Botón:** en la barra de cada juego, a la derecha del todo y siempre en el mismo sitio: un círculo con «?» y debajo la palabra «Ayuda» (≥ 56 px de alto). Medido en los cinco juegos, en las dos orientaciones y con texto Grande: cabe a la derecha en todos. Para que quepa en el Rummy en vertical con texto Grande, ahí «Deshacer jugada» va sin icono y la pastilla de turno a 18 px. Los textos están en `js/juegos/<juego>/ayuda.js`.
-**Ventana:** la misma de elegir partida (§3): barra con el color del juego, título «Cómo se juega al <juego>» y «✕ Cerrar»; se cierra también al tocar fuera o con Escape. El texto se desplaza hacia abajo. Mientras está abierta, la partida queda en pausa (cronómetro y tiempo por turno parados). No se abre sola.
+**Botón:** en la barra de cada juego, a la derecha del todo y siempre en el mismo sitio: un círculo de 56 px con un «?» grande, sin texto (excepción pedida por el usuario a «botones con texto»; para el lector de pantalla se llama «Ayuda»). Medido en los cinco juegos, en las dos orientaciones y con texto Grande: cabe a la derecha en todos. Para que quepa en el Rummy en vertical con texto Grande, ahí «Deshacer jugada» va sin icono y la pastilla de turno a 18 px. Los textos están en `js/juegos/<juego>/ayuda.js`.
+**Ventana:** la misma de elegir partida (§3), pero un 50 % más ancha (900 px como máximo): barra con el color del juego, título «Cómo se juega al <juego>» y «✕ Cerrar»; se cierra también al tocar fuera o con Escape. El texto se desplaza hacia abajo. Mientras está abierta, la partida queda en pausa (cronómetro y tiempo por turno parados). No se abre sola.
 **Textos** (frases cortas; mismos apartados en todos los juegos):
 
 **Sudoku**

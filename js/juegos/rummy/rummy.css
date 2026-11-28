@@ -114,6 +114,8 @@
 .combinacion.no-valida { box-shadow: 0 0 0 3px var(--error); }
 .combinacion.cambiada { outline: 3px dashed var(--resalte-rival); outline-offset: 4px; }   /* la ha cambiado un rival */
 .combinacion.destino { cursor: pointer; }
+/* La combinación (o «Nueva combinación») que recibirá la ficha que arrastras (v1.7) */
+.combinacion.apuntada, .zona-nueva.apuntada { box-shadow: 0 0 0 4px var(--sobre-tapete); }
 .zona-nueva {
   min-width: calc(var(--fm-ancho) * 4);
   min-height: calc(var(--fm-ancho) * 1.375);

@@ -139,6 +139,12 @@ class PartidaRummy {
     // Lola, Paco y Carmen juntos: en fila sobre el tapete (vertical) o en columna a su derecha (horizontal)
     this.rivalesEl = [1, 2, 3].map(() => h('div', { class: 'rival', 'aria-live': 'polite' }));
     this.mesaEl = h('section', { class: 'mesa', 'aria-label': 'Mesa' });
+    // Con una ficha elegida, tocar el tapete junto a una combinación (a menos de una ficha) la pone ahí
+    this.mesaEl.addEventListener('click', (e) => {
+      if (this.sel === null || e.target.closest('[data-destino], [data-ficha]')) return;
+      const destino = this.destinoEn([[e.clientX, e.clientY]])?.dataset.destino;
+      if (destino) this.soltarEn(destino);
+    });
     // Avisos («Hay una combinación no válida…», lo que ha hecho un rival): flotan sobre la parte
     // de abajo del tapete, sin empujar nada, y se van al tocar cualquier cosa (v1.7)
     this.avisoEl = h('p', { class: 'aviso-mesa', 'aria-live': 'polite' });
@@ -518,7 +524,48 @@ class PartidaRummy {
     }
     a.fantasma.style.left = `${e.clientX - a.dx}px`;
     a.fantasma.style.top = `${e.clientY - a.dy}px`;
+    // Se marca la combinación (o zona) que recibirá la ficha si la sueltas aquí
+    this.apuntar(this.destinoEn(this.puntosArrastre(a, e)));
     e.preventDefault();
+  }
+
+  /** Dónde está la ficha que arrastras: su centro y, después, la punta del dedo. */
+  puntosArrastre(a, e) {
+    const r = a.fantasma.getBoundingClientRect();
+    return [[r.left + r.width / 2, r.top + r.height / 2], [e.clientX, e.clientY]];
+  }
+
+  /**
+   * Destino en esos puntos (combinación, «Nueva combinación» o atril). Si caen en el tapete
+   * fuera de toda combinación, vale la más cercana a menos de una ficha de distancia (v1.7):
+   * así se puede soltar «después del 5» aunque el dedo quede en el hueco verde.
+   */
+  destinoEn(puntos) {
+    for (const [x, y] of puntos) {
+      const el = document.elementFromPoint(x, y)?.closest('[data-destino]');
+      if (el) return el;
+    }
+    const [x, y] = puntos[0];
+    const m = this.mesaEl.getBoundingClientRect();
+    if (x < m.left || x > m.right || y < m.top || y > m.bottom) return null;
+    const margen = parseFloat(getComputedStyle(this.raiz).getPropertyValue('--fm-ancho')) || 48;
+    let mejor = null;
+    let distancia = Infinity;
+    for (const c of this.mesaEl.querySelectorAll('.combinacion')) {
+      const r = c.getBoundingClientRect();
+      const d = Math.hypot(Math.max(r.left - x, 0, x - r.right), Math.max(r.top - y, 0, y - r.bottom));
+      if (d < distancia) { distancia = d; mejor = c; }
+    }
+    return distancia <= margen ? mejor : null;
+  }
+
+  /** Contorno en el destino al que apunta la ficha que arrastras (solo combinaciones y «Nueva»). */
+  apuntar(el) {
+    const marcable = el && el.closest('.mesa') ? el : null;
+    if (this.apuntado === marcable) return;
+    this.apuntado?.classList.remove('apuntada');
+    marcable?.classList.add('apuntada');
+    this.apuntado = marcable;
   }
 
   alSoltar(e) {
@@ -526,9 +573,9 @@ class PartidaRummy {
     if (!a || e.pointerId !== a.puntero) return;   // otro dedo: no afecta al arrastre en curso
     this.arrastre = null;
     if (!a.movido) { this.tocarFicha(a.id, a.el); return; }
+    const destino = this.destinoEn(this.puntosArrastre(a, e))?.dataset.destino;
     a.fantasma.remove();
-    const debajo = document.elementFromPoint(e.clientX, e.clientY);
-    const destino = debajo?.closest('[data-destino]')?.dataset.destino;
+    this.apuntar(null);
     if (destino) this.soltarEn(destino, a.id);
   }
 
@@ -545,6 +592,7 @@ class PartidaRummy {
   cancelarArrastre() {
     this.arrastre?.fantasma?.remove();
     this.arrastre = null;
+    this.apuntar(null);
   }
 
   // ---------- Turnos de los rivales ----------

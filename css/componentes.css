@@ -75,24 +75,19 @@
   border-color: transparent;
 }
 .barra-juego button:disabled { opacity: 0.5; }
-/* Botón «Ayuda» (v1.7): a la derecha del todo en todos los juegos; «?» encima y «Ayuda» debajo */
+/* Botón de ayuda (v1.7): solo un «?» grande, redondo, a la derecha del todo en todos los juegos */
 .boton-ayuda {
   flex: none;
-  min-width: 3.5rem;
-  min-height: 3.5rem;
-  padding: 4px 10px;
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0;
   border: 0;
-  border-radius: 1.25rem;
+  border-radius: 50%;
   display: inline-flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0;
-  font-size: 1.125rem;          /* 18 px */
-  font-weight: 700;
-  line-height: 1.1;
 }
-.boton-ayuda svg { width: 1.5rem; height: 1.5rem; }
+.boton-ayuda svg { width: 2.5rem; height: 2.5rem; }
 
 /* ---------- Tarjetas ---------- */
 .tarjeta {
@@ -227,7 +222,8 @@
 }
 .dialogo-cerrar svg { width: 1.375rem; height: 1.375rem; }
 .dialogo-cuerpo { display: flex; flex-direction: column; gap: 14px; }
-/* Ventana de ayuda (v1.7): texto que se desplaza hacia abajo */
+/* Ventana de ayuda (v1.7): un 50 % más ancha que las demás (900 px) y texto que se desplaza */
+.dialogo.dialogo-ayuda { width: min(900px, calc(100vw - 48px)); }
 .ayuda { gap: 22px; padding: 0 8px; }
 .ayuda h3 { font-size: 1.375rem; font-weight: 800; margin-bottom: 6px; }
 .ayuda p, .ayuda li { font-size: 1.25rem; line-height: 1.45; }
