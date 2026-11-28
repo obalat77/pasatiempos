@@ -1,6 +1,8 @@
 // Sudoku — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.1).
 // Une la lógica (reglas.js, generador.js) con la pantalla y el guardado.
 import { h, icono, barraJuego } from '../../core/ui.js';
+import { botonAyuda } from '../../core/ayuda.js';
+import { AYUDA } from './ayuda.js';
 import { cronometro } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { tarjetaFinal, datoDestacado, esRecord } from '../../core/final.js';
@@ -84,7 +86,8 @@ class PartidaSudoku {
 
     const cabecera = barraJuego({
       alInicio: () => ctx.navegar(''), titulo: 'Sudoku', subtitulo: dificultad,
-      derecha: [this.tiempoEl, this.pausaBtn], clase: 'sudoku-cabecera',
+      derecha: [this.tiempoEl, this.pausaBtn,
+        botonAyuda({ ayuda: AYUDA, clase: 'juego-sudoku', alAbrir: () => this.pararReloj(), alCerrar: () => this.visibilidad() })], clase: 'sudoku-cabecera',
     });
 
     this.casillas = [];

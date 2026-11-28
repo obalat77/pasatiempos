@@ -32,3 +32,20 @@ test('dato destacado y récord', () => {
   assert.equal(esRecord(100, [{ duracionSeg: 120 }, { duracionSeg: 101 }]), true);
   assert.equal(esRecord(100, [{ duracionSeg: 100 }]), false, 'empatar no es récord');
 });
+
+test('ayuda: los cinco juegos tienen sus instrucciones, con los mismos apartados', async () => {
+  for (const [juego, articulo] of [['sudoku', 'al Sudoku'], ['palabras', 'a Palabras'], ['parejas', 'a Parejas de números'],
+    ['calculos', 'a Cálculos cruzados'], ['rummy', 'al Rummy']]) {
+    const { AYUDA } = await import(`../js/juegos/${juego}/ayuda.js`);
+    assert.equal(AYUDA.titulo, `Cómo se juega ${articulo}`);
+    const titulos = AYUDA.secciones.map((s) => s.titulo);
+    assert.equal(titulos[0], 'Objetivo', juego);
+    for (const t of ['Cómo se juega', 'Los botones', 'Consejo']) assert.ok(titulos.includes(t), `${juego}: falta «${t}»`);
+    for (const s of AYUDA.secciones) {
+      assert.ok(s.texto || s.pasos?.length || s.puntos?.length, `${juego}: «${s.titulo}» vacío`);
+      for (const frase of [s.texto, ...(s.pasos || []), ...(s.puntos || [])].filter(Boolean)) {
+        assert.doesNotMatch(frase, /\p{Extended_Pictographic}/u, 'sin emojis');
+      }
+    }
+  }
+});

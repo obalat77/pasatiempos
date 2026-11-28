@@ -1,6 +1,8 @@
 // Rummy — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.5).
 // Tú contra Lola (izquierda), Paco (arriba) y Carmen (derecha), que piensan en un Web Worker.
 import { h, icono, barraJuego } from '../../core/ui.js';
+import { botonAyuda } from '../../core/ayuda.js';
+import { AYUDA } from './ayuda.js';
 import { numero, cronometro } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { crearAzar } from '../../core/azar.js';
@@ -130,7 +132,8 @@ class PartidaRummy {
       icono('deshacer'), 'Deshacer jugada');
     const cabecera = barraJuego({
       alInicio: () => this.ctx.navegar(''), titulo: 'Rummy', subtitulo: this.info,
-      derecha: [this.tiempoEl, this.deshacerBtn], clase: 'rummy-cabecera',
+      derecha: [this.tiempoEl, this.deshacerBtn,
+        botonAyuda({ ayuda: AYUDA, clase: 'juego-rummy', alAbrir: () => { this.reloj.parar(); this.relojTurno?.parar(); }, alCerrar: () => this.visibilidad() })], clase: 'rummy-cabecera',
     });
 
     // Lola, Paco y Carmen juntos: en fila sobre el tapete (vertical) o en columna a su derecha (horizontal)

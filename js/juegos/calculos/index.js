@@ -1,5 +1,7 @@
 // Cálculos cruzados — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.4).
 import { h, icono, barraJuego } from '../../core/ui.js';
+import { botonAyuda } from '../../core/ayuda.js';
+import { AYUDA } from './ayuda.js';
 import { cronometro } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { tarjetaFinal, datoDestacado, esRecord } from '../../core/final.js';
@@ -68,7 +70,8 @@ class PartidaCalculos {
     this.tiempoEl = h('span', { class: 'barra-tiempo', role: 'timer', 'aria-label': 'Tiempo de juego' });
     const cabecera = barraJuego({
       alInicio: () => this.ctx.navegar(''), titulo: 'Cálculos cruzados', subtitulo: dificultad,
-      derecha: [this.tiempoEl], clase: 'calculos-cabecera',
+      derecha: [this.tiempoEl,
+        botonAyuda({ ayuda: AYUDA, clase: 'juego-calculos', alAbrir: () => this.reloj.parar(), alCerrar: () => this.visibilidad() })], clase: 'calculos-cabecera',
     });
 
     this.instruccion = h('p', { class: 'calculos-instruccion', 'aria-live': 'polite' }, INSTRUCCION());

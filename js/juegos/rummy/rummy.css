@@ -273,3 +273,11 @@
   .rummy > .tarjeta-final { grid-column: 1; grid-row: 3; }
   .rummy > .rummy-preparando { grid-column: 1 / -1; grid-row: 1 / -1; }
 }
+
+/* Vertical con texto Grande (v1.7): con «Ayuda» en la barra no cabía la pastilla de turno.
+   «Deshacer jugada» se queda sin icono (sigue con su texto) y la pastilla, a 18 px × 1,2. */
+@media (orientation: portrait) {
+  html[data-texto="grande"] .rummy .boton-deshacer { padding: 0 0.875rem; }
+  html[data-texto="grande"] .rummy .boton-deshacer svg { display: none; }
+  html[data-texto="grande"] .rummy-info { font-size: 1.125rem; padding: 1px 10px; }
+}

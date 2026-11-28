@@ -5,7 +5,7 @@
 // comprueba que coinciden). Así el iPad detecta que hay versión nueva.
 // AL AÑADIR O QUITAR ARCHIVOS: actualizar ARCHIVOS (una prueba lo comprueba).
 
-const VERSION = 13;
+const VERSION = 14;
 const CACHE = `pasatiempos-v${VERSION}`;
 
 const ARCHIVOS = [
@@ -28,6 +28,7 @@ const ARCHIVOS = [
   'js/version.js',
   'js/core/actualizacion.js',
   'js/core/ajustes.js',
+  'js/core/ayuda.js',
   'js/core/azar.js',
   'js/core/db.js',
   'js/core/estadisticas.js',
@@ -38,16 +39,20 @@ const ARCHIVOS = [
   'js/core/tema.js',
   'js/core/ui.js',
   'js/juegos/calculos/calculos.css',
+  'js/juegos/calculos/ayuda.js',
   'js/juegos/calculos/index.js',
   'js/juegos/calculos/reglas.js',
   'js/juegos/catalogo.js',
+  'js/juegos/palabras/ayuda.js',
   'js/juegos/palabras/index.js',
   'js/juegos/palabras/palabras.css',
   'js/juegos/palabras/reglas.js',
+  'js/juegos/parejas/ayuda.js',
   'js/juegos/parejas/index.js',
   'js/juegos/parejas/parejas.css',
   'js/juegos/parejas/reglas.js',
   'js/juegos/sudoku/generador.js',
+  'js/juegos/sudoku/ayuda.js',
   'js/juegos/sudoku/index.js',
   'js/juegos/sudoku/reglas.js',
   'js/juegos/sudoku/resolutor.js',
@@ -56,6 +61,7 @@ const ARCHIVOS = [
   'js/juegos/sudoku/tecnicas.js',
   'js/juegos/rummy/buscador.js',
   'js/juegos/rummy/ia.js',
+  'js/juegos/rummy/ayuda.js',
   'js/juegos/rummy/index.js',
   'js/juegos/rummy/reglas.js',
   'js/juegos/rummy/rummy.css',

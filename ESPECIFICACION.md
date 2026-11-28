@@ -329,6 +329,44 @@ Juego de fichas numeradas al estilo del Rummikub clásico (no usar ese nombre ni
 - Experto: se guarda fichas cuando solo podría poner 1 o 2 (con 12 o menos en el atril), usa sus comodines solo si colocan al menos 3 fichas más (o para cerrar), y deja de guardarse en cuanto alguien tiene 3 fichas o menos o se acaba el pozo.
 - Estadísticas del Rummy: partidas jugadas y ganadas, racha, tiempo total, tabla «Por jugador» (ganadas y puntos acumulados de cada uno) y últimas partidas con su nivel y ganador.
 
+
+### 5.6 Ayuda de cada juego (v1.7)
+**Botón:** en la barra de cada juego, a la derecha del todo y siempre en el mismo sitio: un círculo con «?» y debajo la palabra «Ayuda» (≥ 56 px de alto). Medido en los cinco juegos, en las dos orientaciones y con texto Grande: cabe a la derecha en todos. Para que quepa en el Rummy en vertical con texto Grande, ahí «Deshacer jugada» va sin icono y la pastilla de turno a 18 px. Los textos están en `js/juegos/<juego>/ayuda.js`.
+**Ventana:** la misma de elegir partida (§3): barra con el color del juego, título «Cómo se juega al <juego>» y «✕ Cerrar»; se cierra también al tocar fuera o con Escape. El texto se desplaza hacia abajo. Mientras está abierta, la partida queda en pausa (cronómetro y tiempo por turno parados). No se abre sola.
+**Textos** (frases cortas; mismos apartados en todos los juegos):
+
+**Sudoku**
+- *Objetivo.* Rellenar todas las casillas con números del 1 al 9 sin que se repita ninguno en la misma fila, en la misma columna ni en el mismo cuadrado de 3 × 3.
+- *Cómo se juega.* 1) Toca una casilla vacía. 2) Toca un número de abajo. 3) Si te equivocas, toca «Borrar» o «Deshacer».
+- *Los botones.* «Notas»: si está en «sí», los números se apuntan pequeños, como recordatorio. «Pista»: pone el número correcto en la casilla elegida. «Pausa»: para el reloj.
+- *Consejo.* Empieza por las filas, columnas o cuadrados a los que les faltan pocos números.
+
+**Palabras**
+- *Objetivo.* Formar todas las palabras del nivel con las letras del círculo.
+- *Cómo se juega.* 1) Desliza el dedo de una letra a otra sin levantarlo, o tócalas una a una. 2) Al soltar (o al tocar la palabra que se va formando) se comprueba. 3) Si es correcta, aparece en su sitio.
+- *Los botones.* «Mezclar»: cambia las letras de sitio, a veces así se ven otras palabras. «Pista»: descubre una letra.
+- *Consejo.* Las palabras que existen pero no son del nivel también cuentan: se guardan como «Palabras extra».
+
+**Parejas de números**
+- *Objetivo.* Quitar todos los números del tablero, de dos en dos.
+- *Cómo se juega.* 1) Toca un número y después otro. 2) Se quitan si son iguales (5 y 5) o si suman 10 (3 y 7). 3) Tienen que estar juntos: al lado, encima, debajo o en diagonal. También valen si entre ellos solo hay casillas ya quitadas, o si uno está al final de una fila y el otro al principio de la siguiente.
+- *Los botones.* «Añadir números»: copia al final los números que quedan (4 veces por partida). «Pista»: señala una pareja. «Deshacer»: vuelve atrás.
+- *Consejo.* Antes de añadir números, busca bien: suele quedar alguna pareja.
+
+**Cálculos cruzados**
+- *Objetivo.* Completar las cuentas, que se cruzan como en un crucigrama, para que todas den bien.
+- *Cómo se juega.* 1) Toca una casilla vacía. 2) Toca un número de abajo: solo están los que faltan. 3) Las multiplicaciones y divisiones se hacen antes que las sumas y restas.
+- *Los botones.* «Borrar»: devuelve el número a su sitio. «Deshacer»: vuelve atrás. «Pista»: pone un número correcto.
+- *Consejo.* Empieza por la cuenta a la que le falte un solo número.
+
+**Rummy**
+- *Objetivo.* Quedarte sin fichas antes que Lola, Paco y Carmen.
+- *Combinaciones.* Serie: 3 o 4 fichas del mismo número y de colores distintos (7 rojo, 7 azul, 7 negro). Escalera: 3 o más números seguidos del mismo color (4, 5 y 6 azules). El comodín (la carita) sirve por cualquier ficha.
+- *Cómo se juega.* 1) En tu turno, toca una ficha de tu atril y después dónde ponerla: una combinación de la mesa o «Nueva combinación». También puedes arrastrarla. 2) Cuando todo esté bien, toca «Terminar turno». 3) Si no puedes o no quieres poner nada, toca «Robar ficha».
+- *La primera vez.* Tus primeras fichas en la mesa tienen que sumar al menos 30 puntos, solo con fichas tuyas. Después ya puedes cambiar de sitio las fichas de la mesa, siempre que al terminar todo quede bien.
+- *Los botones.* «Ordenar 1 2 3» y «Ordenar por color»: colocan tu atril y separan lo que ya tienes formado. «Deshacer jugada»: devuelve todo a como estaba al empezar tu turno.
+- *Consejo.* Lo que acaban de poner los rivales se ve en amarillo.
+
 ---
 
 ## 6. Fases de trabajo

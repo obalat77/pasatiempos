@@ -41,6 +41,7 @@ const TRAZOS = {
   seguir: '<path d="M8 5l11 7-11 7z"/>',
   mezclar: '<path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
   cerrar: '<path d="M6 6l12 12M18 6L6 18"/>',
+  ayuda: '<circle cx="12" cy="12" r="10"/><path d="M9.5 9.2a2.6 2.6 0 1 1 3.6 2.4c-.7.3-1.1.9-1.1 1.6v.6"/><path d="M12 17.3v.2"/>',
 };
 
 export function icono(nombre, grosor = 2) {

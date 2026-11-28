@@ -1,5 +1,7 @@
 // Parejas de números — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.3).
 import { h, icono, barraJuego } from '../../core/ui.js';
+import { botonAyuda } from '../../core/ayuda.js';
+import { AYUDA } from './ayuda.js';
 import { cronometro } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { tarjetaFinal, datoDestacado, esRecord } from '../../core/final.js';
@@ -72,7 +74,8 @@ class PartidaParejas {
     this.tiempoEl = h('span', { class: 'barra-tiempo', role: 'timer', 'aria-label': 'Tiempo de juego' });
     const cabecera = barraJuego({
       alInicio: () => this.ctx.navegar(''), titulo: 'Parejas de números', subtitulo: this.quedanEl,
-      derecha: [this.tiempoEl], clase: 'parejas-cabecera',
+      derecha: [this.tiempoEl,
+        botonAyuda({ ayuda: AYUDA, clase: 'juego-parejas', alAbrir: () => this.reloj.parar(), alCerrar: () => this.visibilidad() })], clase: 'parejas-cabecera',
     });
 
     this.instruccion = h('p', { class: 'parejas-instruccion', 'aria-live': 'polite' }, INSTRUCCION());

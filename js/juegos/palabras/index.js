@@ -1,5 +1,7 @@
 // Palabras — interfaz común de juego (ESPECIFICACION.md §2.4 y §5.2).
 import { h, icono, barraJuego } from '../../core/ui.js';
+import { botonAyuda } from '../../core/ayuda.js';
+import { AYUDA } from './ayuda.js';
 import { numero } from '../../core/formato.js';
 import { Reloj } from '../../core/reloj.js';
 import { tarjetaFinal } from '../../core/final.js';
@@ -98,7 +100,8 @@ class PartidaPalabras {
     const subtitulo = this.modo === 'lista' ? `Nivel ${numero(nivel.id)} · modo lista` : `Nivel ${numero(nivel.id)}`;
     const cabecera = barraJuego({
       alInicio: () => this.ctx.navegar(''), titulo: 'Palabras', subtitulo,
-      derecha: [this.cuenta], clase: 'palabras-cabecera',
+      derecha: [this.cuenta,
+        botonAyuda({ ayuda: AYUDA, clase: 'juego-palabras', alAbrir: () => this.reloj.parar(), alCerrar: () => this.visibilidad() })], clase: 'palabras-cabecera',
     });
 
     this.tablero = h('div', { role: 'group', 'aria-label': this.modo === 'lista' ? 'Palabras por encontrar' : 'Crucigrama' });
